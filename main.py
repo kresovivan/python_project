@@ -276,6 +276,10 @@ my_tuple_list = [(3,6), (0,1), (4,5), ('O',3.9)]
 for (a,b) in my_tuple_list:
     print(a,b, end=' ')
 
+#Списковые включения
 
+my_list = [1.25, -9,10,3.78,-5.92, -1.16, 80]
+new_list = [i if i > 0 else 0 for i in my_list]
+print(new_list)
 
 
