@@ -599,7 +599,22 @@ def measure_time(func):
 # Применяем декоратор к функции
 @measure_time
 def some_function():
-    time.sleep(4)  # Имитация долгой работы
+    time.sleep(1)  # Имитация долгой работы
     print("Функция выполнена")
 
 some_function()
+
+#Декоратор для логирования
+def log_function_call(func):
+    def wrapper(*args, **kwargs):
+        print(f"Вызов функции {func.__name__} с аргументами: {args}, {kwargs}")
+        result = func(*args, **kwargs)
+        print(f"Функция {func.__name__} завершилась с результатом: {result}")
+        return result
+    return wrapper
+
+@log_function_call
+def add(a, b):
+    return a + b
+
+add(3, 5)
