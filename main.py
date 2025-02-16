@@ -618,3 +618,18 @@ def add(a, b):
     return a + b
 
 add(3, 5)
+
+#Декоратор для обработки исключений
+def handle_exceptions(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            print(f"Произошла ошибка: {e}")
+    return wrapper
+
+@handle_exceptions
+def divide(a, b):
+    return a / b
+
+divide(10, 0)  # Вывод: Произошла ошибка: division by zero
