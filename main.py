@@ -324,3 +324,17 @@ def test_default(a=10):
     print(a)
 test_default('Hi!')
 test_default() #10
+
+def test_default2(a=10, b=12):
+    print(a+b)
+test_default2()
+test_default2(4)
+test_default2(4,2)
+
+#Если первыми аргументами поставить необязательные
+# (значения которых заданы по умолчанию), а следом за ними обязательные аргументы, то
+#интерпретатор Python сообщит об ошибке SyntaxError: parameter without a default follows parameter with a default
+
+def test_default3(b=12,a):
+    print(a+b)
+test_default3(4,2)
