@@ -283,7 +283,7 @@ new_list = [i if i > 0 else -1000 for i in my_list]
 print(new_list)
 
 
-#Передача оюъектов в функцию
+#Передача объектов в функцию
 
 def test(a,b,c):
     print('a = {}; b = {}; c = {}'.format(a,b,c))
