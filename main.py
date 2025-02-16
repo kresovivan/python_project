@@ -361,3 +361,11 @@ def custom_function3(a,b,c,*args):
 
 custom_function3(1,1,1,[10,20,30])
 
+#4.Передача произвольного количества позиционных и ключевых элементов.
+
+def custom_function4(*args, **kwargs): # *args, **kwargs можно заменить на *a и **b например
+    if args:
+        print(args)
+        if kwargs:
+            print(kwargs)
+custom_function4(10,20, key='Hi', Oo = 100)
