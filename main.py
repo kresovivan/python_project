@@ -584,3 +584,22 @@ jump(3)
 #Как работают декораторы?
 #Декоратор — это функция, которая принимает другую функцию в качестве аргумента, добавляет
 #к ней новое поведение и возвращает изменённую функцию.
+import time
+
+# Декоратор для замера времени выполнения
+def measure_time(func):
+    def wrapper(*args, **kwargs):
+        start_time = time.time()  # Запоминаем время начала
+        result = func(*args, **kwargs)  # Вызываем исходную функцию
+        end_time = time.time()  # Запоминаем время окончания
+        print(f"Функция {func.__name__} выполнилась за {end_time - start_time:.4f} секунд")
+        return result
+    return wrapper
+
+# Применяем декоратор к функции
+@measure_time
+def some_function():
+    time.sleep(4)  # Имитация долгой работы
+    print("Функция выполнена")
+
+some_function()
