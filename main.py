@@ -279,7 +279,15 @@ for (a,b) in my_tuple_list:
 #Списковые включения
 
 my_list = [1.25, -9,10,3.78,-5.92, -1.16, 80]
-new_list = [i if i > 0 else 0 for i in my_list]
+new_list = [i if i > 0 else -1000 for i in my_list]
 print(new_list)
 
 
+#Передача оюъектов в функцию
+
+def test(a,b,c):
+    print('a = {}; b = {}; c = {}'.format(a,b,c))
+
+x,y,z = (5, [1,4], 'Str')
+test(x,y,z)
+print('x = {}; y = {}; z = {}'.format(x,y,z))
