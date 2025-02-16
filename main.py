@@ -301,3 +301,16 @@ x,y,z = (5, [1,4], 'Str')
 test(x,y,z)
 print('x = {}; y = {}; z = {}'.format(id(x),id(y),id(z)))
 
+#Попробуем изменить значение объектов в функции и посмотреть, что из этого получится
+def test(a,b,c):
+    a = 2
+    b[0] = 'Oo'
+    c = '^_^'
+    print('a = {}, b = {}, c = {}'.format(a,b,c))
+    print('a = {}, b = {}, c = {}'.format(id(a), id(b), id(c)))
+
+x,y,z = (5, [1,4], 'Str')
+test(x,y,z)
+print('x = {}, y={}, z={}'.format(x,y,z))
+print('x = {}, y={}, z={}'.format(id(x),id(y),id(z)))
+
