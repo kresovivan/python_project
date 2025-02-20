@@ -717,35 +717,10 @@ for user in filter_and_transform(users):
 # Модули кэшируются (файл .pyc), что ускоряет их повторное использование.
 
 
-# math_operations.py
 
-def add(a, b):
-    return a + b
 
-def subtract(a, b):
-    return a - b
 
-def multiply(a, b):
-    return a * b
 
-def divide(a, b):
-    if b == 0:
-        raise ValueError("Cannot divide by zero!")
-    return a / b
-
-# main.py
-
-import math_operations as mo  # Импортируем модуль
-
-result_add = mo.add(10, 5)
-result_subtract = mo.subtract(10, 5)
-result_multiply = mo.multiply(10, 5)
-result_divide = mo.divide(10, 5)
-
-print(f"Add: {result_add}")
-print(f"Subtract: {result_subtract}")
-print(f"Multiply: {result_multiply}")
-print(f"Divide: {result_divide}")
 
 
 
