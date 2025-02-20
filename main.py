@@ -644,13 +644,47 @@ divide(10, 0)  # Вывод: Произошла ошибка: division by zero
 # (после последнего yield), до следующего yield.
 # Когда функция завершает выполнение (или встречает return), вызывается исключение StopIteration.
 
-
+#Пример генерации нарастающей последовательности чисел от 0 до 3
 def gen_test():
     N=0
-    while N < 10:
+    while N < 3:
         yield N
         N += 1
 
 for x in gen_test():
     print(x, end=' ')
+
+#Аналог генератора функции нарастающей последовательности, тело которой состоит только из yield
+
+def gen_surprise_test():
+    yield 0
+    yield 1
+    yield 2
+
+for x in gen_surprise_test():
+    print(x, end=' ')
+
+
+#Генераторы можно использовать для фильтрации и преобразования данных на лету, например,
+# при обработке данных из базы данных или API.
+
+def filter_and_transform(data):
+    for item in data:
+        if item["age"] > 10:
+            yield {
+                "name": item["name"].upper(),
+                "age": item["age"]
+            }
+
+# Использование
+users = [
+    {"name": "Alice", "age": 25},
+    {"name": "Bob", "age": 17},
+    {"name": "Charlie", "age": 30},
+    {"name": "Robert", "age": 40},
+    {"name": "Albert", "age": 50}
+]
+
+for user in filter_and_transform(users):
+    print(user)
 
