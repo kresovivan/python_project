@@ -717,8 +717,16 @@ for user in filter_and_transform(users):
 # Модули кэшируются (файл .pyc), что ускоряет их повторное использование.
 
 
+import my_module1
+if __name__ == "__main__":
+     my_module1.printer('Alex') # Hello, Alex!
+     print(my_module1.str1)#
 
 
+from my_module1 import * #копирует все имена на верхнем уровне
+if __name__ == "__main__":
+    printer('Alex') # Hello, Alex!
+    print(str1)
 
 
 
