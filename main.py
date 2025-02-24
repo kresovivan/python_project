@@ -282,6 +282,10 @@ my_list = [1.25, -9,10,3.78,-5.92, -1.16, 80]
 new_list = [i if i > 0 else -1000 for i in my_list]
 print(new_list)
 
+for i in range(64):
+    grains = 2 ** i
+    print(f"Клетка {i + 1}: {grains} зерен")
+
 
 #Передача объектов в функцию
 
@@ -744,9 +748,7 @@ x.append(4)
 print("x:", x)  # Вывод: x: [1, 2, 3, 4]
 print("y:", y)  # Вывод: y: [1, 2, 3, 4]
 
-for i in range(64):
-    grains = 2 ** i
-    print(f"Клетка {i + 1}: {grains} зерен")
+
 
 
 
