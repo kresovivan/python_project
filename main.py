@@ -286,6 +286,10 @@ for i in range(64):
     grains = 2 ** i
     print(f"Клетка {i + 1}: {grains} зерен")
 
+count = 0
+while count < 5:
+    print(count)
+    count += 1
 
 #Передача объектов в функцию
 
@@ -747,6 +751,17 @@ x.append(4)
 # Выводим значения переменных x и y
 print("x:", x)  # Вывод: x: [1, 2, 3, 4]
 print("y:", y)  # Вывод: y: [1, 2, 3, 4]
+
+
+count = 0
+while count < 5:
+    print(count)
+    count += 1
+
+user_input = ""
+while user_input != "exit":
+    user_input = input("Введите 'exit' для выхода: ")
+    print(user_input)
 
 
 
