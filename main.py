@@ -749,3 +749,9 @@ if __name__ == "__main__":
 if __name__ == "___main__":
     first.function()
     second.function()
+
+n = 5
+for i in range(1, n + 1):
+    for j in range(1, n + 1):
+        print(f"{i} * {j} = {i * j}", end='\t')
+    print()  # Переход на новую строку для следующего множителя
