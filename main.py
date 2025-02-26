@@ -728,7 +728,7 @@ for user in filter_and_transform(users):
 import my_module1
 if __name__ == "__main__":
      my_module1.printer('Alex') # Hello, Alex!
-     print(my_module1.str1)#
+     print(my_module1.str1)
 
 
 from my_module1 import * #копирует все имена на верхнем уровне
@@ -753,18 +753,42 @@ print("x:", x)  # Вывод: x: [1, 2, 3, 4]
 print("y:", y)  # Вывод: y: [1, 2, 3, 4]
 
 
-count = 0
-while count < 5:
-    print(count)
-    count += 1
-
-user_input = ""
-while user_input != "exit":
-    user_input = input("Введите 'exit' для выхода: ")
-    print(user_input)
 
 
 
+for num in range(10):
+    if num == 3:
+        break  # Прекращает цикл, как только num достигает 5
+    print(num)
 
 
 
+elements = [1, 2, 3, -99, 5]
+# Поиск первого отрицательного элемента
+for element in elements:
+    if element < 0:
+        print("Найден отрицательный элемент: ", element)
+        break
+
+data = ["apple", "banana", "", "cherry", "date"]
+for fruit in data:
+    if not fruit:
+        continue  # Пропустить пустые строки
+    print(fruit.capitalize())
+
+    # Инициализация переменной-счетчика
+counter = 1
+
+# Цикл while, который проходит числа от 1 до 100
+while counter <= 100:
+    # Проверка, является ли число четным
+    if counter % 2 == 0:
+        # Если число четное, увеличиваем счетчик и пропускаем его
+        counter += 1
+        continue
+
+    # Если число нечетное, выводим его
+    print(counter)
+
+    # Увеличиваем счетчик
+    counter += 1
