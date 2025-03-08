@@ -30,3 +30,8 @@ for suit in SUIT_TUPLE:
     for thisValue, rank in enumerate(RANK_TUPLE):
         cardDict = {'rank':rank, 'suit':suit, 'value':thisValue + 1}
         startingDeckList.append(cardDict)
+
+score = 50
+
+while True: #несколько игр
+    print()
