@@ -35,3 +35,10 @@ score = 50
 
 while True: #несколько игр
     print()
+    gameDeckList = shuffle(startingDeckList)
+    currentCardDict = getCard(gameDeckList)
+    currentCardRank = currentCardDict['rank']
+    currentCardValue = currentCardDict['value']
+    currentCardSuit = currentCardDict['suit']
+    print('Starting card is:', currentCardRank + ' of ' + currentCardSuit)
+    print()
