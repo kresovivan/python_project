@@ -47,9 +47,14 @@ while True:  #несколько игр
     print('Starting card is:', currentCardRank + ' of ' + currentCardSuit)
     print()
 
-for cardNumber in range(0, NCARDS):  #Играем в одну игру из этого количества карт
-    answer = input('Will the next card be higher or lower than the' +
+    for cardNumber in range(0, NCARDS):  #Играем в одну игру из этого количества карт#
+        answer = input('Will the next card be higher or lower than the' +
                    currentCardRank + ' of ' +
                    currentCardSuit + '? (enter h or 1): ')
     answer = answer.casefold()
-    nextCard
+    nextCardDict = getCard(gameDeckList)
+    nextCardRank = nextCardDict['rank']
+    nextCardSuit = nextCardDict['suit']
+    nexCardValue = nextCardDict['value']
+    print('Next card is:', nextCardRank + ' of ' + nextCardSuit)
+
