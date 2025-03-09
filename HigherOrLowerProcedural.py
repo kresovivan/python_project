@@ -7,21 +7,22 @@ RANK_TUPLE = ('Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Quee
 NCARDS = 8
 
 
-#Проходим по колоде и эта функция возвращает случайную карту из колоды
+# Проходим по колоде и эта функция возвращает случайную карту из колоды
 
 def getCard(deckListIn):
-    thisCard = deckListIn.pop()  #Снимаем одну карту с верхней части колоды и возвращаем
+    thisCard = deckListIn.pop()  # Снимаем одну карту с верхней части колоды и возвращаем
     return thisCard
 
 
-#Проходим по колоде и эта функция возвращает перемешанную копию колоды
+# Проходим по колоде и эта функция возвращает перемешанную копию kolоды
+
 def shuffle(deckListIn):
     deckListOut = deckListIn.copy()  # создаем копию стартовой колоды
     random.shuffle(deckListOut)
     return deckListOut
 
 
-#Основоной код
+# Основной код
 
 print('Welcome to Higher or Lower!!!')
 print('You have to choose whether the next card to be shown will be higher or lower than the current card.')
@@ -37,7 +38,7 @@ for suit in SUIT_TUPLE:
 
 score = 50
 
-while True:  #несколько игр
+while True:  # Несколько игр
     print()
     gameDeckList = shuffle(startingDeckList)
     currentCardDict = getCard(gameDeckList)
@@ -47,14 +48,37 @@ while True:  #несколько игр
     print('Starting card is:', currentCardRank + ' of ' + currentCardSuit)
     print()
 
-    for cardNumber in range(0, NCARDS):  #Играем в одну игру из этого количества карт#
-        answer = input('Will the next card be higher or lower than the' +
-                   currentCardRank + ' of ' +
-                   currentCardSuit + '? (enter h or 1): ')
+    for cardNumber in range(0, NCARDS):  # Играем в одну игру из этого количества карт#
+        answer = input('Will the next card be higher or lower than the ' +
+                       currentCardRank + ' of ' +
+                       currentCardSuit + '? (enter h or 1): ')
     answer = answer.casefold()
     nextCardDict = getCard(gameDeckList)
     nextCardRank = nextCardDict['rank']
     nextCardSuit = nextCardDict['suit']
-    nexCardValue = nextCardDict['value']
+    nextCardValue = nextCardDict['value']
     print('Next card is:', nextCardRank + ' of ' + nextCardSuit)
 
+    if answer == 'h':
+        if nextCardValue > currentCardValue:
+            print('You got it right, it was higher')
+            score += 20
+        else:
+            print('Sorry, it was not higher')
+            score -= 15
+
+    elif answer == 'l':
+        if nextCardValue < currentCardValue:
+            score += 20
+            print('You got it right, it was lower')
+        else:
+            print('Sorry, it was not lower')
+            score -= 15
+            print('Your score is:', score)
+            print()
+            currentCardRank = nextCardDict['rank']
+            currentCardValue = nextCardDict['value']
+
+            goAgain = input('To play again, press enter, or "q" to quit: ')
+            if goAgain == 'q':
+                break
