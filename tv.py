@@ -1,7 +1,9 @@
 # класс tv
 
 class TV():
-    def __init__(self):
+    def __init__(self, brand, location): #передаем бренд и расположение телевизора
+        self.brand = brand
+        self.location = location
         self.isOn = False
         self.isMuted = False
         # произвольный список каналов по умолчанию
@@ -58,6 +60,8 @@ class TV():
         print()
         print('TV Status:')
         if self.isOn:
+            print('   Status of TV',self.brand)
+            print('   Location of TV', self.location)
             print('   TV is: On')
             print('   Channel is:', self.channelList[self.channelIndex])
             if self.isMuted:
@@ -65,12 +69,14 @@ class TV():
             else:
                 print('   Volume is:', self.volume)
         else:
+            print('   Status of TV', self.brand)
+            print('   Location of TV', self.location)
             print('   TV is: Off')
 
 #Создаем объекты телевизоры TV
-oTV = TV()
-oTV1 = TV()
-oTV2 = TV()
+oTV = TV('Samsung', 'Bedroom')
+oTV1 = TV('Philipps', 'Family room')
+oTV2 = TV('Izumrud', 'Balcony')
 
 #Включаем телевизор и показываем статус
 oTV.power()
