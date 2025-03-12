@@ -52,4 +52,21 @@ class TV():
             return
         self.isMuted = not self.isMuted
 
+    def setChannel(self, newChannel):
+        if newChannel in self.channelList:
+            self.channelIndex = self.channelList.index(newChannel) #Если newChannel нет в нашем списке каналов, то ничего не делать
+
+    def showInfo(self):
+        print()
+        print('TV Status:')
+        if self.isOn:
+            print('   TV is: On')
+            print('   Channel is:', self.channelList[self.channelIndex])
+            if self.isMuted:
+                print('   Volume is:', self.volume, '(sound is muted)')
+            else:
+                print('   Volume is:', self.volume)
+        else:
+            print('   TV is: Off')
+
 
