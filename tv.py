@@ -39,3 +39,17 @@ class TV():
         self.channelIndex = self.channelIndex + 1
         if self.channelIndex > self.nChannels:
             self.channelIndex = 0 # После последнего канала вернуться к первому каналу
+
+    def channelDown(self):
+        if not self.isOn:
+            return
+        self.channelIndex = self.channelIndex - 1
+        if self.channelIndex < 0:
+            self.channelIndex = self.nChannels - 1 # Перед первым каналом последний
+
+    def mute(self):
+        if not self.isOn:
+            return
+        self.isMuted = not self.isMuted
+
+
