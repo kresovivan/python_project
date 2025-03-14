@@ -1,14 +1,10 @@
 import random
 
-def initGame():
-    global Attemp, Input
+def initGame(Attemp, Input):
     Secret = 'Я задумал число от 1 до 1000'
     print(Secret)
-    Attemp = 0
-    Input = 0
 
-def playGame():
-    global Attemp, Input
+def playGame(Attemp,Input):
     Case = random.randint(1,1000)
     while Input != Case:
         print('Угадай число: ', end='')
@@ -20,12 +16,12 @@ def playGame():
             print('Слишком большое!')
         if Input == Case:
             print("Вы угадали число!")
+    return Attemp
 
-def endGame():
-    global Attemp
+def endGame(Attemp):
     print('Ты пробовал ' + str(Attemp) + ' раз.')
 
 #Осонвная программа
-initGame()
-playGame()
-endGame()
+initGame(0,0)
+Game = playGame(0,0)
+endGame(Game)
