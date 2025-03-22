@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2e91dd10-759b-4f17-a692-d2e493edac44" name="Changes" comment="test python1">
+      <change afterPath="$PROJECT_DIR$/My_Bank_Version3.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/My_Bank_Version1.py" beforeDir="false" afterPath="$PROJECT_DIR$/My_Bank_Version1.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,6 +63,7 @@
     "Python.DimmerSwitch.executor": "Run",
     "Python.HigherOrLowerProcedural.executor": "Run",
     "Python.My_Bank_Version1.executor": "Run",
+    "Python.My_Bank_Version2.executor": "Run",
     "Python.battary.executor": "Run",
     "Python.battleship.executor": "Run",
     "Python.dice1.executor": "Run",
@@ -111,14 +112,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1739471318424</updated>
-    </task>
-    <task id="LOCAL-00039" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1740087733158</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1740087733158</updated>
     </task>
     <task id="LOCAL-00040" summary="test python1">
       <option name="closed" value="true" />
@@ -504,7 +497,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742681802991</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1742684560234</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1742684560234</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
