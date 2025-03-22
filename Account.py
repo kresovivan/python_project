@@ -31,7 +31,6 @@ class Account():
                       acoount')
                 return None
 
-
             self.balance = self.balance - amountToWithdraw
             return self.balance
 

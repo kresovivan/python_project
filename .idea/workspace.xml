@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2e91dd10-759b-4f17-a692-d2e493edac44" name="Changes" comment="test python1">
-      <change beforePath="$PROJECT_DIR$/battary.py" beforeDir="false" afterPath="$PROJECT_DIR$/voice.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/voice.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/voice.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Account.py" beforeDir="false" afterPath="$PROJECT_DIR$/Account.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/My_Bank_Version1.py" beforeDir="false" afterPath="$PROJECT_DIR$/My_Bank_Version1.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,35 +58,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.DimmerSwitch.executor&quot;: &quot;Run&quot;,
-    &quot;Python.HigherOrLowerProcedural.executor&quot;: &quot;Run&quot;,
-    &quot;Python.battary.executor&quot;: &quot;Run&quot;,
-    &quot;Python.battleship.executor&quot;: &quot;Run&quot;,
-    &quot;Python.dice1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.dice2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.grade1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.guess.executor&quot;: &quot;Run&quot;,
-    &quot;Python.guess7.executor&quot;: &quot;Run&quot;,
-    &quot;Python.lotto1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.lotto4.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.mathe3.executor&quot;: &quot;Run&quot;,
-    &quot;Python.monster.executor&quot;: &quot;Run&quot;,
-    &quot;Python.my_module1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.palindrom.executor&quot;: &quot;Run&quot;,
-    &quot;Python.second.executor&quot;: &quot;Run&quot;,
-    &quot;Python.tv.executor&quot;: &quot;Run&quot;,
-    &quot;Python.window1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.window2.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/kreso/PycharmProjects/PythonProject&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.Account.executor": "Run",
+    "Python.DimmerSwitch.executor": "Run",
+    "Python.HigherOrLowerProcedural.executor": "Run",
+    "Python.My_Bank_Version1.executor": "Run",
+    "Python.battary.executor": "Run",
+    "Python.battleship.executor": "Run",
+    "Python.dice1.executor": "Run",
+    "Python.dice2.executor": "Run",
+    "Python.grade1.executor": "Run",
+    "Python.guess.executor": "Run",
+    "Python.guess7.executor": "Run",
+    "Python.lotto1.executor": "Run",
+    "Python.lotto4.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.mathe3.executor": "Run",
+    "Python.monster.executor": "Run",
+    "Python.my_module1.executor": "Run",
+    "Python.palindrom.executor": "Run",
+    "Python.second.executor": "Run",
+    "Python.tv.executor": "Run",
+    "Python.window1.executor": "Run",
+    "Python.window2.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/kreso/PycharmProjects/PythonProject",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\kreso\PycharmProjects\PythonProject" />
@@ -109,30 +112,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1739471318424</updated>
-    </task>
-    <task id="LOCAL-00034" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1740084491490</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1740084491490</updated>
-    </task>
-    <task id="LOCAL-00035" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1740084999377</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1740084999377</updated>
-    </task>
-    <task id="LOCAL-00036" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1740085962727</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1740085962727</updated>
     </task>
     <task id="LOCAL-00037" summary="test python1">
       <option name="closed" value="true" />
@@ -502,7 +481,31 @@
       <option name="project" value="LOCAL" />
       <updated>1742674778929</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1742677113650</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1742677113650</updated>
+    </task>
+    <task id="LOCAL-00084" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1742678002522</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1742678002523</updated>
+    </task>
+    <task id="LOCAL-00085" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1742679267543</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1742679267543</updated>
+    </task>
+    <option name="localTasksCounter" value="86" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
