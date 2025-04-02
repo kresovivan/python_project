@@ -1,6 +1,4 @@
 from Account import *
-from My_Bank_Version2 import oAccount
-from My_Bank_Version4 import theBalance
 
 
 class Bank():
