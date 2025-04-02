@@ -26,6 +26,7 @@ class Bank():
         print('Your new account number is:', userAccountNumber)
         print()
 
+
     def closeAccount(self):
         print('*** CloseAccount ***')
         userAccountNumber = input('What is your account number? ')

@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e91dd10-759b-4f17-a692-d2e493edac44" name="Changes" comment="test python1">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="2e91dd10-759b-4f17-a692-d2e493edac44" name="Changes" comment="test python1" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -65,6 +63,7 @@
     "Python.My_Bank_Version2.executor": "Run",
     "Python.My_Bank_Version3.executor": "Run",
     "Python.My_Bank_Version4.executor": "Run",
+    "Python.My_Bank_Version5_Separate_Bank_Class.executor": "Run",
     "Python.battary.executor": "Run",
     "Python.battleship.executor": "Run",
     "Python.dice1.executor": "Run",
@@ -113,38 +112,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1739471318424</updated>
-    </task>
-    <task id="LOCAL-00045" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1741466327262</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1741466327262</updated>
-    </task>
-    <task id="LOCAL-00046" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1741466570610</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1741466570610</updated>
-    </task>
-    <task id="LOCAL-00047" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1741467321496</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1741467321496</updated>
-    </task>
-    <task id="LOCAL-00048" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1741541536458</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1741541536458</updated>
     </task>
     <task id="LOCAL-00049" summary="test python1">
       <option name="closed" value="true" />
@@ -506,7 +473,39 @@
       <option name="project" value="LOCAL" />
       <updated>1743626309330</updated>
     </task>
-    <option name="localTasksCounter" value="94" />
+    <task id="LOCAL-00094" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1743629174380</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1743629174380</updated>
+    </task>
+    <task id="LOCAL-00095" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1743630377439</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1743630377440</updated>
+    </task>
+    <task id="LOCAL-00096" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1743631338832</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1743631338833</updated>
+    </task>
+    <task id="LOCAL-00097" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1743631503309</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1743631503309</updated>
+    </task>
+    <option name="localTasksCounter" value="98" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
