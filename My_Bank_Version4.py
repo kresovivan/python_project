@@ -1,10 +1,8 @@
 #Берем весь код из файла класса Account
 
 from Account import *
-from My_Bank_Version2 import userName, userPassword
-from My_Bank_Version3 import accountDict
 
-#наичинаем с пустого списка счетов
+#начинаем с пустого списка счетов
 accountDict = { }
 nextAccountNumber = 0
 
