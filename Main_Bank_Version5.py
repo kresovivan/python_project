@@ -2,7 +2,6 @@
 
 #Берем весь код класса банка
 from Bank import *
-from My_Bank_Version3 import joesAccountNumber, marysAccountNumber
 
 # создаем экземпляр банка
 oBank = Bank()
