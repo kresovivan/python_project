@@ -1,4 +1,7 @@
 from Account import *
+from My_Bank_Version2 import oAccount
+from My_Bank_Version4 import theBalance
+
 
 class Bank():
     def __init__(self):
@@ -8,32 +11,37 @@ class Bank():
 
 #Создаем два счета
     def createAccount(self, theName, theStartingAmount, thePassword):
-        oAccount = Account(theName, theStartingAmount, thePassword)\
+        oAccount= Account(theName, theStartingAmount, thePassword)
         newAccountNumber = self.nextAccountNumber
-accountDict[joesAccountNumber] = oAccount
-print('Joe account number is: ', joesAccountNumber)
-nextAccountNumber = nextAccountNumber + 1
+        self.accountDict[newAccountNumber] = oAccount
+        #Увеличиваем на единицу для подготовки к созданию следующей учетной записи
+        self.nextAccountNumber = self.nextAccountNumber + 1
+        return newAccountNumber
 
-oAccount = Account('Mary', 100, 'MarysPassword')
-marysAccountNumber = nextAccountNumber
-accountDict[marysAccountNumber] = oAccount
-print('Mary account number is: ', marysAccountNumber)
-nextAccountNumber = nextAccountNumber + 1
+    def openAccount(self):
+        print('*** Open Account ***')
+        userName = input('What is the name for the new user account? ')
+        userStartingAmount = input('What is the starting balance for this account? ')
+        userStartingAmount = int(userStartingAmount)
+        userPassword = input('What is the password you want to use for this account? ')
+        userAccountNumber = self.createAccount(userName, userStartingAmount, userPassword)
+        print('Your new account number is:', userAccountNumber)
+        print()
 
-while True:
-    print()
-    print('Press b to get the balance')
-    print('Press d to make deposit')
-    print('Press o to open a new account')
-    print('Press w to make a withdrawal')
-    print('Press s to show all accounts')
-    print('Press q to quit')
-    print()
+    def closeAccount(self):
+        print('*** CloseAccount ***')
+        userAccountNumber = input('What is your account number? ')
+        userAccountNumber = int(userAccountNumber)
+        userPassword = input('What is your password? ')
+        oAccount = self.accountDict[userAccountNumber]
+        theBalance = oAccount.getBalance(userPassword)
+        if theBalance is not None:
+            print('You had', theBalance, 'in your account, which is being returned to you.')
+            #удаляем учетную запись пользователя из словаря учетных записей
+            del self.accountDict[userAccountNumber]
+            print('Your account is now closed')
 
-    action = input('What do you want to do? ')
-    action = action.lower()
-    action = action[0]
-    print()
+
 
     if action == 'b':
         print('*** Get Balance ***')
@@ -57,17 +65,7 @@ while True:
         if theBalance is not None:
             print('Your balance is: ', theBalance)
 
-    elif action == 'o':
-        print ('*** Open Account***')
-        userName = input('What is the name for the new user account? ')
-        userStartingAmount = input('What is the starting balance for this account? ')
-        userStartingAmount = int(userStartingAmount)
-        userPassword = input('What is the password you want to use for this account? ')
-        oAccount = Account(userName, userStartingAmount, userPassword)
-        accountDict[nextAccountNumber] = oAccount
-        print('Your new account number is:', nextAccountNumber)
-        nextAccountNumber = nextAccountNumber + 1
-        print()
+
 
     elif action == 's':
         print('Show:')
