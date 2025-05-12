@@ -13,5 +13,5 @@ if (Score) >= 80 and (Score) < 90:
     print("Хорошо(2)")
 if (Score) >= 90 and (Score) <= 100:
     print("Очень хорошо (1)")
-if Score > 100 or Score < 0:
+if (Score) > 100 or (Score) < 0:
     print("Неправильно(0)")
