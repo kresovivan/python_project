@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e91dd10-759b-4f17-a692-d2e493edac44" name="Changes" comment="test python1">
-      <change beforePath="$PROJECT_DIR$/grade1.py" beforeDir="false" afterPath="$PROJECT_DIR$/grade1.py" afterDir="false" />
-    </list>
+    <list default="true" id="2e91dd10-759b-4f17-a692-d2e493edac44" name="Changes" comment="test python1" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -167,22 +165,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1739471318424</updated>
-    </task>
-    <task id="LOCAL-00058" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1741816594935</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1741816594936</updated>
-    </task>
-    <task id="LOCAL-00059" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1741817327887</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1741817327887</updated>
     </task>
     <task id="LOCAL-00060" summary="test python1">
       <option name="closed" value="true" />
@@ -560,7 +542,23 @@
       <option name="project" value="LOCAL" />
       <updated>1747079527974</updated>
     </task>
-    <option name="localTasksCounter" value="107" />
+    <task id="LOCAL-00107" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1747080110547</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1747080110547</updated>
+    </task>
+    <task id="LOCAL-00108" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1747080267615</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1747080267615</updated>
+    </task>
+    <option name="localTasksCounter" value="109" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
