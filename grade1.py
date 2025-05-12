@@ -2,7 +2,7 @@
 print("Введи число: ", end='')
 Score = int(input())
 print("Это ", end='')
-if Score >0 and Score < 25:
+if Score >= 0 and Score < 25:
     print('Ужасно (6)')
 if Score >=25 and Score < 45:
     print('Плохо (5)')
