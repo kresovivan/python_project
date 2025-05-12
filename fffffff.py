@@ -10,4 +10,4 @@ if 45 <= Score < 65:
 if 65 <= Score < 80:
     print("Средне(3)")
 if Score > 100 or Score < 0:
-    print("Неправильно(0)")
+    print("0")
