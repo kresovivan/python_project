@@ -1,17 +1,21 @@
-print("Введи число:   ", end="")
-Score = int(input())
-print("Это ", end="")
-if 0 <= Score < 25:
-    print("Ужасно (6)")
-if 25 <= Score < 45:
-    print("Плохо (5)")
-if 45 <= Score < 65:
-    print("Сойдет(4)")
-if 65 <= Score < 80:
-    print("Средне(3)")
-if 80 <= Score < 90:
-    print("Хорошо(2)")
-if 90 <= Score <= 100:
-    print("Очень хорошо (1)")
-if Score > 100 or Score < 0:
-    print("Неправильно(0)")
+import random
+
+Secret = 'Я задумал число от 1 до 1000'
+Case = random.randint(1, 1000)
+print(Secret)
+Attemp = 0
+Input = 0
+while Input != Case:
+    print('Угадай число: ', end='')
+    Input = int(input())
+    Attemp = Attemp + 1
+    if Input < Case:
+        print('Слишком маленькое!')
+    if Input > Case:
+        print('Слишком большое!')
+    if Input == Case:
+        print("Вы угадали число!")
+    if Input == 0:
+        print('Правильно число было: ' + str(Case))
+        break
+print('Ты пробовал ' + str(Attemp) + ' раз.')
