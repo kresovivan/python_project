@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e91dd10-759b-4f17-a692-d2e493edac44" name="Changes" comment="test python1">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="2e91dd10-759b-4f17-a692-d2e493edac44" name="Changes" comment="test python1" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -115,7 +112,7 @@
       <recent name="C:\Users\kreso\PycharmProjects\PythonProject" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.grade1">
+  <component name="RunManager">
     <configuration name="Main_Bank_Version5" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="PythonProject" />
       <option name="ENV_FILES" value="" />
@@ -208,30 +205,6 @@
       <option name="presentableId" value="Default" />
       <updated>1739471318424</updated>
       <workItem from="1748264463480" duration="18000" />
-    </task>
-    <task id="LOCAL-00080" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1742340617157</created>
-      <option name="number" value="00080" />
-      <option name="presentableId" value="LOCAL-00080" />
-      <option name="project" value="LOCAL" />
-      <updated>1742340617157</updated>
-    </task>
-    <task id="LOCAL-00081" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1742341301906</created>
-      <option name="number" value="00081" />
-      <option name="presentableId" value="LOCAL-00081" />
-      <option name="project" value="LOCAL" />
-      <updated>1742341301906</updated>
-    </task>
-    <task id="LOCAL-00082" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1742674778929</created>
-      <option name="number" value="00082" />
-      <option name="presentableId" value="LOCAL-00082" />
-      <option name="project" value="LOCAL" />
-      <updated>1742674778929</updated>
     </task>
     <task id="LOCAL-00083" summary="test python1">
       <option name="closed" value="true" />
@@ -601,7 +574,31 @@
       <option name="project" value="LOCAL" />
       <updated>1747508714267</updated>
     </task>
-    <option name="localTasksCounter" value="129" />
+    <task id="LOCAL-00129" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1748280570867</created>
+      <option name="number" value="00129" />
+      <option name="presentableId" value="LOCAL-00129" />
+      <option name="project" value="LOCAL" />
+      <updated>1748280570876</updated>
+    </task>
+    <task id="LOCAL-00130" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1748280578564</created>
+      <option name="number" value="00130" />
+      <option name="presentableId" value="LOCAL-00130" />
+      <option name="project" value="LOCAL" />
+      <updated>1748280578564</updated>
+    </task>
+    <task id="LOCAL-00131" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1748281002330</created>
+      <option name="number" value="00131" />
+      <option name="presentableId" value="LOCAL-00131" />
+      <option name="project" value="LOCAL" />
+      <updated>1748281002330</updated>
+    </task>
+    <option name="localTasksCounter" value="132" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
