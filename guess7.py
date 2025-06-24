@@ -24,7 +24,7 @@ def playGame():
 
 def endGame():
     global  Attempt
-    print("Ты провобовал " + str(Attempt) + " раз.")
+    print("Ты пробовал " + str(Attempt) + " раз.")
 
 #Основная программа
 initGame()
