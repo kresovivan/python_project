@@ -10,3 +10,4 @@ class Monster:
 #Основная программа
 Frank = Monster()
 Frank.show()
+
