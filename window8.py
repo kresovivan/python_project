@@ -1,22 +1,24 @@
-#Приветствие с кнопками
-#Окно с событиями
 from tkinter import *
 from tkinter import messagebox
 
-#Функция для события
-def button1Click():
-    messagebox.showinfo("Ответ", "Это радует!")
-def button2Click():
-    messagebox.showinfo("Ответ", "Это огорчает!")
+class Dialog():
+    #Инициализация
+    def __init__(self, Title):
+        self.Window = Tk()
+        self.Window.title(Title)
+        self.Window.config(width=260, height=120)
+        self.Display = Label(self.Window, text="Привет, как дела?")
+        self.Display.place(x=50, y=20, width=160, height=30)
+        self.Button1 = Button(self.Window, text="Хорошо", command=self.button1Click)
+        self.Button2 = Button(self.Window, text="Плохо", command=self.button2Click)
+        self.Button1.place(x=20, y=70, width=100, height=30)
+        self.Button2.place(x=140, y=70, width=100, height=30)
+        self.Window.mainloop()
 
-#Основная программа
-Window = Tk()
-Window.title("Привет")
-Window.config(width=260, height=120)
-Display = Label(Window, text = "Привет, как дела?")
-Display.place(x=50, y=20, width=160, height=30)
-Button1 = Button(Window, text="Хорошо", command=button1Click)
-Button2 = Button(Window, text="Плохо",  command=button2Click)
-Button1.place(x=20, y=70, width=100, height=30)
-Button2.place(x=140, y=70, width=100, height=30)
-Window.mainloop()
+        #Метод
+    def button1Click(self):
+        messagebox.showinfo("Ответ", "Это радует!")
+    def button2Click(self):
+        messagebox.showinfo("Ответ", "Это огорчает!")
+
+Window = Dialog("Привет")
