@@ -1,21 +1,8 @@
-class Monster:
-    #Инициализация аттрибута
-    def __init__(self, name, character):
-        self.__Name = name
-        self.__Character = character
-        #Метод c одним подчеркиванием защищенный, если с двумя подчеркиваниями, то метод приватный
-    def _Type(self):
-        return "Монстр"
-    def show(self):
-        print('Имя: ' + self.__Name)
-        print('Особенность: ' + self.__Character)
-        print('Тип: ' + self._Type())
-
-class GMonster(Monster):
-    def _Type(self):
-        return 'Сын монстра'
-
-class SMonster(Monster):
-    def _Type(self):
-        return 'Сын монстра'
-
+import monster5
+#Основная программа
+Frank = monster5.Monster("Фрэнки","Необычный")
+Frank.show()
+Albert = monster5.GMonster("Альберт","Задумчивый")
+Albert.show()
+Sigmund = monster5.SMonster("Зигмунд","Веселый")
+Sigmund.show()

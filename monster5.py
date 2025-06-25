@@ -16,3 +16,7 @@ class Monster:
 class GMonster(Monster):
     def Type(self):
         return "Дух монстра"
+
+class SMonster(Monster):
+    def Type(self):
+        return "Душа монстра"
