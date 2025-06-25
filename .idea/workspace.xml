@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e91dd10-759b-4f17-a692-d2e493edac44" name="Changes" comment="test python1" />
+    <list default="true" id="2e91dd10-759b-4f17-a692-d2e493edac44" name="Changes" comment="test python1">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monster6.py" beforeDir="false" afterPath="$PROJECT_DIR$/monster6.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monster8.py" beforeDir="false" afterPath="$PROJECT_DIR$/monster8.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monsterlabx.py" beforeDir="false" afterPath="$PROJECT_DIR$/monsterlabx.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -97,6 +102,8 @@
     "Python.monster2.executor": "Run",
     "Python.monster4.executor": "Run",
     "Python.monster5.executor": "Run",
+    "Python.monster6.executor": "Run",
+    "Python.monster8.executor": "Run",
     "Python.monsterlab.executor": "Run",
     "Python.my_module1.executor": "Run",
     "Python.palindrom.executor": "Run",
@@ -154,14 +161,6 @@
       <workItem from="1750621379104" duration="30000" />
       <workItem from="1750621929036" duration="62000" />
       <workItem from="1750621996614" duration="32000" />
-    </task>
-    <task id="LOCAL-00111" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1747080675678</created>
-      <option name="number" value="00111" />
-      <option name="presentableId" value="LOCAL-00111" />
-      <option name="project" value="LOCAL" />
-      <updated>1747080675678</updated>
     </task>
     <task id="LOCAL-00112" summary="test python1">
       <option name="closed" value="true" />
@@ -547,7 +546,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750858729536</updated>
     </task>
-    <option name="localTasksCounter" value="160" />
+    <task id="LOCAL-00160" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1750861073067</created>
+      <option name="number" value="00160" />
+      <option name="presentableId" value="LOCAL-00160" />
+      <option name="project" value="LOCAL" />
+      <updated>1750861073067</updated>
+    </task>
+    <option name="localTasksCounter" value="161" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
