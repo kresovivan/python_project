@@ -93,6 +93,8 @@
     "Python.mathe4.executor": "Run",
     "Python.million1.executor": "Run",
     "Python.monster.executor": "Run",
+    "Python.monster1.executor": "Run",
+    "Python.monster2.executor": "Run",
     "Python.my_module1.executor": "Run",
     "Python.palindrom.executor": "Run",
     "Python.python_words.executor": "Run",
@@ -149,22 +151,6 @@
       <workItem from="1750621379104" duration="30000" />
       <workItem from="1750621929036" duration="62000" />
       <workItem from="1750621996614" duration="32000" />
-    </task>
-    <task id="LOCAL-00104" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1747079241474</created>
-      <option name="number" value="00104" />
-      <option name="presentableId" value="LOCAL-00104" />
-      <option name="project" value="LOCAL" />
-      <updated>1747079241474</updated>
-    </task>
-    <task id="LOCAL-00105" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1747079360632</created>
-      <option name="number" value="00105" />
-      <option name="presentableId" value="LOCAL-00105" />
-      <option name="project" value="LOCAL" />
-      <updated>1747079360632</updated>
     </task>
     <task id="LOCAL-00106" summary="test python1">
       <option name="closed" value="true" />
@@ -542,7 +528,23 @@
       <option name="project" value="LOCAL" />
       <updated>1750855419393</updated>
     </task>
-    <option name="localTasksCounter" value="153" />
+    <task id="LOCAL-00153" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1750856829311</created>
+      <option name="number" value="00153" />
+      <option name="presentableId" value="LOCAL-00153" />
+      <option name="project" value="LOCAL" />
+      <updated>1750856829311</updated>
+    </task>
+    <task id="LOCAL-00154" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1750857289681</created>
+      <option name="number" value="00154" />
+      <option name="presentableId" value="LOCAL-00154" />
+      <option name="project" value="LOCAL" />
+      <updated>1750857289681</updated>
+    </task>
+    <option name="localTasksCounter" value="155" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
