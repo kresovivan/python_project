@@ -25,4 +25,4 @@ def endGame(Attempt):
 #Основная программа
 initGame()
 Game = playGame(0,0)
-##endGame(Game)
+endGame(Game)
