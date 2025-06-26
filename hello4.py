@@ -26,3 +26,13 @@ for pos in range (0,3)
     Knopka[pos].place(x=20, y=60+pos*40, width=120, heght=30)
     Knopka[pos+3].place(x=160, y=60 + pos * 40, width=120, heght=30 )
 
+# Индивидульная настройка событий
+Knopka[0].config(command=lambda: buttonClick(0))
+Knopka[1].config(command=lambda: buttonClick(1))
+Knopka[2].config(command=lambda: buttonClick(2))
+Knopka[3].config(command=lambda: buttonClick(3))
+Knopka[4].config(command=lambda: buttonClick(4))
+Knopka[5].config(command=lambda: buttonClick(5))
+
+#Цикл событий
+Window.mainloop()
