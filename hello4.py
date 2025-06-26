@@ -34,3 +34,4 @@ Knopka[5].config(command=lambda: buttonClick(5))
 
 #Цикл событий
 Window.mainloop()
+
