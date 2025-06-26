@@ -35,12 +35,12 @@ Button5 = Button(Window, text="Ужасно",   command=button5Click)
 Button6 = Button(Window, text="Не скажу", command=button6Click)
 
 #Позиционирование кнопок
-Button1.place(x=20, y=60,  width=120, height=30)
-Button2.place(x=160, y=60,  width=120, height=30)
-Button3.place(x=20, y=100,  width=120, height=30)
-Button4.place(x=160, y=100, width=120, height=30)
-Button5.place(x=20, y=140,  width=120, height=30)
-Button6.place(x=160, y=140, width=120, height=30)
+Button1.place(x=20,  y=60,   width=120, height=30)
+Button2.place(x=160, y=60,   width=120, height=30)
+Button3.place(x=20,  y=100,  width=120, height=30)
+Button4.place(x=160, y=100,  width=120, height=30)
+Button5.place(x=20,  y=140,  width=120, height=30)
+Button6.place(x=160, y=140,  width=120, height=30)
 
 #Цикл событий
 Window.mainloop()
