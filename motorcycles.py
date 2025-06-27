@@ -4,17 +4,16 @@ motorcycles[2] = 'suzuki'
 motorcycles.append('ducati')
 print(motorcycles)
 
-
 motorcycles = []
 motorcycles = ['honda', 'yamaha', 'suzuki']
 motorcycles.insert(0,'harley')
 print(motorcycles)
 
-
-
 motorcycles = ['honda', 'yamaha', 'suzuki']
 del motorcycles[2]
 print(motorcycles)
+
+
 
 
 
