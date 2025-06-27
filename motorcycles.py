@@ -1,4 +1,11 @@
 motorcycles = ['honda', 'yamaha', 'suzuki']
 print(motorcycles)
-motorcycles[2] = 'ducati'
+motorcycles[2] = 'suzuki'
+motorcycles.append('ducati')
+print(motorcycles)
+
+
+motorcycles = []
+motorcycles = ['honda', 'yamaha', 'suzuki']
+motorcycles.insert(0,'harley')
 print(motorcycles)
