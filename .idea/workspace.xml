@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e91dd10-759b-4f17-a692-d2e493edac44" name="Changes" comment="test python1" />
+    <list default="true" id="2e91dd10-759b-4f17-a692-d2e493edac44" name="Changes" comment="test python1">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -80,6 +82,7 @@
     "Python.dice1.executor": "Run",
     "Python.dice2.executor": "Run",
     "Python.drom.executor": "Run",
+    "Python.even_numbers.executor": "Run",
     "Python.full_name.executor": "Run",
     "Python.grade1.executor": "Run",
     "Python.gradle1.executor": "Run",
@@ -115,6 +118,7 @@
     "Python.palindrom.executor": "Run",
     "Python.python_words.executor": "Run",
     "Python.second.executor": "Run",
+    "Python.squares.executor": "Run",
     "Python.swap1.executor": "Run",
     "Python.trim_whitespace.executor": "Run",
     "Python.tv.executor": "Run",
@@ -172,38 +176,6 @@
       <workItem from="1750621379104" duration="30000" />
       <workItem from="1750621929036" duration="62000" />
       <workItem from="1750621996614" duration="32000" />
-    </task>
-    <task id="LOCAL-00155" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1750857619705</created>
-      <option name="number" value="00155" />
-      <option name="presentableId" value="LOCAL-00155" />
-      <option name="project" value="LOCAL" />
-      <updated>1750857619705</updated>
-    </task>
-    <task id="LOCAL-00156" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1750858357714</created>
-      <option name="number" value="00156" />
-      <option name="presentableId" value="LOCAL-00156" />
-      <option name="project" value="LOCAL" />
-      <updated>1750858357714</updated>
-    </task>
-    <task id="LOCAL-00157" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1750858602412</created>
-      <option name="number" value="00157" />
-      <option name="presentableId" value="LOCAL-00157" />
-      <option name="project" value="LOCAL" />
-      <updated>1750858602412</updated>
-    </task>
-    <task id="LOCAL-00158" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1750858685778</created>
-      <option name="number" value="00158" />
-      <option name="presentableId" value="LOCAL-00158" />
-      <option name="project" value="LOCAL" />
-      <updated>1750858685778</updated>
     </task>
     <task id="LOCAL-00159" summary="test python1">
       <option name="closed" value="true" />
@@ -565,7 +537,39 @@
       <option name="project" value="LOCAL" />
       <updated>1751047923540</updated>
     </task>
-    <option name="localTasksCounter" value="204" />
+    <task id="LOCAL-00204" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1751048750171</created>
+      <option name="number" value="00204" />
+      <option name="presentableId" value="LOCAL-00204" />
+      <option name="project" value="LOCAL" />
+      <updated>1751048750171</updated>
+    </task>
+    <task id="LOCAL-00205" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1751049201974</created>
+      <option name="number" value="00205" />
+      <option name="presentableId" value="LOCAL-00205" />
+      <option name="project" value="LOCAL" />
+      <updated>1751049201974</updated>
+    </task>
+    <task id="LOCAL-00206" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1751051373171</created>
+      <option name="number" value="00206" />
+      <option name="presentableId" value="LOCAL-00206" />
+      <option name="project" value="LOCAL" />
+      <updated>1751051373171</updated>
+    </task>
+    <task id="LOCAL-00207" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1751051526454</created>
+      <option name="number" value="00207" />
+      <option name="presentableId" value="LOCAL-00207" />
+      <option name="project" value="LOCAL" />
+      <updated>1751051526454</updated>
+    </task>
+    <option name="localTasksCounter" value="208" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
