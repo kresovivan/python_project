@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e91dd10-759b-4f17-a692-d2e493edac44" name="Changes" comment="test python1">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="2e91dd10-759b-4f17-a692-d2e493edac44" name="Changes" comment="test python1" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -62,90 +60,90 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.Account.executor": "Run",
-    "Python.DimmerSwitch.executor": "Run",
-    "Python.HigherOrLowerProcedural.executor": "Run",
-    "Python.Main_Bank_Version5.executor": "Run",
-    "Python.My_Bank_Version1.executor": "Run",
-    "Python.My_Bank_Version2.executor": "Run",
-    "Python.My_Bank_Version3.executor": "Run",
-    "Python.My_Bank_Version4.executor": "Run",
-    "Python.My_Bank_Version5_Separate_Bank_Class.executor": "Run",
-    "Python.apostrophe.executor": "Run",
-    "Python.battary.executor": "Run",
-    "Python.battleship.executor": "Run",
-    "Python.bicycles.executor": "Run",
-    "Python.cars.executor": "Run",
-    "Python.catweight.executor": "Run",
-    "Python.catweight2.executor": "Run",
-    "Python.dice1.executor": "Run",
-    "Python.dice2.executor": "Run",
-    "Python.drom.executor": "Run",
-    "Python.even_numbers.executor": "Run",
-    "Python.full_name.executor": "Run",
-    "Python.grade1.executor": "Run",
-    "Python.gradle1.executor": "Run",
-    "Python.guess.executor": "Run",
-    "Python.guess7.executor": "Run",
-    "Python.hello1.executor": "Run",
-    "Python.hello2.executor": "Run",
-    "Python.hello3.executor": "Run",
-    "Python.hello4.executor": "Run",
-    "Python.hello5.executor": "Run",
-    "Python.hello_world.executor": "Run",
-    "Python.lesson1.executor": "Run",
-    "Python.lesson2.executor": "Run",
-    "Python.line_break.executor": "Run",
-    "Python.lotto1.executor": "Run",
-    "Python.lotto4.executor": "Run",
-    "Python.magicians.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.mathe3.executor": "Run",
-    "Python.mathe4.executor": "Run",
-    "Python.million1.executor": "Run",
-    "Python.monster.executor": "Run",
-    "Python.monster1.executor": "Run",
-    "Python.monster2.executor": "Run",
-    "Python.monster4.executor": "Run",
-    "Python.monster5.executor": "Run",
-    "Python.monster6.executor": "Run",
-    "Python.monster8.executor": "Run",
-    "Python.monsterlab.executor": "Run",
-    "Python.motorcycles.executor": "Run",
-    "Python.my_module1.executor": "Run",
-    "Python.name.executor": "Run",
-    "Python.palindrom.executor": "Run",
-    "Python.players.executor": "Run",
-    "Python.python_words.executor": "Run",
-    "Python.second.executor": "Run",
-    "Python.squares.executor": "Run",
-    "Python.swap1.executor": "Run",
-    "Python.trim_whitespace.executor": "Run",
-    "Python.tv.executor": "Run",
-    "Python.window1.executor": "Run",
-    "Python.window2.executor": "Run",
-    "Python.window4.executor": "Run",
-    "Python.window5.executor": "Run",
-    "Python.window7.executor": "Run",
-    "Python.window8.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "git-widget-placeholder": "master",
-    "go.import.settings.migrated": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/kreso/PycharmProjects/PythonProject",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.sourceCode",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.Account.executor&quot;: &quot;Run&quot;,
+    &quot;Python.DimmerSwitch.executor&quot;: &quot;Run&quot;,
+    &quot;Python.HigherOrLowerProcedural.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Main_Bank_Version5.executor&quot;: &quot;Run&quot;,
+    &quot;Python.My_Bank_Version1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.My_Bank_Version2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.My_Bank_Version3.executor&quot;: &quot;Run&quot;,
+    &quot;Python.My_Bank_Version4.executor&quot;: &quot;Run&quot;,
+    &quot;Python.My_Bank_Version5_Separate_Bank_Class.executor&quot;: &quot;Run&quot;,
+    &quot;Python.apostrophe.executor&quot;: &quot;Run&quot;,
+    &quot;Python.battary.executor&quot;: &quot;Run&quot;,
+    &quot;Python.battleship.executor&quot;: &quot;Run&quot;,
+    &quot;Python.bicycles.executor&quot;: &quot;Run&quot;,
+    &quot;Python.cars.executor&quot;: &quot;Run&quot;,
+    &quot;Python.catweight.executor&quot;: &quot;Run&quot;,
+    &quot;Python.catweight2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.dice1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.dice2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.drom.executor&quot;: &quot;Run&quot;,
+    &quot;Python.even_numbers.executor&quot;: &quot;Run&quot;,
+    &quot;Python.full_name.executor&quot;: &quot;Run&quot;,
+    &quot;Python.grade1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.gradle1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.guess.executor&quot;: &quot;Run&quot;,
+    &quot;Python.guess7.executor&quot;: &quot;Run&quot;,
+    &quot;Python.hello1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.hello2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.hello3.executor&quot;: &quot;Run&quot;,
+    &quot;Python.hello4.executor&quot;: &quot;Run&quot;,
+    &quot;Python.hello5.executor&quot;: &quot;Run&quot;,
+    &quot;Python.hello_world.executor&quot;: &quot;Run&quot;,
+    &quot;Python.lesson1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.lesson2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.line_break.executor&quot;: &quot;Run&quot;,
+    &quot;Python.lotto1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.lotto4.executor&quot;: &quot;Run&quot;,
+    &quot;Python.magicians.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mathe3.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mathe4.executor&quot;: &quot;Run&quot;,
+    &quot;Python.million1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.monster.executor&quot;: &quot;Run&quot;,
+    &quot;Python.monster1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.monster2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.monster4.executor&quot;: &quot;Run&quot;,
+    &quot;Python.monster5.executor&quot;: &quot;Run&quot;,
+    &quot;Python.monster6.executor&quot;: &quot;Run&quot;,
+    &quot;Python.monster8.executor&quot;: &quot;Run&quot;,
+    &quot;Python.monsterlab.executor&quot;: &quot;Run&quot;,
+    &quot;Python.motorcycles.executor&quot;: &quot;Run&quot;,
+    &quot;Python.my_module1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.name.executor&quot;: &quot;Run&quot;,
+    &quot;Python.palindrom.executor&quot;: &quot;Run&quot;,
+    &quot;Python.players.executor&quot;: &quot;Run&quot;,
+    &quot;Python.python_words.executor&quot;: &quot;Run&quot;,
+    &quot;Python.second.executor&quot;: &quot;Run&quot;,
+    &quot;Python.squares.executor&quot;: &quot;Run&quot;,
+    &quot;Python.swap1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.trim_whitespace.executor&quot;: &quot;Run&quot;,
+    &quot;Python.tv.executor&quot;: &quot;Run&quot;,
+    &quot;Python.window1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.window2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.window4.executor&quot;: &quot;Run&quot;,
+    &quot;Python.window5.executor&quot;: &quot;Run&quot;,
+    &quot;Python.window7.executor&quot;: &quot;Run&quot;,
+    &quot;Python.window8.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/kreso/PycharmProjects/PythonProject&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\kreso\PycharmProjects\PythonProject" />
@@ -178,14 +176,6 @@
       <workItem from="1750621379104" duration="30000" />
       <workItem from="1750621929036" duration="62000" />
       <workItem from="1750621996614" duration="32000" />
-    </task>
-    <task id="LOCAL-00169" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1750877432955</created>
-      <option name="number" value="00169" />
-      <option name="presentableId" value="LOCAL-00169" />
-      <option name="project" value="LOCAL" />
-      <updated>1750877432955</updated>
     </task>
     <task id="LOCAL-00170" summary="test python1">
       <option name="closed" value="true" />
@@ -571,7 +561,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751126458046</updated>
     </task>
-    <option name="localTasksCounter" value="218" />
+    <task id="LOCAL-00218" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1751369098134</created>
+      <option name="number" value="00218" />
+      <option name="presentableId" value="LOCAL-00218" />
+      <option name="project" value="LOCAL" />
+      <updated>1751369098134</updated>
+    </task>
+    <option name="localTasksCounter" value="219" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
