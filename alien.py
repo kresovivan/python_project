@@ -11,3 +11,8 @@ alien_1["color"] = "green"
 alien_1["points"] = 5
 print(alien_1)
 
+alien_0 = {"color": "green"}
+print (f"The alien is {alien_0["color"]}.")
+
+alien_0["color"] = "yellow"
+print (f"The alien is now {alien_0["color"]}.")
