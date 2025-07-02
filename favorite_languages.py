@@ -7,3 +7,5 @@ favorite_languages = {
 
 language = favorite_languages["sarah"].title()
 print(f"Sarah favorite language {language}.")
+
+
