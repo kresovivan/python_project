@@ -35,3 +35,5 @@ for alien in aliens[0:3]:
 
 for alien in aliens[0:10]:
     print(alien)
+
+
