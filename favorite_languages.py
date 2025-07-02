@@ -20,3 +20,6 @@ for name in favorite_languages.keys():
         language = favorite_languages[name].title()
         print(f"\t{name.title()}, I see you love {language}!")
 
+for name in sorted(favorite_languages.keys()):
+    print(f"{name.title()}, thank you for taking the poll")
+
