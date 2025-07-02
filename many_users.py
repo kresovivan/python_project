@@ -6,8 +6,8 @@ users = {
     },
     "mcurie": {
         "first":"marie",
-         "last": "curie",
-         "location" : "paris",
+        "last": "curie",
+        "location" : "paris",
     },
 }
 
