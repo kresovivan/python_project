@@ -27,7 +27,19 @@ for name in sorted(favorite_languages.keys()):
 for name in set(favorite_languages.values()):
     print(f"{name.title()}")
 
+favorite_languages = {
+    "jen":    ["python", "ruby"],
+    "sarah":  ["c", "c++", "pascal"],
+    "edward": ["ruby"],
+    "phil":   ["python"],
+    "raul":   ["python"],
+}
 
-
-
+for name, languages in favorite_languages.items():
+    if len(languages) > 1:
+        print(f"\n{name.title()}'s favorite languages are:")
+        for language in languages:
+            print(f"\t{language.title()}")
+    else:
+        print(f"\n{name.title()}'s favorite language is {languages[0].title()}")
 
