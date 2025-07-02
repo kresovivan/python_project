@@ -41,5 +41,5 @@ for name, languages in favorite_languages.items():
         for language in languages:
             print(f"\t{language.title()}")
     else:
-        print(f"\n{name.title()}'s favorite language is {languages[0].title()}")
+        print(f"\n{name.title()}'s favorite language is {language.title()}")
 
