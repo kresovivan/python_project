@@ -3,5 +3,7 @@ favorite_languages = {
     "sarah":  "c",
     "edward": "ruby",
     "phil":   "python",
-
 }
+
+language = favorite_languages["sarah"].title()
+print(f"Sarah favorite language {language}.")
