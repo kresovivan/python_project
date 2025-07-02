@@ -11,4 +11,3 @@ for name, language in favorite_languages.items():
 for name in favorite_languages.keys():
     print(name.title())
 
-
