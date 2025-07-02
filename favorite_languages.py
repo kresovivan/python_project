@@ -24,5 +24,8 @@ for name in favorite_languages.keys():
 for name in sorted(favorite_languages.keys()):
     print(f"{name.title()}, thank you for taking the poll")
 
+for name in set(favorite_languages.values()):
+    print(f"{name.title()}")
+
 
 
