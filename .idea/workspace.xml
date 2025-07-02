@@ -90,6 +90,7 @@
     "Python.full_name.executor": "Run",
     "Python.grade1.executor": "Run",
     "Python.gradle1.executor": "Run",
+    "Python.greeter.executor": "Run",
     "Python.guess.executor": "Run",
     "Python.guess7.executor": "Run",
     "Python.hello1.executor": "Run",
@@ -186,22 +187,6 @@
       <workItem from="1750621379104" duration="30000" />
       <workItem from="1750621929036" duration="62000" />
       <workItem from="1750621996614" duration="32000" />
-    </task>
-    <task id="LOCAL-00219" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1751369977164</created>
-      <option name="number" value="00219" />
-      <option name="presentableId" value="LOCAL-00219" />
-      <option name="project" value="LOCAL" />
-      <updated>1751369977164</updated>
-    </task>
-    <task id="LOCAL-00220" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1751371484345</created>
-      <option name="number" value="00220" />
-      <option name="presentableId" value="LOCAL-00220" />
-      <option name="project" value="LOCAL" />
-      <updated>1751371484345</updated>
     </task>
     <task id="LOCAL-00221" summary="test python1">
       <option name="closed" value="true" />
@@ -579,7 +564,23 @@
       <option name="project" value="LOCAL" />
       <updated>1751479671782</updated>
     </task>
-    <option name="localTasksCounter" value="268" />
+    <task id="LOCAL-00268" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1751479853342</created>
+      <option name="number" value="00268" />
+      <option name="presentableId" value="LOCAL-00268" />
+      <option name="project" value="LOCAL" />
+      <updated>1751479853342</updated>
+    </task>
+    <task id="LOCAL-00269" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1751480408772</created>
+      <option name="number" value="00269" />
+      <option name="presentableId" value="LOCAL-00269" />
+      <option name="project" value="LOCAL" />
+      <updated>1751480408772</updated>
+    </task>
+    <option name="localTasksCounter" value="270" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
