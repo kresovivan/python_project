@@ -20,3 +20,4 @@ print (f"The alien is now {alien_0["color"]}.")
 
 del alien_0["points"]
 print(alien_0)
+
