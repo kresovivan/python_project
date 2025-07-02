@@ -1,5 +1,3 @@
-import hello5
-
 favorite_languages = {
     "jen":    "python",
     "sarah":  "c",
