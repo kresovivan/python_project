@@ -9,4 +9,12 @@ while polling_active:
     response = input("Which mountain would you like to climb someday? ")
     #Ответ сохраняется в словаре
     responses[name] = response
-    print(responses)
+
+    #проверка продолжения опроса
+    repeat = input("Would you like to let another person respond? (yes/no)")
+    if repeat == 'no':
+        polling_active = False
+    #Опрос завершен, вывести результаты
+    print("\n ---Poll results---")
+    for name, response in responses.items():
+        print(f"{name} would like to climb {response}")
