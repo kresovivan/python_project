@@ -8,4 +8,4 @@ describe_pet('hamster', 'harry')
 describe_pet('dog', 'sharik')
 
 
-describe_pet(pet_name='kisunchik')
+describe_pet('kisunchik')
