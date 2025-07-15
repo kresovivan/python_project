@@ -2,7 +2,7 @@
 unprinted_designs = ["phone case", "robot pendant", "dodecahedron"]
 completed_models = []
 
-def print_models(unprinted_designs, completed_models)
+def print_models(unprinted_designs, completed_models):
 
 #Цикл последовательно печатает каждую модель до конца списка.
 #После печати каждая модель перемещается в список completed_models.
