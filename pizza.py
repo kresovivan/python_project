@@ -1,12 +1,7 @@
 #Сохранение инфолрмации о заказнной пицце
-pizza = {
-    "crust": "thick",
-    "toppings":["mushrooms", "extra cheese", "super cheese"],
-}
+def make_pizza(*toppings):
+    """Вывод заказанных топпингов"""
+    print(toppings)
 
-#Описание заказа
-print(f"You ordered a {pizza["crust"]} - crust pizza with the following \
-toppings:")
+make_pizza("geen peppers", 'extrf cheese')
 
-for topping in pizza["toppings"]:
-    print("\t" + topping)
