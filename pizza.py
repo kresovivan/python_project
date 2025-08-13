@@ -1,9 +1,6 @@
 #Сохранение инфолрмации о заказнной пицце
-def make_pizza(*toppings):
+def make_pizza(size,*toppings):
     """Выводит описание пиццы"""
-    print("\nMaking a pizza with the following toppings:")
+    print(f"\nMaking a {size}-inch pizza with the following toppings:")
     for topping in toppings:
         print(f" - {topping}")
-
-make_pizza("green peppers", 'extrа cheese')
-
