@@ -3,5 +3,8 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.12 (PythonProject)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12 virtualenv at C:\Users\kreso\PycharmProjects\PythonProject\.venv" project-jdk-type="Python SDK" />
+  <component name="ExtraIDETweaksSettingsProject">
+    <option name="enableOpenEditorsShowRecentFiles" value="true" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.14 (PythonProject)" project-jdk-type="Python SDK" />
 </project>
