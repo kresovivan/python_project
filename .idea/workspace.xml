@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2e91dd10-759b-4f17-a692-d2e493edac44" name="Changes" comment="test python1">
-      <change afterPath="$PROJECT_DIR$/dictionaries1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dictionaries2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/duplacate.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/programming_dictionary.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dictionaries1.py" beforeDir="false" afterPath="$PROJECT_DIR$/dictionaries1.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,123 +63,128 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.Account.executor&quot;: &quot;Run&quot;,
-    &quot;Python.DimmerSwitch.executor&quot;: &quot;Run&quot;,
-    &quot;Python.HigherOrLowerProcedural.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Main_Bank_Version5.executor&quot;: &quot;Run&quot;,
-    &quot;Python.My_Bank_Version1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.My_Bank_Version2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.My_Bank_Version3.executor&quot;: &quot;Run&quot;,
-    &quot;Python.My_Bank_Version4.executor&quot;: &quot;Run&quot;,
-    &quot;Python.My_Bank_Version5_Separate_Bank_Class.executor&quot;: &quot;Run&quot;,
-    &quot;Python.alien.executor&quot;: &quot;Run&quot;,
-    &quot;Python.alien_no_points.executor&quot;: &quot;Run&quot;,
-    &quot;Python.amusement_park.executor&quot;: &quot;Run&quot;,
-    &quot;Python.apostrophe.executor&quot;: &quot;Run&quot;,
-    &quot;Python.banned_users.executor&quot;: &quot;Run&quot;,
-    &quot;Python.battary.executor&quot;: &quot;Run&quot;,
-    &quot;Python.battleship.executor&quot;: &quot;Run&quot;,
-    &quot;Python.bicycles.executor&quot;: &quot;Run&quot;,
-    &quot;Python.break.executor&quot;: &quot;Run&quot;,
-    &quot;Python.build_profile.executor&quot;: &quot;Run&quot;,
-    &quot;Python.cars.executor&quot;: &quot;Run&quot;,
-    &quot;Python.catweight.executor&quot;: &quot;Run&quot;,
-    &quot;Python.catweight2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.cities.executor&quot;: &quot;Run&quot;,
-    &quot;Python.confirmed_user.executor&quot;: &quot;Run&quot;,
-    &quot;Python.counting.executor&quot;: &quot;Run&quot;,
-    &quot;Python.dice1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.dice2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.drom.executor&quot;: &quot;Run&quot;,
-    &quot;Python.even_numbers.executor&quot;: &quot;Run&quot;,
-    &quot;Python.even_or_odd.executor&quot;: &quot;Run&quot;,
-    &quot;Python.favorite_languages.executor&quot;: &quot;Run&quot;,
-    &quot;Python.formatted_name.executor&quot;: &quot;Run&quot;,
-    &quot;Python.full_name.executor&quot;: &quot;Run&quot;,
-    &quot;Python.grade1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.gradle1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.greet_users.executor&quot;: &quot;Run&quot;,
-    &quot;Python.greeter.executor&quot;: &quot;Run&quot;,
-    &quot;Python.guess.executor&quot;: &quot;Run&quot;,
-    &quot;Python.guess7.executor&quot;: &quot;Run&quot;,
-    &quot;Python.hello1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.hello2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.hello3.executor&quot;: &quot;Run&quot;,
-    &quot;Python.hello4.executor&quot;: &quot;Run&quot;,
-    &quot;Python.hello5.executor&quot;: &quot;Run&quot;,
-    &quot;Python.hello_world.executor&quot;: &quot;Run&quot;,
-    &quot;Python.infinite cycle.executor&quot;: &quot;Run&quot;,
-    &quot;Python.lesson1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.lesson2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.line_break.executor&quot;: &quot;Run&quot;,
-    &quot;Python.lotto1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.lotto4.executor&quot;: &quot;Run&quot;,
-    &quot;Python.magicians.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.make_pizzas.executor&quot;: &quot;Run&quot;,
-    &quot;Python.many_users.executor&quot;: &quot;Run&quot;,
-    &quot;Python.mathe3.executor&quot;: &quot;Run&quot;,
-    &quot;Python.mathe4.executor&quot;: &quot;Run&quot;,
-    &quot;Python.million1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.monster.executor&quot;: &quot;Run&quot;,
-    &quot;Python.monster1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.monster2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.monster4.executor&quot;: &quot;Run&quot;,
-    &quot;Python.monster5.executor&quot;: &quot;Run&quot;,
-    &quot;Python.monster6.executor&quot;: &quot;Run&quot;,
-    &quot;Python.monster8.executor&quot;: &quot;Run&quot;,
-    &quot;Python.monsterlab.executor&quot;: &quot;Run&quot;,
-    &quot;Python.motorcycles.executor&quot;: &quot;Run&quot;,
-    &quot;Python.mountain_poll.executor&quot;: &quot;Run&quot;,
-    &quot;Python.my_module1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.name.executor&quot;: &quot;Run&quot;,
-    &quot;Python.palindrom.executor&quot;: &quot;Run&quot;,
-    &quot;Python.parrot.executor&quot;: &quot;Run&quot;,
-    &quot;Python.person.executor&quot;: &quot;Run&quot;,
-    &quot;Python.pets.executor&quot;: &quot;Run&quot;,
-    &quot;Python.pizza.executor&quot;: &quot;Run&quot;,
-    &quot;Python.players.executor&quot;: &quot;Run&quot;,
-    &quot;Python.printing_models.executor&quot;: &quot;Run&quot;,
-    &quot;Python.python_words.executor&quot;: &quot;Run&quot;,
-    &quot;Python.rollercoaster.executor&quot;: &quot;Run&quot;,
-    &quot;Python.second.executor&quot;: &quot;Run&quot;,
-    &quot;Python.squares.executor&quot;: &quot;Run&quot;,
-    &quot;Python.swap1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.toppings.executor&quot;: &quot;Run&quot;,
-    &quot;Python.trim_whitespace.executor&quot;: &quot;Run&quot;,
-    &quot;Python.tv.executor&quot;: &quot;Run&quot;,
-    &quot;Python.voting.executor&quot;: &quot;Run&quot;,
-    &quot;Python.window1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.window2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.window4.executor&quot;: &quot;Run&quot;,
-    &quot;Python.window5.executor&quot;: &quot;Run&quot;,
-    &quot;Python.window7.executor&quot;: &quot;Run&quot;,
-    &quot;Python.window8.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/kreso/PycharmProjects/PythonProject&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.Account.executor": "Run",
+    "Python.DimmerSwitch.executor": "Run",
+    "Python.HigherOrLowerProcedural.executor": "Run",
+    "Python.Main_Bank_Version5.executor": "Run",
+    "Python.My_Bank_Version1.executor": "Run",
+    "Python.My_Bank_Version2.executor": "Run",
+    "Python.My_Bank_Version3.executor": "Run",
+    "Python.My_Bank_Version4.executor": "Run",
+    "Python.My_Bank_Version5_Separate_Bank_Class.executor": "Run",
+    "Python.alien.executor": "Run",
+    "Python.alien_no_points.executor": "Run",
+    "Python.amusement_park.executor": "Run",
+    "Python.apostrophe.executor": "Run",
+    "Python.banned_users.executor": "Run",
+    "Python.battary.executor": "Run",
+    "Python.battleship.executor": "Run",
+    "Python.bicycles.executor": "Run",
+    "Python.break.executor": "Run",
+    "Python.build_profile.executor": "Run",
+    "Python.cars.executor": "Run",
+    "Python.catweight.executor": "Run",
+    "Python.catweight2.executor": "Run",
+    "Python.cities.executor": "Run",
+    "Python.confirmed_user.executor": "Run",
+    "Python.counting.executor": "Run",
+    "Python.dice1.executor": "Run",
+    "Python.dice2.executor": "Run",
+    "Python.dictionaries1.executor": "Run",
+    "Python.dictionaries2.executor": "Run",
+    "Python.drom.executor": "Run",
+    "Python.duplacate.executor": "Run",
+    "Python.even_numbers.executor": "Run",
+    "Python.even_or_odd.executor": "Run",
+    "Python.favorite_languages.executor": "Run",
+    "Python.formatted_name.executor": "Run",
+    "Python.full_name.executor": "Run",
+    "Python.grade1.executor": "Run",
+    "Python.gradle1.executor": "Run",
+    "Python.greet_users.executor": "Run",
+    "Python.greeter.executor": "Run",
+    "Python.guess.executor": "Run",
+    "Python.guess7.executor": "Run",
+    "Python.hello1.executor": "Run",
+    "Python.hello2.executor": "Run",
+    "Python.hello3.executor": "Run",
+    "Python.hello4.executor": "Run",
+    "Python.hello5.executor": "Run",
+    "Python.hello_world.executor": "Run",
+    "Python.infinite cycle.executor": "Run",
+    "Python.lesson1.executor": "Run",
+    "Python.lesson2.executor": "Run",
+    "Python.line_break.executor": "Run",
+    "Python.lotto1.executor": "Run",
+    "Python.lotto4.executor": "Run",
+    "Python.magicians.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.make_pizzas.executor": "Run",
+    "Python.many_users.executor": "Run",
+    "Python.mathe3.executor": "Run",
+    "Python.mathe4.executor": "Run",
+    "Python.million1.executor": "Run",
+    "Python.monster.executor": "Run",
+    "Python.monster1.executor": "Run",
+    "Python.monster2.executor": "Run",
+    "Python.monster4.executor": "Run",
+    "Python.monster5.executor": "Run",
+    "Python.monster6.executor": "Run",
+    "Python.monster8.executor": "Run",
+    "Python.monsterlab.executor": "Run",
+    "Python.motorcycles.executor": "Run",
+    "Python.mountain_poll.executor": "Run",
+    "Python.my_module1.executor": "Run",
+    "Python.name.executor": "Run",
+    "Python.palindrom.executor": "Run",
+    "Python.parrot.executor": "Run",
+    "Python.person.executor": "Run",
+    "Python.pets.executor": "Run",
+    "Python.pizza.executor": "Run",
+    "Python.players.executor": "Run",
+    "Python.printing_models.executor": "Run",
+    "Python.programming_dictionary.executor": "Run",
+    "Python.python_words.executor": "Run",
+    "Python.rollercoaster.executor": "Run",
+    "Python.second.executor": "Run",
+    "Python.squares.executor": "Run",
+    "Python.swap1.executor": "Run",
+    "Python.toppings.executor": "Run",
+    "Python.trim_whitespace.executor": "Run",
+    "Python.tv.executor": "Run",
+    "Python.voting.executor": "Run",
+    "Python.window1.executor": "Run",
+    "Python.window2.executor": "Run",
+    "Python.window4.executor": "Run",
+    "Python.window5.executor": "Run",
+    "Python.window7.executor": "Run",
+    "Python.window8.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "git-widget-placeholder": "master",
+    "go.import.settings.migrated": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Kresov Ivan/PycharmProjects/PythonProject",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Kresov Ivan\PycharmProjects\PythonProject" />
       <recent name="C:\Users\kreso\PycharmProjects\PythonProject" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -237,15 +245,7 @@
       <workItem from="1760213430210" duration="928000" />
       <workItem from="1762883123787" duration="379000" />
       <workItem from="1762884514034" duration="752000" />
-      <workItem from="1764008340687" duration="82000" />
-    </task>
-    <task id="LOCAL-00285" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1751624107393</created>
-      <option name="number" value="00285" />
-      <option name="presentableId" value="LOCAL-00285" />
-      <option name="project" value="LOCAL" />
-      <updated>1751624107393</updated>
+      <workItem from="1764008340687" duration="10065000" />
     </task>
     <task id="LOCAL-00286" summary="test python1">
       <option name="closed" value="true" />
@@ -631,7 +631,15 @@
       <option name="project" value="LOCAL" />
       <updated>1757594336543</updated>
     </task>
-    <option name="localTasksCounter" value="334" />
+    <task id="LOCAL-00334" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1764008469820</created>
+      <option name="number" value="00334" />
+      <option name="presentableId" value="LOCAL-00334" />
+      <option name="project" value="LOCAL" />
+      <updated>1764008469820</updated>
+    </task>
+    <option name="localTasksCounter" value="335" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -656,5 +664,12 @@
   <component name="VgoProject">
     <integration-enabled>false</integration-enabled>
     <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Account_py$monster5.coverage" NAME="monster5 Coverage Results" MODIFIED="1764008473389" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Account_py$duplacate.coverage" NAME="duplacate Coverage Results" MODIFIED="1764014136754" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Account_py$programming_dictionary.coverage" NAME="programming_dictionary Coverage Results" MODIFIED="1764015839475" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Account_py$dictionaries2.coverage" NAME="dictionaries2 Coverage Results" MODIFIED="1764010948312" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Account_py$dictionaries1.coverage" NAME="dictionaries1 Coverage Results" MODIFIED="1764013678459" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
