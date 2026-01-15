@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2e91dd10-759b-4f17-a692-d2e493edac44" name="Changes" comment="test python1">
-      <change afterPath="$PROJECT_DIR$/dictionaries2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/duplacate.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/programming_dictionary.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Introduction_to_python_chernyshev.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dictionaries1.py" beforeDir="false" afterPath="$PROJECT_DIR$/dictionaries1.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +65,7 @@
     "Python.Account.executor": "Run",
     "Python.DimmerSwitch.executor": "Run",
     "Python.HigherOrLowerProcedural.executor": "Run",
+    "Python.Introduction_to_python_chernyshev.executor": "Run",
     "Python.Main_Bank_Version5.executor": "Run",
     "Python.My_Bank_Version1.executor": "Run",
     "Python.My_Bank_Version2.executor": "Run",
@@ -245,15 +243,8 @@
       <workItem from="1760213430210" duration="928000" />
       <workItem from="1762883123787" duration="379000" />
       <workItem from="1762884514034" duration="752000" />
-      <workItem from="1764008340687" duration="10065000" />
-    </task>
-    <task id="LOCAL-00286" summary="test python1">
-      <option name="closed" value="true" />
-      <created>1751625789757</created>
-      <option name="number" value="00286" />
-      <option name="presentableId" value="LOCAL-00286" />
-      <option name="project" value="LOCAL" />
-      <updated>1751625789757</updated>
+      <workItem from="1764008340687" duration="10873000" />
+      <workItem from="1768498689660" duration="6998000" />
     </task>
     <task id="LOCAL-00287" summary="test python1">
       <option name="closed" value="true" />
@@ -639,7 +630,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764008469820</updated>
     </task>
-    <option name="localTasksCounter" value="335" />
+    <task id="LOCAL-00335" summary="test python1">
+      <option name="closed" value="true" />
+      <created>1764018894010</created>
+      <option name="number" value="00335" />
+      <option name="presentableId" value="LOCAL-00335" />
+      <option name="project" value="LOCAL" />
+      <updated>1764018894010</updated>
+    </task>
+    <option name="localTasksCounter" value="336" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -666,8 +665,9 @@
     <settings-migrated>true</settings-migrated>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Account_py$monster5.coverage" NAME="monster5 Coverage Results" MODIFIED="1764008473389" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Account_py$Introduction_to_python_chernyshev.coverage" NAME="Introduction_to_python_chernyshev Coverage Results" MODIFIED="1768506279382" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Account_py$duplacate.coverage" NAME="duplacate Coverage Results" MODIFIED="1764014136754" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Account_py$monster5.coverage" NAME="monster5 Coverage Results" MODIFIED="1768500206052" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Account_py$programming_dictionary.coverage" NAME="programming_dictionary Coverage Results" MODIFIED="1764015839475" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Account_py$dictionaries2.coverage" NAME="dictionaries2 Coverage Results" MODIFIED="1764010948312" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Account_py$dictionaries1.coverage" NAME="dictionaries1 Coverage Results" MODIFIED="1764013678459" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
