@@ -208,9 +208,57 @@ print(line.replace('tt','RTY').split(',')) #['ffff,RTYt,nn,d\n']
 К основным характеристикам списков можно отнести то, что они:
 - являются упорядоченными коллекциями произвольных объектов;
 - поддерживают доступ по смещению
-- имеют переменную длинну
+- имеют переменную длину
 - разнородны и допускают произвольно глубокое вложение
 - относятся к категории "изменяемая последовательность"
 - представляют собой массивы ссылок на объекты 
+"""
+
+my_list = []
+my_list = list()
+
+#Если список необходимо инициализировать переменными в момент его объявления, используют следующие конструкции
+my_list1 = ['one', 'two']
+my_list2 = list(['one', 'two'])
+
+#Добавление в список осуществляется через вызов у него метода .append(val), где val - добавляемое значение в конец списка
+print(my_list1) # ['one', 'two']
+my_list1.append('three') # ['one', 'two', 'three']
+print(my_list1)
+
+"""Важно чтобы в списке обязательно содержались или в него добавлялись данные одного типа"""
+
+my_list1.append(4)
+my_list1.append(5)
+print(my_list1) #['one', 'two', 'three', 4, 5]
+
+my_new_list: list[int] = [4,5]
+my_new_list.append('add')
+print(my_new_list)
+
+"""Ошибка будет возникать не на этапе компиляции а на этапе выполнения программы
+Это связано с тем, что типы в Python определяются автоматически во время выполнения, а не
+при объявлении их в коде
+Получается, что разработчик никогда не определяет переменные заблаговременно, все сводится
+к переменным, объектам, и связям между ними"""
+
+"""
+for it in my_new_list:
+    it = it - 1
+    print(it) #TypeError: unsupported operand type(s) for -: 'str' and 'int' 
+"""
+
+"""Чтобы проверить код на соответствие типов объектов необходимо установить
+pip install mypy
+
+(.venv) PS C:Users\Kresov Ivan\PycharmProjects\PythonProject> mypy introduction_to_python_chernyshev.py
+introduction_to_python_chernyshev.py:88: error: Incompatible types in assignment (expression has type "list[int]", variable has type "int")  [assignment]
+introduction_to_python_chernyshev.py:99: error: Unsupported target for indexed assignment ("int")  [index]
+introduction_to_python_chernyshev.py:100: error: Unsupported target for indexed assignment ("int")  [index]
+introduction_to_python_chernyshev.py:231: error: Argument 1 to "append" of "list" has incompatible type "int"; expected "str"  [arg-type]
+introduction_to_python_chernyshev.py:232: error: Argument 1 to "append" of "list" has incompatible type "int"; expected "str"  [arg-type]
+introduction_to_python_chernyshev.py:236: error: Argument 1 to "append" of "list" has incompatible type "str"; expected "int"  [arg-type]
+Found 6 errors in 1 file (checked 1 source file)
+(.venv) PS C:Users\Kresov Ivan\PycharmProjects\PythonProject>
 
 """
