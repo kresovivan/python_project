@@ -55,6 +55,7 @@
 Разница между ними заключается в том, что в случае объявления имени переменной неизменяемого типа
 ей задается идентификатор, который невозможно изменить.
 """
+from os import remove
 
 n = 10
 b = n
@@ -251,7 +252,7 @@ for it in my_new_list:
 """Чтобы проверить код на соответствие типов объектов необходимо установить
 pip install mypy
 
-(.venv) PS C:Users\Kresov Ivan\PycharmProjects\PythonProject> mypy introduction_to_python_chernyshev.py
+(.venv) PS C:UsersKresov IvanPycharmProjectsPythonProject> mypy introduction_to_python_chernyshev.py
 introduction_to_python_chernyshev.py:88: error: Incompatible types in assignment (expression has type "list[int]", variable has type "int")  [assignment]
 introduction_to_python_chernyshev.py:99: error: Unsupported target for indexed assignment ("int")  [index]
 introduction_to_python_chernyshev.py:100: error: Unsupported target for indexed assignment ("int")  [index]
@@ -259,6 +260,59 @@ introduction_to_python_chernyshev.py:231: error: Argument 1 to "append" of "list
 introduction_to_python_chernyshev.py:232: error: Argument 1 to "append" of "list" has incompatible type "int"; expected "str"  [arg-type]
 introduction_to_python_chernyshev.py:236: error: Argument 1 to "append" of "list" has incompatible type "str"; expected "int"  [arg-type]
 Found 6 errors in 1 file (checked 1 source file)
-(.venv) PS C:Users\Kresov Ivan\PycharmProjects\PythonProject>
+(.venv) PS C:UsersKresov IvanPycharmProjectsPythonProject>
 
 """
+
+# Добавление объекта в список на указанную позицию, где все элементы индекса сдвигаются вправо
+names = ["Max","Tom","Alex"]
+print(names)
+names.insert(1,"John")
+print(names)
+
+# Метод extend() добавляет все элементы другого списка в конец текущего списка
+one = [1,2]
+two = [3,4]
+one.extend(two)
+print(one)
+
+del names[0]
+print(names)
+
+names.pop(0)
+print(names)
+
+names.remove('Alex')
+print(names)
+
+
+#Сортировка элементов списка осуществляется следующим образом
+names = ["Max","Tom","Alex"]
+names.sort()
+print(names) #Необходимо помнить что при сортировке списка с разнотипными элементами может произойти ошибка
+
+new_array = [2,'abc','ttt','10', 3.6]
+#new_array.sort()
+#print(new_array) #TypeError: '<' not supported between instances of 'str' and 'int'
+new_array.sort(key=str) # передаем на вход метода sort параметр key
+print(new_array)
+
+#Необходимо посчитать, сколько раз по значению повторяется элемент в списке
+my_list = [1,2,2,2,2,2,2,3,4,4,4,4,4]
+my_list1 = ['Ivan','Ivan','Ivan', 'Petr','Ivan', 'Petr','Ivan','Ivan']
+print(my_list.count(2))
+print(my_list.count(4))
+print(my_list1.count('Ivan'))
+
+#Во избежание изменение изменений исходного списка необходимо использовать метод copy
+my_array = [2,3,5,7,8,10]
+my_new_array = my_array.copy()
+my_new_array.append(12)
+print(my_array)     #[2, 3, 5, 7, 8, 10]
+print(my_new_array) #[2, 3, 5, 7, 8, 10, 12]
+
+#Проверить содержится ли в (последовательности, списке, строке и т.д.) объект с определенным значением
+my_array = [2,3,5,7,8,10]
+print(2 in my_array) #True
+print(0 in my_array) #False
+
