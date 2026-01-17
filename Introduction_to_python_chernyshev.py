@@ -768,3 +768,36 @@ match value2 := value + 2:
 print(f'value = {value}')
 print(f'value = {value2}')
 
+""" Если по нескольким значениям необходимо выполнить один и тот же код, то можно прибегнуть к следующему формату использования 
+рассматриваемой условной конструкции """
+
+name = 'Stanislav'
+match name:
+    case 'Stanislav':
+        print('Admin')
+    case 'Maxim' | 'Alex' | 'Bill':
+        print('Employee')
+    case _:
+        print('Oo')
+
+"""Так как  match  осуществляет сопоставление шаблонов, то его можно использовать с кортежами и словарями"""
+
+#С кортежем
+
+animal = ('Alex', 'cat', 10)
+match animal:
+    case ('Tom', 'dog', 14):
+        print('Dog')
+    case ('Alex', 'cat', 10): # Cat
+        print('Cat')
+
+#Если необходимо, чтобы какой-то элемент кортежа соответствовал некоторому набору значений - необходимо перечислить
+# их через вертикальную черту
+
+animal = ('Alex', 'dog', 10)
+match animal:
+    case ('Tom' | 'Alex', 'dog', 14 | 10):
+        print('Dog') #Dog
+    case ('Alex', 'cat', 10):
+        print('Cat')
+
