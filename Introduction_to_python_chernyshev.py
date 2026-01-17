@@ -1219,6 +1219,7 @@ my_dict[key]  # Получает значение для текущего клю
 # key = 'b' → my_dict['b'] = 2.3
 # и т.д.
 """
+
 my_dict = {'a': 1.7, 'b': 2.3, 'c': 3.3, 'd': 4.6, 'e': 5.8, 'f': 10.1}
 for key in my_dict:
     print(key, '=>', my_dict[key])
