@@ -896,3 +896,44 @@ match animals:
 
 """При использовании оператора match со словарями имеется возможность проверять вхождение в него определенных ключей
 с их значениями или вариантами значений"""
+
+animal = {'animal' : 'dog', 'name' : 'Tom', 'age': 3}
+match animal:
+    case {'animal': 'cat', 'name' : 'Tommy', 'age': 3}:
+        print('It is cat', animal)
+    case{'animal': 'dog', 'name': 'Tom', 'age': 3}: #It is dog {'animal': 'dog', 'name': 'Tom', 'age': 3}
+        print('It is dog', animal)
+    case {}:
+        print('dict have not necessary keys')
+    case _:
+        print('It is not dict')
+
+
+animal['name'] = 'Alex'
+match animal:
+    case {'animal': 'cat', 'name' : 'Tommy', 'age': 3}:
+        print('It is cat', animal)
+    case{'animal': 'bird', 'name': 'Alex', 'age': 3}:
+        print('It is bird', animal)
+    case {}:
+        print('dict have not necessary keys')
+    case _:
+        print('It is not dict')
+
+
+animal = {
+    'animal': 'bird',
+    'name': 'Alex',
+    'age': 3
+}
+
+match animal:
+    case {'animal': 'cat', 'name' : 'Tommy', 'age': 3}:
+        print('Не сработает')
+    case {'animal': 'bird', 'name': 'Alex', 'age': 3}:
+        print('It is bird', animal)  # ✓ Выполнится!
+    case {}:
+        print('Не сработает')
+    case _:
+        print('Не сработает')
+
