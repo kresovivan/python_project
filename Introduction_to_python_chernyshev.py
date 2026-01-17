@@ -894,3 +894,5 @@ match animals:
     case ['dog', second_animal, *_]:
         print(f'First - dog, second - {second_animal}') #First - dog, second - cat
 
+"""При использовании оператора match со словарями имеется возможность проверять вхождение в него определенных ключей
+с их значениями или вариантами значений"""
