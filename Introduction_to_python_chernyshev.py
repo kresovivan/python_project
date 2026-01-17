@@ -834,3 +834,5 @@ match animal:
         print('Dog')
     case('Tommy', *att):
         print(f'Tommy is {att[0]}, age = {att[1]}')  # Tommy is cat, age = 10
+
+"""Аналогично дело обстоит и с массивом"""
