@@ -835,4 +835,21 @@ match animal:
     case('Tommy', *att):
         print(f'Tommy is {att[0]}, age = {att[1]}')  # Tommy is cat, age = 10
 
-"""Аналогично дело обстоит и с массивом"""
+"""Аналогично дело обстоит и с массивами"""
+
+animals = ['dog', 'cat']
+match animals:
+    case [_]: #Массив из 1-го любого элемента
+        print(animals)
+    case [_,_]: #Массив из 2-ух любых элементов
+        print(f'len = {len(animals)}, animals: {animals}') #len = 2, animals: ['dog', 'cat']
+    case [_,_,_]: #Массив из 3-ех любых элементов ['dog', 'cat', 'mouse']
+        print(animals)
+
+match animals:
+    case ['dog' | 'bird', 'cat']: #['dog', 'cat']
+        print(animals)
+    case ['bird', 'cat']:
+        print(animals)
+    case ['bird', 'cat' | 'dog']:
+        print(animals)
