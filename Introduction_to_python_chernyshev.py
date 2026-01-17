@@ -869,3 +869,28 @@ match animals:
         print('dog', any)
     case ['bird', 'cat' | 'dog']:
         print(animals)
+"""
+case ['dog', second_animal, *_]:
+# Разбираем паттерн:
+# 1. animals[0] == 'dog' ✓
+# 2. second_animal = animals[1] = 'cat' (любое значение)
+# 3. *_ = animals[2:] = ['bird', 'mouse'] (все остальное, нам не важно)
+
+case ['dog', second_animal, *_]:
+#        │          │         │
+#        │          │         └─ *_: игнорировать все остальные элементы
+#        │          │
+#        │          └─ second_animal: сохранить ВТОРОЙ элемент в эту переменную
+#        │
+#        └─ 'dog': первый элемент должен быть равен 'dog'
+
+"""
+animals = ['dog', 'cat', 'bird', 'mouse']
+match animals:
+    case['dog','mouse']:
+        print(animals)
+    case['bird', 'cat' | 'dog']:
+        print(animals)
+    case ['dog', second_animal, *_]:
+        print(f'First - dog, second - {second_animal}') #First - dog, second - cat
+
