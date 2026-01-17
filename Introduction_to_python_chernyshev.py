@@ -933,7 +933,34 @@ match animal:
     case {'animal': 'bird', 'name': 'Alex', 'age': 3}:
         print('It is bird', animal)  # ✓ Выполнится!
     case {}:
-        print('Не сработает')
+        print('dict have not necessary keys')
     case _:
-        print('Не сработает')
+        print('It is not dict')
 
+animal = {'name': 'Alex','animal': 'bird', 'age': 3}  # Только один ключ!
+match animal:
+    case {'animal': 'cat', 'name': 'Tommy', 'age': 3}:
+        print('It is cat')
+
+    # Используем ** для игнорирования отсутствующих ключей
+    case {'name': 'Alex', **rest}:
+        print(f'Alex found! Rest keys: {rest}')  # Выполнится!
+
+    case {}:
+        print('Empty dict')
+
+    case _:
+        print('Not a dict')
+
+"""Также Python поддерживает возможность выбора между различными вариантами словарей"""
+
+man = {'name':'Alex'}
+match man:
+    case{'animal': 'cat'}:
+        print('It is cat')
+    case{'animal': 'dog'} | {'name': 'Alex'}:
+        print('It is dog or man')
+    case {}:
+        print('dict have not necessary keys')
+    case _:
+        print('It is not a dict')
