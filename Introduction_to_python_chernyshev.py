@@ -980,3 +980,25 @@ match animal:
         print('dict have not necessary keys')
     case _:
         print('It is not a dict')
+
+"""В тех случаях, когда важен только один ключ словаря, а все остальные несут либо
+вспомогательный характер для последующей обработки данных, либо их можно отбросить за
+ненадобностью, используйте символы **
+
+It is dog
+name is Tommy
+age  is 3
+"""
+
+animal = {'animal':'dog', 'name': 'Tommy', 'age': 3}
+match animal:
+    case{'animal': animal_type, **kwarg}:
+        print(f'It is {animal_type}')
+        for key in kwarg:
+            print(f'{key} is {kwarg[key]}')
+    case {}:
+        print('dict have not necessary keys')
+    case _:
+        print('It is not a dict')
+
+
