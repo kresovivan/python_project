@@ -964,3 +964,19 @@ match man:
         print('dict have not necessary keys')
     case _:
         print('It is not a dict')
+
+"""Если необходимо получить значение по ключу и оно не представляет важности, то можно использовать
+следующий подход"""
+
+
+animal = {'animal':'dog', 'name': 'Tommy'}
+#animal = {'animal':'bird', 'name': 'Gosha'}
+match animal:
+    case{'animal': animal_type, 'name': name}:
+        print(f'{name} is {animal_type}') #Tommy is dog
+    case{'animal': 'bird', 'name': _}: # имя не важно
+        print('It is bird', animal)
+    case {}:
+        print('dict have not necessary keys')
+    case _:
+        print('It is not a dict')
