@@ -1428,3 +1428,49 @@ my_list = [1,2,3,4,5]
 my_list = [it + 10 for it in my_list]
 print(my_list) #[11, 12, 13, 14, 15]
 
+
+my_list = [1,2,3,4,5]
+new_list = []
+for it in my_list:
+    new_list.append(it + 10)
+print(new_list)  #[11, 12, 13, 14, 15]
+
+"""Наиболее распространенный способ использовать условную логику при работе со списковыми
+включениями - добавить условное выражение в конец выражения:
+
+new_list = [expression for member in iterable (if conditional)]
+
+"""
+
+new_list = [x for x in range(10) if x % 2 == 0] #[0, 2, 4, 6, 8]
+print(new_list)
+
+new_list = [x for x in range(10) if x % 2 != 0] #[1, 3, 5, 7, 9]
+print(new_list)
+
+"""
+В случае когда необходимо использовать полноценный блок ветвления if else, используется
+следующий вид спискового включения:
+new_list = [expression (if conditional) for member in iterable]]
+"""
+
+new_list = [1.25, -9.45, 10.22, 3.78, -5.92, 1.16]
+new_list = [i if i > 0 else 0 for i in new_list] # [1.25, 0, 10.22, 3.78, 0, 1.16]
+print(new_list)
+
+"""Если необходимо использовать более сложную логику, то вместо выражения можно использовать функцию
+
+[test_func(i) for i in new_list]
+# Это генератор списка (list comprehension)
+# Для каждого элемента i в new_list:
+# 1. Вызываем test_func(i)
+# 2. Результат добавляем в новый список
+
+"""
+
+def test_func(value):
+    return value if value < 0 else 0
+
+new_list = [1.25, -9.45, 10.22, 3.78, -5.92, 1.16]
+new_list = [test_func(i) for i in new_list] # [0, -9.45, 0, 0, -5.92, 0]
+print(new_list)
