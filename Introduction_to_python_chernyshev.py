@@ -1298,7 +1298,15 @@ print("\n=== НАЧАЛО СКРИПТА ===")
 print(len(my_str)) #4
 print(list(range(len(my_str))))
 
+my_str = 'Test'
 for it in range(len(my_str)):
     print(my_str[it], end='\n')
+
+
+my_str = 'Test'
+i = 0
+while i < len(my_str):
+    print(my_str[i])
+    i += 1
 
 print("=== КОНЕЦ СКРИПТА ===")
