@@ -1367,7 +1367,6 @@ print(list(zip(one, two,three))) # [(1, 4, 7), (2, 5, 8), (3, 6, 9)]
 # Для a=1, b=4, c=7, (b-a)*c=21:
 '({} - {}) * {} = {}'.format(1, 4, 7, 21)
 # становится: '(1 - 4) * 7 = 21'
-
 """
 for a,b,c in zip(one, two, three):
     print('({} - {}) * {} = {}'.format(b,a,c, (b-a)*c))
