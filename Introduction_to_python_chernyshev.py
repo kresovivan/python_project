@@ -1474,3 +1474,12 @@ def test_func(value):
 new_list = [1.25, -9.45, 10.22, 3.78, -5.92, 1.16]
 new_list = [test_func(i) for i in new_list] # [0, -9.45, 0, 0, -5.92, 0]
 print(new_list)
+
+"""Включения можно использовать также для словарей и множеств"""
+
+my_list = [1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+my_set = {i for i in my_list if i % 2 == 0}
+print(my_set)
+
+my_dict = {i: i * i for i in range(15)} #{0: 0, 1: 1, 2: 4, 3: 9, 4: 16, 5: 25, 6: 36, 7: 49, 8: 64, 9: 81, 10: 100, 11: 121, 12: 144, 13: 169, 14: 196}
+print(my_dict)
