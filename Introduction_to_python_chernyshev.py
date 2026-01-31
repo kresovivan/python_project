@@ -2059,6 +2059,12 @@ print(test_return(4,2)) #(6, 8, 16, 2.0, 2)
 x, y, q, w, z = test_return(4,2) #(6, 8, 16, 2.0, 2)
 print(x, y, q, w, z) #6 8 16 2.0 2
 
+_, *my_list, _ = test_return(4,2)
+print(*my_list) # 8 16 2.0 --первое и последнее значение игнорируются
+
+у, *my_list, q = test_return(4,2)
+print(у, *my_list, q)
+
 
 
 
