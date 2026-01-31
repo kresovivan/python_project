@@ -1958,11 +1958,38 @@ def custom_function(a,b,c=2):
 custom_function(b=2, c=1, a=4) #7
 
 """3.Переменное количество позиционных аргументов (сначала сопоставляются единичные позиционные элементы,
-потом итерируемый список позиционных аргументов, 
-а далее аргументы сопоставляются по имени)
+потом итерируемый список позиционных аргументов, а далее аргументы сопоставляются по имени)
 """
 
+def custom_function(a,b,c, *args):
+    print(a + b + c + sum(*args))
 
+custom_function(1,1,1, [10,20,30]) # 63
 
+#custom_function(a = 1, b = 1, c = 1, [10,20,30]) # SyntaxError: positional argument follows keyword argument
+
+def custom_function(a,b,c, *args, d):
+    print(a + b + c + sum(*args) - d)
+
+custom_function(1, 1, 1, [10, 20, 30], d = 4) #59
+
+#custom_function(1, 1, 1, [10, 20, 30], 4)
+"""    custom_function(1, 1, 1, [10, 20, 30], 4)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: custom_function() missing 1 required keyword-only argument: 'd'
+"""
+
+"""3.Передача произвольного количества позиционных и ключевых элементов 
+"""
+
+def custom_function4(*args, **kwargs):
+    if args:
+        print(args)
+    if kwargs:
+        print(kwargs)
+
+custom_function4(10,20, key='Hi', Oo=100)
+
+#Имена args и kwargs не являются обязательными
 
 
