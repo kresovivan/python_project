@@ -2159,8 +2159,9 @@ def another():
 func()      # 10
 another()   
 print(x)    # 20 (глобальная изменилась)
-
 """
+
+
 
 
 
