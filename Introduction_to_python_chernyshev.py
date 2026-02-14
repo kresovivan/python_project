@@ -2450,3 +2450,14 @@ slow_function()  # slow_function выполнялась 2.0001 сек
 Рассмотрим как декоратор может менять поведение оборачиваемой в него функции. Для этого реализуем следующий декортатор:
 """
 
+def up_register(func):
+    def wrapper():
+        original_result = func()
+        modified_result = original_result.upper()
+        return modified_result
+    return wrapper
+
+@up_register
+def my_func():
+    return "It's work!!!"
+print(my_func()) # "IT'S WORK!!!"
