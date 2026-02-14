@@ -2471,3 +2471,18 @@ print(my_func()) # "IT'S WORK!!!"
 в том, чтобы подменить или обернуть входную функцию замыканием.
 """
 
+def h1_html(function):
+    def wrapper():
+        return '<h1>' + function() + '</h1>'
+    return wrapper
+
+def body(function):
+    def wrapper():
+        return '<body>' + function() + '</body>'
+    return wrapper
+
+@body
+@h1_html
+def my_func():
+    return "It's work!!!"
+print(my_func()) #<body><h1>It's work!!!</h1></body>
