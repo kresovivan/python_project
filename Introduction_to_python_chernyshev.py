@@ -2800,6 +2800,16 @@ def foo(my_list: list[int]) -> int:
     return sum(my_list)
 
 if __name__ == "__main__":
-    my_list = [1,2,4,5,6,7]
+    my_list = [1,2,4.6,5,6,7]
     result = foo(my_list)
-    print(result) #25
+    print(result)
+
+"""Находим ошибку несоответствия типов при помощи запуска утилиты mypy 
+Он позволяет проверить соответствие передаваемых типов на корректность.
+Ошибка несоответствия типов не приведет к падению приложения, но по факту,
+приложение начнет работать не так как мы задумывали, поскольку функция будет
+возвращать вещественный, а не целочисленный результат.
+"""
+    # mypy Introduction_to_python_chernyshev.py
+    # Argument 1 to "foo" has incompatible type "list[str]"; expected "list[int]"  [arg-type]
+
