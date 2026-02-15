@@ -2813,3 +2813,33 @@ if __name__ == "__main__":
     # mypy Introduction_to_python_chernyshev.py
     # Argument 1 to "foo" has incompatible type "list[str]"; expected "list[int]"  [arg-type]
 
+"""Если функция должна работать из смеси целочисленных и вещественных элементов,
+то необходимо воспользоваться объединением"""
+
+from typing import Union
+
+def foo(my_list: list[Union[int, float]]) -> Union[int, float]:
+    return sum(my_list)
+
+if __name__ == "__main__":
+    my_list = [1,2,4.6,5,6.1,10]
+    result = foo(my_list)
+    print(result)
+
+"""Иногда бывают моменты, что переменная не содержит значений или функция может
+возвращать значение None, так как не удалось выполнить расчет или произошла ошибка
+в ходе его выполнения
+Для работы с такими ситуациями используйте Optional из пакета typing"""
+
+from typing import Optional
+def foo(a:int, b: float, c:Optional[int | float]) -> Optional[float]:
+    if c is not None:
+        return a+b+c
+    else:
+        return None
+
+if __name__ == "__main__":
+    print(foo(2,4.6,8.6)) #15.2
+    print(foo(2, 4.6, None)) #None
+
+
