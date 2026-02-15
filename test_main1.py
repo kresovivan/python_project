@@ -27,3 +27,4 @@ def test_pow_n() -> None:
 
     my_pow = pow_n(3)
     assert my_pow(2) == 8
+
