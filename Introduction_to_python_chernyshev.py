@@ -2764,9 +2764,10 @@ def calculate_discount(price: float, percent: float, is_vip: bool) -> float:
         percent += 10
     return price * (1 - percent / 100)
 
-#Раннее обнаружение ошибок
-def get_age() -> int:
-    return "двадцать пять"  # ❌ mypy скажет: expected int, got str
+cv = calculate_discount(price=1000, percent=20, is_vip=True)
+print(cv)
+
+
 
 
 
