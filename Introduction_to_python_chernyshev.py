@@ -2848,3 +2848,36 @@ Any также используется часто в качестве указ�
 сохранить, переслать или прочитать данные в формате json
 """
 
+from typing import Any
+
+def foo() -> dict(str, Any):
+    return {'name': 'Alex',
+            'age': 19,
+            'is_married': False}
+
+if __name__ == "__main__":
+    my_dict = foo()
+    print(my_dict)
+
+"""Так как функция может возвращать другую функцию или принимать ее на вход в качестве аргумента,
+то их тоже необходимо аннотировать, чтобы в дальнейшем избежать сложно отлавливаемых ошибок
+Для этого пакет typing предоставляет разработчику интерфейсный тип Callable[[x,...], result]
+где во вложенных квадратных скобках перечисляется количество аргументов функции и
+их типы, а result указывает тип возвращаемого значения
+"""
+from typing import Any,Callable
+def foo( person:  dict[str,Any],
+         checker: Callable[[int],bool]
+        ) -> bool:
+    return checker(person['age'])
+
+if __name__ == "__main__":
+
+    my_dict ={'name': 'Alex',
+            'age': 19,
+            'is_married': False}
+
+    def my_func(age:int) -> bool:
+        return age >= 18
+
+    print(foo(my_dict, my_func))
