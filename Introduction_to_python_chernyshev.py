@@ -2724,7 +2724,7 @@ Import и from как и оператор def выступают в роли я�
 """Аннотация (Type Hinting)
 Type hinting — это способ объявить ожидаемый тип переменных, 
 аргументов функций и возвращаемых значений в Python.
-Позволяет выявлять ошибки на ранеей стадии проектирования программного продукта,
+Позволяет выявлять ошибки на ранней стадии проектирования программного продукта,
 а не узнавать о их наличии от рассерженных пользователей.
 Для этого используются различные тесты и статистический анализатор
 кода Mypy.
@@ -2767,7 +2767,39 @@ def calculate_discount(price: float, percent: float, is_vip: bool) -> float:
 cv = calculate_discount(price=1000, percent=20, is_vip=True)
 print(cv)
 
+"""Варианты аннотации типов"""
+
+y: int = 1
+y: float = 1.0
+y: bool = True
+y: str = "test"
+y: bytes = b"test"
+y: list[int] = [1,4,6]
+y: set[int] = {1,7,11,6,0}
+y: dict[str, int] = {"key":12}
+y: tuple[int, str, float] = (7, "Oo", 1.45)
+# не фиксированный размер кортежа
+y: tuple[int, ...] = (1,2,3)
 
 
 
+"""
+def foo(my_list: list[int]) -> int:
+    return sum(my_list)
 
+if __name__ == "__main__":
+    # Этот блок - как "режим демонстрации/тестирования"
+    # Он работает ТОЛЬКО при прямом запуске файла
+    my_list = [1,2,4,5,6,7]
+    result = foo(my_list)
+    print(result)  # 25
+
+
+"""
+def foo(my_list: list[int]) -> int:
+    return sum(my_list)
+
+if __name__ == "__main__":
+    my_list = [1,2,4,5,6,7]
+    result = foo(my_list)
+    print(result) #25
