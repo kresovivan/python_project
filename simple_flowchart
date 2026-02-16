@@ -1,0 +1,48 @@
+// Выбор одежды
+digraph {
+	rankdir=TB splines=ortho
+	node [fontname=Arial fontsize=10 shape=box style="rounded,filled"]
+	Start [label="Начало
+Выбор одежды" fillcolor=lightgreen shape=oval]
+	Weather [label="Какая погода?" fillcolor=orange shape=diamond]
+	Cold [label="Взять тёплую куртку" fillcolor=lightblue]
+	Warm [label="Взять лёгкую ветровку" fillcolor=lightblue]
+	Hot [label="Взять футболку" fillcolor=lightblue]
+	Rain [label="Идёт дождь или снег?" fillcolor=orange shape=diamond]
+	RainYes [label="Непромокаемая обувь
++ зонт/дождевик" fillcolor=lightyellow]
+	RainNo [label="Обычная обувь" fillcolor=lightyellow]
+	Occasion [label="Особый повод?" fillcolor=orange shape=diamond]
+	Business [label="Строгий костюм
+/ платье" fillcolor=plum]
+	Party [label="Яркий/
+элегантный наряд" fillcolor=plum]
+	Sport [label="Спортивный
+костюм" fillcolor=plum]
+	Casual [label="Удобные джинсы
+и любимая одежда" fillcolor=plum]
+	End [label="🎉 Идеальный
+образ готов!" fillcolor=lightgreen shape=oval]
+	Start -> Weather
+	Cold -> Rain
+	Warm -> Rain
+	Hot -> Rain
+	RainYes -> Occasion
+	RainNo -> Occasion
+	Business -> End
+	Party -> End
+	Sport -> End
+	Casual -> End
+	Weather -> Cold [label=" Холодно"]
+	Weather -> Warm [label=" Тепло"]
+	Weather -> Hot [label=" Жарко"]
+	Rain -> RainYes [label=" Да"]
+	Rain -> RainNo [label=" Нет"]
+	Occasion -> Business [label=" Деловая
+встреча"]
+	Occasion -> Party [label=" Свидание/
+вечеринка"]
+	Occasion -> Sport [label=" Спорт"]
+	Occasion -> Casual [label=" Обычный
+день"]
+}
