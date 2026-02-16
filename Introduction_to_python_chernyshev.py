@@ -1,3 +1,6 @@
+#Отформатировать код black my_script.py
+
+
 """Встроенные типы данных Python
 Поскольку в Python все является объектом, то неудивительно, что в отличие от других
 языков программирования, помимо пользовательских типов (классов) существуют такие
@@ -55,12 +58,10 @@
 Разница между ними заключается в том, что в случае объявления имени переменной неизменяемого типа
 ей задается идентификатор, который невозможно изменить.
 """
-from mypyc.primitives.misc_ops import none_object_op
-
 n = 10
 b = n
-print('id n=', id(n))
-print('id b=', id(b))
+print("id n=", id(n))
+print("id b=", id(b))
 
 """
 Реузльтат:
@@ -77,8 +78,8 @@ id n = 140724157064440
 id b = 140724157064600
 """
 n = 5
-print('id n=', id(n))
-print('id b=', id(b))
+print("id n=", id(n))
+print("id b=", id(b))
 
 
 """В случае работы с изменяемыми типами данных не будет создаваться новый объект, а идентификатор
@@ -86,10 +87,10 @@ print('id b=', id(b))
 id n= 2390250213312
 id b= 2390250213312 """
 
-n = [1,2]
+n = [1, 2]
 b = n
-print('id n=', id(n))
-print('id b=', id(b))
+print("id n=", id(n))
+print("id b=", id(b))
 print(b)
 print(n)
 """
@@ -99,15 +100,14 @@ id b= 2439073681344
 """
 b[0] = 5
 n[1] = 4
-print('id n=', id(n))
-print('id b=', id(b))
+print("id n=", id(n))
+print("id b=", id(b))
 print(b)
 print(n)
 
 """Поскольку в Python динамический типизация, можно не указывать тип объявляемой переменной,
 он выведется в процессе компиляции программы в байт-код, и далее будет выполняться проверка, чтобы
 операции производились над объектами одного типа (сильная типизация)"""
-
 
 
 """Строки
@@ -122,49 +122,49 @@ print(n)
 
 
 """Индексация"""
-my_str = 'Hello'
-#my_str = " Test"
-print(len(my_str)) #Длина строки = 5
-print(my_str[0])   #H выводим первый элемент, та как индексация начинается с нуля
+my_str = "Hello"
+# my_str = " Test"
+print(len(my_str))  # Длина строки = 5
+print(my_str[0])  # H выводим первый элемент, та как индексация начинается с нуля
 
 """Срез"""
-print(my_str[1:3]) #Срез el из Hello
-print(my_str[:]) #Полный срез Hello
-print(my_str[1:]) #Срез ello
-print(my_str[0:3]) #Срез Hel
-print(my_str[:-1]) #Срез Hell
+print(my_str[1:3])  # Срез el из Hello
+print(my_str[:])  # Полный срез Hello
+print(my_str[1:])  # Срез ello
+print(my_str[0:3])  # Срез Hel
+print(my_str[:-1])  # Срез Hell
 
-print(my_str[::1]) #Срез от первого до последнего символа с шагом 1 - Hello
-print(my_str[::2]) #Срез от первого до последнего символа с шагом 2 - Hlo
-print(my_str[0:4:2]) #Срез от 0 до 3 элемента включительно с шагом 2 - Hl
-print(my_str[::-1]) #Перевернуть последовательность olleH
+print(my_str[::1])  # Срез от первого до последнего символа с шагом 1 - Hello
+print(my_str[::2])  # Срез от первого до последнего символа с шагом 2 - Hlo
+print(my_str[0:4:2])  # Срез от 0 до 3 элемента включительно с шагом 2 - Hl
+print(my_str[::-1])  # Перевернуть последовательность olleH
 
 """Конкатенация"""
-print(my_str + "!!!") #Конкатенация Hello!!!
-print(my_str + '!!!') #Конкатенация Hello!!!
-print(my_str * 3) #Повторение HelloHelloHello
-print([1,7,9] + [8,5]) #Конкатенация [1, 7, 9, 8, 5]
-print([1,2,3] * 3) #Повторение1, 2, 3, 1, 2, 3, 1, 2, 3]
+print(my_str + "!!!")  # Конкатенация Hello!!!
+print(my_str + "!!!")  # Конкатенация Hello!!!
+print(my_str * 3)  # Повторение HelloHelloHello
+print([1, 7, 9] + [8, 5])  # Конкатенация [1, 7, 9, 8, 5]
+print([1, 2, 3] * 3)  # Повторение1, 2, 3, 1, 2, 3, 1, 2, 3]
 
 """Строки относятся к неизменяемому типу данных и их нельзя модифицировать, обращаясь по индексу
 элемента"""
 
-#my_str[1] = 'R' #'str' object does not support item assignment
+# my_str[1] = 'R' #'str' object does not support item assignment
 my_str = "Hello"
 # Хотим заменить 'e' на 'R' → "HRllo"
-new_str = my_str[0] + 'R' + my_str[2:]
+new_str = my_str[0] + "R" + my_str[2:]
 print(new_str)  # "HRllo"
 
 """Имеется возможность модифицировать текстовые данные на месте, для этого необходимо
  развернуть их в список индивидуальных символов и объединить вместе с пустым разделителем"""
 
-my_str = 'Hello'
-#Развернуть в список
+my_str = "Hello"
+# Развернуть в список
 my_list = list(my_str)
-print(my_list) # ['H', 'e', 'l', 'l', 'o']
-my_list[0] = 'S' #Изменить на месте
-print(' / '.join(my_list)) #S / e / l / l / o
-print(''.join(my_list)) #Sello
+print(my_list)  # ['H', 'e', 'l', 'l', 'o']
+my_list[0] = "S"  # Изменить на месте
+print(" / ".join(my_list))  # S / e / l / l / o
+print("".join(my_list))  # Sello
 
 """Методы, которые специфичны только для строкового типа данных и не распространяются
 на последовательности
@@ -179,25 +179,25 @@ print(''.join(my_list)) #Sello
 и другие ;
 """
 
-my_str = 'Hello'
-#Поиск смещения подстроки
-print(my_str.find('o')) # 4
-#Замена вхождения подстроки в mystr другой подстрокой
-print(my_str.replace('el', 'RTY')) #HRTYlo
-print(my_str) #Hello
+my_str = "Hello"
+# Поиск смещения подстроки
+print(my_str.find("o"))  # 4
+# Замена вхождения подстроки в mystr другой подстрокой
+print(my_str.replace("el", "RTY"))  # HRTYlo
+print(my_str)  # Hello
 
-line = 'ffff,ttt,nn,d'
-#Разбить строку по разделителю ',' в список подстрок
-print(line.split(',')) #['ffff', 'tttt', 'nn', 'd']
-#Преобразовать символы строки в верхний регистр
-print(my_str.upper()) #HELLO
+line = "ffff,ttt,nn,d"
+# Разбить строку по разделителю ',' в список подстрок
+print(line.split(","))  # ['ffff', 'tttt', 'nn', 'd']
+# Преобразовать символы строки в верхний регистр
+print(my_str.upper())  # HELLO
 
-line = 'ffff,ttt,nn,d\n'
-#Удалить пробельные символы с правой стороны
-print(line.rstrip()) #ffff,ttt,nn,d
-#Методы можно чередовать
-#Замена подстроки в строке с последующим ее разделением в список
-print(line.replace('tt','RTY').split(',')) #['ffff,RTYt,nn,d\n']
+line = "ffff,ttt,nn,d\n"
+# Удалить пробельные символы с правой стороны
+print(line.rstrip())  # ffff,ttt,nn,d
+# Методы можно чередовать
+# Замена подстроки в строке с последующим ее разделением в список
+print(line.replace("tt", "RTY").split(","))  # ['ffff,RTYt,nn,d\n']
 
 """Списки
 позиционно упорядоченные коллекции объектов произвольных типов, не имеющие фиксированного размера
@@ -218,23 +218,23 @@ print(line.replace('tt','RTY').split(',')) #['ffff,RTYt,nn,d\n']
 my_list = []
 my_list = list()
 
-#Если список необходимо инициализировать переменными в момент его объявления, используют следующие конструкции
-my_list1 = ['one', 'two']
-my_list2 = list(['one', 'two'])
+# Если список необходимо инициализировать переменными в момент его объявления, используют следующие конструкции
+my_list1: list[str,int] = ["one", "two"]
+my_list2 = list(["one", "two"])
 
-#Добавление в список осуществляется через вызов у него метода .append(val), где val - добавляемое значение в конец списка
-print(my_list1) # ['one', 'two']
-my_list1.append('three') # ['one', 'two', 'three']
+# Добавление в список осуществляется через вызов у него метода .append(val), где val - добавляемое значение в конец списка
+print(my_list1)  # ['one', 'two']
+my_list1.append("three")  # ['one', 'two', 'three']
 print(my_list1)
 
 """Важно чтобы в списке обязательно содержались или в него добавлялись данные одного типа"""
 
 my_list1.append(4)
 my_list1.append(5)
-print(my_list1) #['one', 'two', 'three', 4, 5]
+print(my_list1)  # ['one', 'two', 'three', 4, 5]
 
-my_new_list: list[int] = [4,5]
-my_new_list.append('add')
+my_new_list: list[int] = [4, 5]
+my_new_list.append("add")
 print(my_new_list)
 
 """Ошибка будет возникать не на этапе компиляции а на этапе выполнения программы
@@ -265,14 +265,14 @@ Found 6 errors in 1 file (checked 1 source file)
 """
 
 # Добавление объекта в список на указанную позицию, где все элементы индекса сдвигаются вправо
-names = ["Max","Tom","Alex"]
+names = ["Max", "Tom", "Alex"]
 print(names)
-names.insert(1,"John")
+names.insert(1, "John")
 print(names)
 
 # Метод extend() добавляет все элементы другого списка в конец текущего списка
-one = [1,2]
-two = [3,4]
+one = [1, 2]
+two = [3, 4]
 one.extend(two)
 print(one)
 
@@ -282,39 +282,41 @@ print(names)
 names.pop(0)
 print(names)
 
-names.remove('Alex')
+names.remove("Alex")
 print(names)
 
 
-#Сортировка элементов списка осуществляется следующим образом
-names = ["Max","Tom","Alex"]
+# Сортировка элементов списка осуществляется следующим образом
+names = ["Max", "Tom", "Alex"]
 names.sort()
-print(names) #Необходимо помнить что при сортировке списка с разнотипными элементами может произойти ошибка
+print(
+    names
+)  # Необходимо помнить что при сортировке списка с разнотипными элементами может произойти ошибка
 
-new_array = [2,'abc','ttt','10', 3.6]
-#new_array.sort()
-#print(new_array) #TypeError: '<' not supported between instances of 'str' and 'int'
-new_array.sort(key=str) # передаем на вход метода sort параметр key
+new_array = [2, "abc", "ttt", "10", 3.6]
+# new_array.sort()
+# print(new_array) #TypeError: '<' not supported between instances of 'str' and 'int'
+new_array.sort(key=str)  # передаем на вход метода sort параметр key
 print(new_array)
 
-#Необходимо посчитать, сколько раз по значению повторяется элемент в списке
-my_list = [1,2,2,2,2,2,2,3,4,4,4,4,4]
-my_list1 = ['Ivan','Ivan','Ivan', 'Petr','Ivan', 'Petr','Ivan','Ivan']
+# Необходимо посчитать, сколько раз по значению повторяется элемент в списке
+my_list = [1, 2, 2, 2, 2, 2, 2, 3, 4, 4, 4, 4, 4]
+my_list1 = ["Ivan", "Ivan", "Ivan", "Petr", "Ivan", "Petr", "Ivan", "Ivan"]
 print(my_list.count(2))
 print(my_list.count(4))
-print(my_list1.count('Ivan'))
+print(my_list1.count("Ivan"))
 
-#Во избежание изменение изменений исходного списка необходимо использовать метод copy
-my_array = [2,3,5,7,8,10]
+# Во избежание изменение изменений исходного списка необходимо использовать метод copy
+my_array = [2, 3, 5, 7, 8, 10]
 my_new_array = my_array.copy()
 my_new_array.append(12)
-print(my_array)     #[2, 3, 5, 7, 8, 10]
-print(my_new_array) #[2, 3, 5, 7, 8, 10, 12]
+print(my_array)  # [2, 3, 5, 7, 8, 10]
+print(my_new_array)  # [2, 3, 5, 7, 8, 10, 12]
 
-#Проверить содержится ли в (последовательности, списке, строке и т.д.) объект с определенным значением
-my_array = [2,3,5,7,8,10]
-print(2 in my_array) #True
-print(0 in my_array) #False
+# Проверить содержится ли в (последовательности, списке, строке и т.д.) объект с определенным значением
+my_array = [2, 3, 5, 7, 8, 10]
+print(2 in my_array)  # True
+print(0 in my_array)  # False
 
 """Кортежи - изменяемые последовательности, при их создании необходимо использовать следующее правило, 
 если в круглые скобки заключен один элемент, то Python рассматривает их как обычные, а если заключено
@@ -332,11 +334,11 @@ print(0 in my_array) #False
 -относятся к категории неизменяемая последовательность
 """
 
-my_tuple = ('Alex','John')
+my_tuple = ("Alex", "John")
 print(my_tuple)
 
 
-my_tuple1 = tuple(['Alex','John'])
+my_tuple1 = tuple(["Alex", "John"])
 print(my_tuple1)
 
 """Кортежи как и рассмотрение ранее списки поддерживают ряд общих методов работы с ними
@@ -352,34 +354,35 @@ print(my_tuple1)
 # 3.На последнем шаге из данного списка создается новый кортеж
 # 4.Ссылка на него присваивается переменной, через чье имя осуществляется работа с исходным кортежем
 
-my_tuple = 2,3,4,5
+my_tuple = 2, 3, 4, 5
 print(my_tuple)
 my_list = list(my_tuple)
 print(my_list)
-my_list = list(map(lambda x:x*2, my_list))
+my_list = list(map(lambda x: x * 2, my_list))
 print(my_list)
 my_tuple = tuple(my_list)
 print(my_tuple)
 
 
-my_tuple1 = 2,3,4,5
+my_tuple1 = 2, 3, 4, 5
 my_list1 = list(my_tuple1)
-my_list1 = [x*2 for x in my_list1]
+my_list1 = [x * 2 for x in my_list1]
 print(my_list1)
 my_tuple1 = tuple(my_list1)
 print(my_tuple1)
 
 """Можно использовать именованные кортежи"""
 from collections import namedtuple
-ItemRec = namedtuple('ItemRec',['name', 'age', 'jobs'])
-my_tuple = ItemRec(name='Alex', age=24, jobs=['Python', 'Java'])
+
+ItemRec = namedtuple("ItemRec", ["name", "age", "jobs"])
+my_tuple = ItemRec(name="Alex", age=24, jobs=["Python", "Java"])
 print(my_tuple)
-print(my_tuple[0], my_tuple[2], my_tuple[1]) #Alex ['Python', 'Java'] 24
+print(my_tuple[0], my_tuple[2], my_tuple[1])  # Alex ['Python', 'Java'] 24
 
 
 """Именованный кортеж можно переименовать в словарь"""
 my_dict = my_tuple._asdict()
-print(my_dict['name'], my_dict['jobs'])
+print(my_dict["name"], my_dict["jobs"])
 print(my_dict)
 
 
@@ -395,24 +398,28 @@ print(my_dict)
 Объявить множество можно следующим способом
 """
 
-my_list = [0,1,1,2,3,9,4,5,6,6,7,8,9]
+my_list = [0, 1, 1, 2, 3, 9, 4, 5, 6, 6, 7, 8, 9]
 print(my_list)
-my_set = set() #пустое множество
-my_set = set(my_list) # удалить дубликаты
-print(my_set) #{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+my_set = set()  # пустое множество
+my_set = set(my_list)  # удалить дубликаты
+print(my_set)  # {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 
-#Для добавления элементов используется следующие методы:
+# Для добавления элементов используется следующие методы:
 my_set.add(102)
-print(my_set) #{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 102}
-my_set.update([2,100,99,4,5,6])
-print(my_set)  #{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 102, 100, 99} Повторяемые значения игнорируются при update
+print(my_set)  # {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 102}
+my_set.update([2, 100, 99, 4, 5, 6])
+print(
+    my_set
+)  # {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 102, 100, 99} Повторяемые значения игнорируются при update
 
-#Удаление элементов из множества производится следующим способом:
+# Удаление элементов из множества производится следующим способом:
 my_set.remove(2)
-print(my_set) #{0, 1, 3, 4, 5, 6, 7, 8, 9, 102, 100, 99}
+print(my_set)  # {0, 1, 3, 4, 5, 6, 7, 8, 9, 102, 100, 99}
 
-my_set.discard(100) #Если не будет удаляемого объекта, то не выведет ошибку в программе
-print(my_set) #{0, 1, 3, 4, 5, 6, 7, 8, 9, 102, 99}
+my_set.discard(
+    100
+)  # Если не будет удаляемого объекта, то не выведет ошибку в программе
+print(my_set)  # {0, 1, 3, 4, 5, 6, 7, 8, 9, 102, 99}
 
 """Операции над множествами
 Пересчение
@@ -421,65 +428,65 @@ print(my_set) #{0, 1, 3, 4, 5, 6, 7, 8, 9, 102, 99}
 Объединение
 """
 
-A = {0,1,1,2,3,9,4,5,6,6,7,8,9}
-B = {1,3,6,10,15,21,28,36,45}
+A = {0, 1, 1, 2, 3, 9, 4, 5, 6, 6, 7, 8, 9}
+B = {1, 3, 6, 10, 15, 21, 28, 36, 45}
 print(A)
 print(B)
 
-#Объединение
+# Объединение
 new_set_union = A.union(B)
 print(new_set_union)
 
-#Пересечение
+# Пересечение
 new_set_intersect = A.intersection(B)
 print(new_set_intersect)
 
-#Cимметрическая разность
+# Cимметрическая разность
 new_set_symmetric_difference = A.symmetric_difference(B)
 print(new_set_symmetric_difference)
 
 
-#Разность
+# Разность
 new_set_difference = A.difference(B)
 print(new_set_difference)
 
-#При этом три из приведенных операций симметричны:
-#Объединение
-check = ( A | B) == (B | A) # True
-#Пересечение
-check1 = ( A & B) == (B & A) # True
-#Cимметрическая разность
-check2 = ( A ^ B) == (B ^ A) #True
+# При этом три из приведенных операций симметричны:
+# Объединение
+check = (A | B) == (B | A)  # True
+# Пересечение
+check1 = (A & B) == (B & A)  # True
+# Cимметрическая разность
+check2 = (A ^ B) == (B ^ A)  # True
 
 print(check)
 print(check1)
 print(check2)
 
-#Проверка на то, является ли множество A подмножеством B и наоборот, выполняется следующим способом:
-A = {1,2,3}
-B = {1,2,3,4}
-#А является подмножеством B ?
-print(A.issubset(B)) #True
-#B является подмножеством A ?
-print(B.issubset(A)) #False
+# Проверка на то, является ли множество A подмножеством B и наоборот, выполняется следующим способом:
+A = {1, 2, 3}
+B = {1, 2, 3, 4}
+# А является подмножеством B ?
+print(A.issubset(B))  # True
+# B является подмножеством A ?
+print(B.issubset(A))  # False
 
 # Является ли множество A надмножеством множества B.
 """Надмножество = содержит ВСЕ элементы другого множества (и возможно еще свои)
 A.issuperset(B) возвращает True, если все элементы B есть в A
 A.issuperset(B) возвращает False, если хотя бы один элемент из B отсутствует в A"""
-print(A.issuperset(B)) #False
+print(A.issuperset(B))  # False
 
 # Является ли множество B надмножеством множества A.
-print(B.issuperset(A)) #True
+print(B.issuperset(A))  # True
 
 """Проверка на т входит ли элемент в множество, осуществляется посредством использования
 оператора in (not in): """
 
-B = {1,2,3,4}
-print(0 in B)     #False
-print(0 not in B) #True
-print(1 not in B) #False
-print(1 in B)     #True
+B = {1, 2, 3, 4}
+print(0 in B)  # False
+print(0 not in B)  # True
+print(1 not in B)  # False
+print(1 in B)  # True
 
 """Так как множества должны вычислять хеш-код для каждого элемента, то в них могут храниться только
 хешируемые элементы
@@ -508,48 +515,50 @@ __hash__ и __eq__ .
 Словари можно вкладывать в коллекции, записывая один словарь в виде значения внутри другого словаря либо внутри списка
 или кортежа.
 """
-#Пустой словарь
+# Пустой словарь
 my_dict = {}
-#Двухэлементный словарь
-my_dict = {'name': 'Alex', 'course': 3}
-#Вложение
-my_dict = {'info': {'name': 'Alex', 'course': 3}}
+# Двухэлементный словарь
+my_dict = {"name": "Alex", "course": 3}
+# Вложение
+my_dict = {"info": {"name": "Alex", "course": 3}}
 print(my_dict)
 
-my_dict = dict(name='Alex', course=3)
-my_dict = dict([('name','Alex'), ('course',3)])
+my_dict = dict(name="Alex", course=3)
+my_dict = dict([("name", "Alex"), ("course", 3)])
 print(my_dict)
 
-keylist = ['name', 'course', 'age']
-valuelist = ['Alex', 3, 20]
-my_dict = dict(zip(keylist,valuelist)) #{'name': 'Alex', 'course': 3, 'age': 20} # zip создает пары (ключ, значение)
+keylist = ["name", "course", "age"]
+valuelist = ["Alex", 3, 20]
+my_dict = dict(
+    zip(keylist, valuelist)
+)  # {'name': 'Alex', 'course': 3, 'age': 20} # zip создает пары (ключ, значение)
 print(my_dict)
-my_dict = dict.fromkeys(['name','course'])
+my_dict = dict.fromkeys(["name", "course"])
 print(my_dict)
 
-#Добавление элементов в словарь
+# Добавление элементов в словарь
 
 my_dict = {}
-my_dict['name'] = 'Alex'
-my_dict['course'] = 3
-my_dict['age'] = '41'
-my_dict['gender'] = 'Female'
+my_dict["name"] = "Alex"
+my_dict["course"] = 3
+my_dict["age"] = "41"
+my_dict["gender"] = "Female"
 print(my_dict)
-print(my_dict['name']) #Вывод значения по ключу
+print(my_dict["name"])  # Вывод значения по ключу
 
-#при обращении к значению элемента по его ключу стоит быть осторожным, так как элемент может отсутствовать в словаре
+# при обращении к значению элемента по его ключу стоит быть осторожным, так как элемент может отсутствовать в словаре
 
-#print(my_dict['info']) #    print(my_dict['info'])~~~~~~~^^^^^^^^ KeyError: 'info'
+# print(my_dict['info']) #    print(my_dict['info'])~~~~~~~^^^^^^^^ KeyError: 'info'
 
-#Перед таким обращением нужно проверить существует ли запись с данным ключом в словаре:
-print('info' in my_dict)  #False
-print('name' in my_dict)  #True
+# Перед таким обращением нужно проверить существует ли запись с данным ключом в словаре:
+print("info" in my_dict)  # False
+print("name" in my_dict)  # True
 
-#Обойти проблему проверки можно используя метод setdefault(key, def_val)
+# Обойти проблему проверки можно используя метод setdefault(key, def_val)
 
-print(my_dict.get('name', 'Maxim'))
-#Alex пытается получить значение по ключу 'name' из словаря, и если такого ключа нет - возвращает значение по умолчанию 'Maxim'.
-print(my_dict.get('info', 'no')) #no
+print(my_dict.get("name", "Maxim"))
+# Alex пытается получить значение по ключу 'name' из словаря, и если такого ключа нет - возвращает значение по умолчанию 'Maxim'.
+print(my_dict.get("info", "no"))  # no
 
 """Бывают моменты, когда необходимо получить список:
  - ключей,
@@ -558,73 +567,84 @@ print(my_dict.get('info', 'no')) #no
    для этого используются следующие методы: 
 """
 
-my_dict = {'name': 'Alex', 'course': 3, 'info':{'age':21, 'country': 'rus'}}
+my_dict = {"name": "Alex", "course": 3, "info": {"age": 21, "country": "rus"}}
 
-#Вывести все ключи
-print(list(my_dict.keys())) # ['name', 'course', 'info']
+# Вывести все ключи
+print(list(my_dict.keys()))  # ['name', 'course', 'info']
 
-#Вывести все значения
-print(list(my_dict.values())) # ['Alex', 3, {'age': 21, 'country': 'rus'}]
+# Вывести все значения
+print(list(my_dict.values()))  # ['Alex', 3, {'age': 21, 'country': 'rus'}]
 
-#Кортежи пар ключ-значение
-print(list(my_dict.items())) # [('name', 'Alex'), ('course', 3), ('info', {'age': 21, 'country': 'rus'})]
+# Кортежи пар ключ-значение
+print(
+    list(my_dict.items())
+)  # [('name', 'Alex'), ('course', 3), ('info', {'age': 21, 'country': 'rus'})]
 
-#Копировать словарь можно следующим способом:
-my_dict = {'name': 'Alex', 'course': 3}
+# Копировать словарь можно следующим способом:
+my_dict = {"name": "Alex", "course": 3}
 my_new_dict = my_dict.copy()
-my_new_dict['info'] = 'None'
-print(my_dict) #{'name': 'Alex', 'course': 3}
-print(my_new_dict) #{'name': 'Alex', 'course': 3, 'info': 'None'}
+my_new_dict["info"] = "None"
+print(my_dict)  # {'name': 'Alex', 'course': 3}
+print(my_new_dict)  # {'name': 'Alex', 'course': 3, 'info': 'None'}
 
 """Приведенным выше способом осуществляется поверхностное копирование, а это значит, что при наличии
 в виде значения у словаря списка, вложенного словаря или измененных типов будут скопированы ссылки на эти объекты
 Таким образом при их изменении изменяться объекты и в исходном словаре:
 """
 
-my_dict = {'name': 'Alex', 'course': 3, 'info':{'age':21, 'country': 'rus'}}
-print(my_dict) #{'name': 'Alex', 'course': 3, 'info': {'age': 21, 'country': 'rus'}}
+my_dict = {"name": "Alex", "course": 3, "info": {"age": 21, "country": "rus"}}
+print(my_dict)  # {'name': 'Alex', 'course': 3, 'info': {'age': 21, 'country': 'rus'}}
 my_new_dict = my_dict.copy()
-my_new_dict['info']['age'] = 1
+my_new_dict["info"]["age"] = 1
 print(my_new_dict)
-print(my_dict) # {'name': 'Alex', 'course': 3, 'info': {'age': 1, 'country': 'rus'}} вместо   {'name': 'Alex', 'course': 3, 'info':{'age':21, 'country': 'rus'}}
+print(
+    my_dict
+)  # {'name': 'Alex', 'course': 3, 'info': {'age': 1, 'country': 'rus'}} вместо   {'name': 'Alex', 'course': 3, 'info':{'age':21, 'country': 'rus'}}
 
 """Чтобы избежать такой проблемы, следует использовать глубокое копирование"""
 
 import copy
-my_dict = {'name': 'Alex', 'course': 3, 'info':{'age':21, 'country': 'rus'}}
+
+my_dict = {"name": "Alex", "course": 3, "info": {"age": 21, "country": "rus"}}
 my_new_dict = copy.deepcopy(my_dict)
-my_new_dict['info']['age'] = 1
+my_new_dict["info"]["age"] = 1
 print(my_new_dict)
-print(my_dict) # {'name': 'Alex', 'course': 3, 'info': {'age': 21, 'country': 'rus'}}
+print(my_dict)  # {'name': 'Alex', 'course': 3, 'info': {'age': 21, 'country': 'rus'}}
 
 """Удаление или извлечение пар ключ:значение в словаре осуществляется следующими способами: 
 """
 
-my_dict = {'name': 'Alex', 'course': 3, 'test1':10, 'test2':'prob', 'test3': 3.56}
-print(my_dict) #{'name': 'Alex', 'course': 3, 'test1': 10, 'test2': 'prob', 'test3': 3.56}
+my_dict = {"name": "Alex", "course": 3, "test1": 10, "test2": "prob", "test3": 3.56}
+print(
+    my_dict
+)  # {'name': 'Alex', 'course': 3, 'test1': 10, 'test2': 'prob', 'test3': 3.56}
 
-print(my_dict.pop('test3', 10)) #3.56 Если ключа нет - возвращает значение по умолчанию (второй аргумент)
-print(my_dict) #{'name': 'Alex', 'course': 3, 'test1': 10, 'test2': 'prob'}
+print(
+    my_dict.pop("test3", 10)
+)  # 3.56 Если ключа нет - возвращает значение по умолчанию (второй аргумент)
+print(my_dict)  # {'name': 'Alex', 'course': 3, 'test1': 10, 'test2': 'prob'}
 
-print(my_dict.popitem()) #Возвращение удаленных значение ('test2', 'prob')
-del my_dict['name'] # Удаление элементов по ключу
-print(my_dict) #{'course': 3, 'test1': 10}
+print(my_dict.popitem())  # Возвращение удаленных значение ('test2', 'prob')
+del my_dict["name"]  # Удаление элементов по ключу
+print(my_dict)  # {'course': 3, 'test1': 10}
 
 """Для добавления двух словарей по ключам используется следующий подход
 """
 
-my_dict = {'name':'Alex', 'course': 3}
-my_new_dict = {'test1':10, 'test2':'prob', 'test3': 3.56}
+my_dict = {"name": "Alex", "course": 3}
+my_new_dict = {"test1": 10, "test2": "prob", "test3": 3.56}
 my_dict.update(my_new_dict)
-print(my_dict) #{'name': 'Alex', 'course': 3, 'test1': 10, 'test2': 'prob', 'test3': 3.56}
+print(
+    my_dict
+)  # {'name': 'Alex', 'course': 3, 'test1': 10, 'test2': 'prob', 'test3': 3.56}
 
 """Бывают случаи когда ключи в одном и другом словаре совпадают, тогда произойдет замена
 значений по ключам у того словаря, которому вы вызываете метод update"""
 
-my_dict = {'name':'Alex', 'course': 3}
-my_new_dict = {'test1':10, 'name':'prob', 'test3': 3.56}
+my_dict = {"name": "Alex", "course": 3}
+my_new_dict = {"test1": 10, "name": "prob", "test3": 3.56}
 my_dict.update(my_new_dict)
-print(my_dict) #{'name': 'prob', 'course': 3, 'test1': 10, 'test3': 3.56}
+print(my_dict)  # {'name': 'prob', 'course': 3, 'test1': 10, 'test3': 3.56}
 
 """Основные операторы в Python:
 каждый оператор имеет собственное специфическое значение и собственный специфический синтаксис - правила,
@@ -671,18 +691,18 @@ else:
 Если температура на улице > 30 градусов по цельсию то надеть шоорты, иначе одеть брюки
 """
 
-t=20
+t = 20
 if t > 30:
-    print('Надеть шорты')
+    print("Надеть шорты")
 else:
-    print('Надеть брюки')
+    print("Надеть брюки")
 
-#Взять зонт
-#Выйти на улицу
-sun=False
+# Взять зонт
+# Выйти на улицу
+sun = False
 if not sun:
     print("Взять зонт")
-print('Выйти на улицу')
+print("Выйти на улицу")
 
 
 """"Следующим примером разберем как посредством условной конструкции
@@ -690,26 +710,26 @@ print('Выйти на улицу')
 
 value = 1445
 if 0 < value < 10:
-    print('Число входит в диапазон от 0 до 10')
+    print("Число входит в диапазон от 0 до 10")
 elif 10 < value < 20:
-    print('Число входит в диапазон от 10 до 20')
+    print("Число входит в диапазон от 10 до 20")
 elif 20 < value < 30:
-    print('Число входит в диапазон от 20 до 30')
+    print("Число входит в диапазон от 20 до 30")
 else:
-    print('Значение больше 30')
+    print("Значение больше 30")
 
 """Условные конструкции могут иметь различную степень вложенности"""
 value = 9000
 if value > 30:
     if value < 50:
-        print('30 < value < 50')
+        print("30 < value < 50")
     else:
-        print('30 < value >= 50')
+        print("30 < value >= 50")
 else:
     if value > 10:
-        print('30 >= value > 10')
+        print("30 >= value > 10")
     else:
-        print('30 >= value < 10')
+        print("30 >= value < 10")
 
 """Когда необходимо указать что в данном блоке ничего не выполняется, то используется команда pass, которая
 размещается там, где должна находиться команда, но никаких действий она не выполняет"""
@@ -717,7 +737,7 @@ a = 26
 if a < 25:
     pass
 else:
-   print(a)
+    print(a)
 
 """Оператор match
 Если блок кода в программе состоит из большого числа цепочек if elif else стоит задуматься об использовании
@@ -745,13 +765,13 @@ case _ (может отсуствовать)
 value = 4
 match value:
     case 2:
-        print('2')
-        print(f'{value} + 2 = {value + 2}')
+        print("2")
+        print(f"{value} + 2 = {value + 2}")
     case 4:
-        print('4')
-        print(f'{value} + 4 = {value + 4}')
+        print("4")
+        print(f"{value} + 4 = {value + 4}")
     case _:
-        print('8')
+        print("8")
 
 """При использовании инструкции match case желательно, чтобы подаваемые на вход оператора  match и сравниваемые
  значения были одного и того же типа. Дополнительно, в конструкции  match  - case можно использовать моржовый
@@ -760,57 +780,57 @@ match value:
 value = 0
 match value2 := value + 2:
     case 2:
-         print(f'{value} + 2 = {value + 2}')
+        print(f"{value} + 2 = {value + 2}")
     case 4:
-        print('4')
+        print("4")
     case _:
-        print('8')
-print(f'value = {value}')
-print(f'value = {value2}')
+        print("8")
+print(f"value = {value}")
+print(f"value = {value2}")
 
 """ Если по нескольким значениям необходимо выполнить один и тот же код, то можно прибегнуть к следующему формату использования 
 рассматриваемой условной конструкции """
 
-name = 'Stanislav'
+name = "Stanislav"
 match name:
-    case 'Stanislav':
-        print('Admin')
-    case 'Maxim' | 'Alex' | 'Bill':
-        print('Employee')
+    case "Stanislav":
+        print("Admin")
+    case "Maxim" | "Alex" | "Bill":
+        print("Employee")
     case _:
-        print('Oo')
+        print("Oo")
 
 """Так как  match  осуществляет сопоставление шаблонов, то его можно использовать с кортежами и словарями"""
 
-#С кортежем
+# С кортежем
 
-animal = ('Alex', 'cat', 10)
+animal = ("Alex", "cat", 10)
 match animal:
-    case ('Tom', 'dog', 14):
-        print('Dog')
-    case ('Alex', 'cat', 10): # Cat
-        print('Cat')
+    case ("Tom", "dog", 14):
+        print("Dog")
+    case ("Alex", "cat", 10):  # Cat
+        print("Cat")
 
-#Если необходимо, чтобы какой-то элемент кортежа соответствовал некоторому набору значений - необходимо перечислить
+# Если необходимо, чтобы какой-то элемент кортежа соответствовал некоторому набору значений - необходимо перечислить
 # их через вертикальную черту
 
-animal = ('Alex', 'dog', 10)
+animal = ("Alex", "dog", 10)
 match animal:
-    case ('Tom' | 'Alex', 'dog', 14 | 10):
-        print('Dog') #Dog
-    case ('Alex', 'cat', 10):
-        print('Cat')
+    case ("Tom" | "Alex", "dog", 14 | 10):
+        print("Dog")  # Dog
+    case ("Alex", "cat", 10):
+        print("Cat")
 
 """Дополнительно, при описании шаблона можно заменить один из элементов кортежа именем или символом нижнего подчеркивания
 (если не планируем его использовать). В этом случае становится неважно какое значение в момент сопоставления
  шаблона хранится в элементе кортежа
  """
-animal = ('Tommy', 'cat', 10)
+animal = ("Tommy", "cat", 10)
 match animal:
-    case ('Tom' | 'Alex', 'dog', 14 | 10):
-        print('Dog') #Dog
-    case ('Tommy', animal_type, age):
-        print(f'Tommy is {animal_type}, age = {age}') #Tommy is cat, age = 10
+    case ("Tom" | "Alex", "dog", 14 | 10):
+        print("Dog")  # Dog
+    case ("Tommy", animal_type, age):
+        print(f"Tommy is {animal_type}, age = {age}")  # Tommy is cat, age = 10
 
 """При работе с кортежами количество их элементов проверяемых в шаблоне, должно соответствовать 
 количеству элементов кортежа, подаваемого на вход оператора match
@@ -828,30 +848,32 @@ att[1] == 10
 
 """
 
-animal = ('Tommy', 'cat', 10)
+animal = ("Tommy", "cat", 10)
 match animal:
-    case ('Tom' | 'Alex', 'dog', 14 | 10):
-        print('Dog')
-    case('Tommy', *att):
-        print(f'Tommy is {att[0]}, age = {att[1]}')  # Tommy is cat, age = 10
+    case ("Tom" | "Alex", "dog", 14 | 10):
+        print("Dog")
+    case ("Tommy", *att):
+        print(f"Tommy is {att[0]}, age = {att[1]}")  # Tommy is cat, age = 10
 
 """Аналогично дело обстоит и со списками"""
 
-animals = ['dog', 'cat']
+animals = ["dog", "cat"]
 match animals:
-    case [_]: #Массив из 1-го любого элемента
+    case [_]:  # Массив из 1-го любого элемента
         print(animals)
-    case [_,_]: #Массив из 2-ух любых элементов
-        print(f'len = {len(animals)}, animals: {animals}') #len = 2, animals: ['dog', 'cat']
-    case [_,_,_]: #Массив из 3-ех любых элементов ['dog', 'cat', 'mouse']
+    case [_, _]:  # Массив из 2-ух любых элементов
+        print(
+            f"len = {len(animals)}, animals: {animals}"
+        )  # len = 2, animals: ['dog', 'cat']
+    case [_, _, _]:  # Массив из 3-ех любых элементов ['dog', 'cat', 'mouse']
         print(animals)
 
 match animals:
-    case ['dog' | 'bird', 'cat']: #['dog', 'cat']
+    case ["dog" | "bird", "cat"]:  # ['dog', 'cat']
         print(animals)
-    case ['bird', 'cat']:
+    case ["bird", "cat"]:
         print(animals)
-    case ['bird', 'cat' | 'dog']:
+    case ["bird", "cat" | "dog"]:
         print(animals)
 """🎯 Что означает *any?
 * (звездочка) - оператор распаковки/захвата остатка
@@ -861,13 +883,13 @@ any - имя переменной (можно использовать любо�
 # *  → для последовательностей (списки, кортежи)
 # ** → для словарей (dict)
 """
-animals = ['dog', 'cat', 'bird', 'mouse']
+animals = ["dog", "cat", "bird", "mouse"]
 match animals:
-    case ['dog','cat']:
+    case ["dog", "cat"]:
         print(animals)
-    case ['dog', *any]:
-        print('dog', any)
-    case ['bird', 'cat' | 'dog']:
+    case ["dog", *any]:
+        print("dog", any)
+    case ["bird", "cat" | "dog"]:
         print(animals)
 """
 case ['dog', second_animal, *_]:
@@ -885,101 +907,101 @@ case ['dog', second_animal, *_]:
 #        └─ 'dog': первый элемент должен быть равен 'dog'
 
 """
-animals = ['dog', 'cat', 'bird', 'mouse']
+animals = ["dog", "cat", "bird", "mouse"]
 match animals:
-    case['dog','mouse']:
+    case ["dog", "mouse"]:
         print(animals)
-    case['bird', 'cat' | 'dog']:
+    case ["bird", "cat" | "dog"]:
         print(animals)
-    case ['dog', second_animal, *_]:
-        print(f'First - dog, second - {second_animal}') #First - dog, second - cat
+    case ["dog", second_animal, *_]:
+        print(f"First - dog, second - {second_animal}")  # First - dog, second - cat
 
 """При использовании оператора match со словарями имеется возможность проверять вхождение в него определенных ключей
 с их значениями или вариантами значений"""
 
-animal = {'animal' : 'dog', 'name' : 'Tom', 'age': 3}
+animal = {"animal": "dog", "name": "Tom", "age": 3}
 match animal:
-    case {'animal': 'cat', 'name' : 'Tommy', 'age': 3}:
-        print('It is cat', animal)
-    case{'animal': 'dog', 'name': 'Tom', 'age': 3}: #It is dog {'animal': 'dog', 'name': 'Tom', 'age': 3}
-        print('It is dog', animal)
+    case {"animal": "cat", "name": "Tommy", "age": 3}:
+        print("It is cat", animal)
+    case {
+        "animal": "dog",
+        "name": "Tom",
+        "age": 3,
+    }:  # It is dog {'animal': 'dog', 'name': 'Tom', 'age': 3}
+        print("It is dog", animal)
     case {}:
-        print('dict have not necessary keys')
+        print("dict have not necessary keys")
     case _:
-        print('It is not dict')
+        print("It is not dict")
 
 
-animal['name'] = 'Alex'
+animal["name"] = "Alex"
 match animal:
-    case {'animal': 'cat', 'name' : 'Tommy', 'age': 3}:
-        print('It is cat', animal)
-    case{'animal': 'bird', 'name': 'Alex', 'age': 3}:
-        print('It is bird', animal)
+    case {"animal": "cat", "name": "Tommy", "age": 3}:
+        print("It is cat", animal)
+    case {"animal": "bird", "name": "Alex", "age": 3}:
+        print("It is bird", animal)
     case {}:
-        print('dict have not necessary keys')
+        print("dict have not necessary keys")
     case _:
-        print('It is not dict')
+        print("It is not dict")
 
 
-animal = {
-    'animal': 'bird',
-    'name': 'Alex',
-    'age': 3
-}
+animal = {"animal": "bird", "name": "Alex", "age": 3}
 
 match animal:
-    case {'animal': 'cat', 'name' : 'Tommy', 'age': 3}:
-        print('Не сработает')
-    case {'animal': 'bird', 'name': 'Alex', 'age': 3}:
-        print('It is bird', animal)  # ✓ Выполнится!
+    case {"animal": "cat", "name": "Tommy", "age": 3}:
+        print("Не сработает")
+    case {"animal": "bird", "name": "Alex", "age": 3}:
+        print("It is bird", animal)  # ✓ Выполнится!
     case {}:
-        print('dict have not necessary keys')
+        print("dict have not necessary keys")
     case _:
-        print('It is not dict')
+        print("It is not dict")
 
-animal = {'name': 'Alex','animal': 'bird', 'age': 3}  # Только один ключ!
+animal = {"name": "Alex", "animal": "bird", "age": 3}  # Только один ключ!
 match animal:
-    case {'animal': 'cat', 'name': 'Tommy', 'age': 3}:
-        print('It is cat')
+    case {"animal": "cat", "name": "Tommy", "age": 3}:
+        print("It is cat")
 
     # Используем ** для игнорирования отсутствующих ключей
-    case {'name': 'Alex', **rest}:
-        print(f'Alex found! Rest keys: {rest}')  # Выполнится!
+    case {"name": "Alex", **rest}:
+        print(f"Alex found! Rest keys: {rest}")  # Выполнится!
 
     case {}:
-        print('Empty dict')
+        print("Empty dict")
 
     case _:
-        print('Not a dict')
+        print("Not a dict")
 
 """Также Python поддерживает возможность выбора между различными вариантами словарей"""
 
-man = {'name':'Alex'}
+man = {"name": "Alex"}
 match man:
-    case{'animal': 'cat'}:
-        print('It is cat')
-    case{'animal': 'dog'} | {'name': 'Alex'}:
-        print('It is dog or man')
+    case {"animal": "cat"}:
+        print("It is cat")
+    case {"animal": "dog"} | {"name": "Alex"}:
+        print("It is dog or man")
     case {}:
-        print('dict have not necessary keys')
+        print("dict have not necessary keys")
     case _:
-        print('It is not a dict')
+        print("It is not a dict")
 
 """Если необходимо получить значение по ключу и оно не представляет важности, то можно использовать
 следующий подход"""
 
 
-animal = {'animal':'dog', 'name': 'Tommy'}
-#animal = {'animal':'bird', 'name': 'Gosha'}
+animal = {"animal": "dog", "name": "Tommy"}
+# animal = {'animal':'bird', 'name': 'Gosha'}
 match animal:
-    case{'animal': animal_type, 'name': name}:
-        print(f'{name} is {animal_type}') #Tommy is dog
-    case{'animal': 'bird', 'name': _}: # имя не важно
-        print('It is bird', animal)
+    case {"animal": animal_type, "name": name}:
+        print(f"{name} is {animal_type}")  # Tommy is dog
+    case {"animal": "bird", "name": _}:  # имя не важно
+        print("It is bird", animal)
     case {}:
-        print('dict have not necessary keys')
+        print("dict have not necessary keys")
     case _:
-        print('It is not a dict')
+        print("It is not a dict")
 
 """В тех случаях, когда важен только один ключ словаря, а все остальные несут либо
 вспомогательный характер для последующей обработки данных, либо их можно отбросить за
@@ -990,16 +1012,16 @@ name is Tommy
 age  is 3
 """
 
-animal = {'animal':'dog', 'name': 'Tommy', 'age': 3}
+animal = {"animal": "dog", "name": "Tommy", "age": 3}
 match animal:
-    case{'animal': animal_type, **kwarg}:
-        print(f'It is {animal_type}')
+    case {"animal": animal_type, **kwarg}:
+        print(f"It is {animal_type}")
         for key in kwarg:
-            print(f'{key} is {kwarg[key]}')
+            print(f"{key} is {kwarg[key]}")
     case {}:
-        print('dict have not necessary keys')
+        print("dict have not necessary keys")
     case _:
-        print('It is not a dict')
+        print("It is not a dict")
 
 """Цикл while и операторы break, continue, pass
 
@@ -1038,26 +1060,27 @@ while True:
 x = 0
 y = 5
 while x < y:
-    print(x, end=' ')
-    x += 1 # x = x + 1
+    print(x, end=" ")
+    x += 1  # x = x + 1
 
 x = 0
 y = 5
 while x < y:
-    print(x, end=' ')
-    x += 1 # x = x + 1
+    print(x, end=" ")
+    x += 1  # x = x + 1
 else:
-    print('Happy end!')
+    print("Happy end!")
 
 
 x = 0
 y = 5
 while x < y:
-    print(x, end=' ')
-    x += 1 # x = x + 1
-    if x > y - 2: break # 5 - 2 = 3 будет 0,1,2,3
+    print(x, end=" ")
+    x += 1  # x = x + 1
+    if x > y - 2:
+        break  # 5 - 2 = 3 будет 0,1,2,3
 else:
-    print('Happy end!')
+    print("Happy end!")
 """
 #Теперь рассмотрим два простых оператора, которые достигают своих целей, только когда вложены
 внутри циклов - break и continue а также пустой оператор-заполнитель pass (который не привязан к
@@ -1105,7 +1128,7 @@ while ax:
     ax = ax - 1
     if ax % 2 != 0:  # Если НЕчетное → continue
         continue
-    print(ax, end=' ')  # Печатаем (только четные)
+    print(ax, end=" ")  # Печатаем (только четные)
 
 print("\n=== КОНЕЦ СКРИПТА ===")
 
@@ -1114,11 +1137,11 @@ print("\n=== КОНЕЦ СКРИПТА ===")
 Приведенный выше пример можно записать и без использования оператора continue:
 """
 print("\n=== НАЧАЛО СКРИПТА ===")
-a=15
+a = 15
 while a:
     a = a - 1
     if a % 2 == 0:
-        print(a, end=' ')
+        print(a, end=" ")
 print("\n=== КОНЕЦ СКРИПТА ===")
 
 """Оператор break используется для немедленного выхода из цикла.
@@ -1161,37 +1184,37 @@ else: # блок else
 
 print("\n=== НАЧАЛО СКРИПТА ===")
 
-a = ['first', 'second', 4,5.9, 'finish']
+a = ["first", "second", 4, 5.9, "finish"]
 for it in a:
-    print(it, end=', ')
+    print(it, end=", ")
 
 print("\n=== КОНЕЦ СКРИПТА ===")
 
 
 """Цикл for позволяет проводить поэлементный перебор строк"""
 
-my_str = 'в далекой галактике...'
+my_str = "в далекой галактике..."
 for it in my_str:
-    if it == 'в':
-        print(it) #в- -д-а-л-е-к-о-й- -г-а-л-а-к-т-и-к-е-.-.-.-
+    if it == "в":
+        print(it)  # в- -д-а-л-е-к-о-й- -г-а-л-а-к-т-и-к-е-.-.-.-
         break
 else:
     for it in my_str:
-            print(it, end=', ')
+        print(it, end=", ")
 
 """Итерация по элементам кортежей осуществляется следующим образом"""
 
 print("\n=== НАЧАЛО СКРИПТА ===")
-my_str = ('в', 'далекой -', 'далекой', 'галактике...')
+my_str = ("в", "далекой -", "далекой", "галактике...")
 for it in my_str:
-    print(it, end=' ')
+    print(it, end=" ")
 print("\n=== КОНЕЦ СКРИПТА ===")
 
 """Для итерации по списку кортежей используют следующий подход"""
 print("\n=== НАЧАЛО СКРИПТА ===")
 
-my_tuple_list = [(3,6),(0,1),(4,5),('O',3.9)]
-for (a,b) in my_tuple_list:
+my_tuple_list = [(3, 6), (0, 1), (4, 5), ("O", 3.9)]
+for a, b in my_tuple_list:
     print(a, b)
 
 print("=== КОНЕЦ СКРИПТА ===")
@@ -1200,12 +1223,12 @@ print("=== КОНЕЦ СКРИПТА ===")
 с применением метода items вместо прохода в цикле по ключам и индексации для извлечения значений вручную: 
 """
 
-#итерация по паре ключ-значение
-my_dict = {'a':1.7, 'b':2.3, 'c':3.3, 'd':4.6, 'e':5.8, 'f':10.1}
+# итерация по паре ключ-значение
+my_dict = {"a": 1.7, "b": 2.3, "c": 3.3, "d": 4.6, "e": 5.8, "f": 10.1}
 for key, value in my_dict.items():
-    print(key, '=>', value)
+    print(key, "=>", value)
 
-#извлечение значений через итерируемый ключ
+# извлечение значений через итерируемый ключ
 """
 # Когда вы пишете `for key in my_dict:`
 # Python автоматически перебирает только КЛЮЧИ словаря
@@ -1222,21 +1245,21 @@ my_dict[key]  # Получает значение для текущего клю
 
 """
 
-my_dict = {'a': 1.7, 'b': 2.3, 'c': 3.3, 'd': 4.6, 'e': 5.8, 'f': 10.1}
+my_dict = {"a": 1.7, "b": 2.3, "c": 3.3, "d": 4.6, "e": 5.8, "f": 10.1}
 for key in my_dict:
-    print(key, '=>', my_dict[key])
+    print(key, "=>", my_dict[key])
 
 """Каждый цикл может содержать в себе ще один цикл, такие циклы называют вложенными"""
 
-items = ("aaa", 111,(4,5), 2.01)
-test = [(4,5), 2.01, 3.14]
+items = ("aaa", 111, (4, 5), 2.01)
+test = [(4, 5), 2.01, 3.14]
 for key in test:
     for item in items:
         if item == key:
-            print(key, 'найден')
+            print(key, "найден")
             break
 else:
-    print(key, 'Не найден!')
+    print(key, "Не найден!")
 
 """Различные способы написания циклов
 
@@ -1267,11 +1290,11 @@ range(from [, to, step])
 
 """
 
-print(range(10)) #range(0, 10)
-print(list(range(10))) #[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+print(range(10))  # range(0, 10)
+print(list(range(10)))  # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-print(range(0, 6)) #range(0, 6)
-print(list(range(0,6))) #[0, 1, 2, 3, 4, 5]
+print(range(0, 6))  # range(0, 6)
+print(list(range(0, 6)))  # [0, 1, 2, 3, 4, 5]
 
 """С одним аргументом range генерирует список целых чисел, начиная с нуля и заканчивая (но не включая)
 значением аргумента.
@@ -1281,25 +1304,25 @@ Python добавляет выбранный шаг к каждому после
 При желании диапазоны могут быть неположительными и не возрастающими:
 """
 
-print(list(range(-5, 5))) #[-5, -4, -3, -2, -1, 0, 1, 2, 3, 4]
+print(list(range(-5, 5)))  # [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4]
 
-print(list(range(5, -5, -2))) #[5, 3, 1, -1, -3]
+print(list(range(5, -5, -2)))  # [5, 3, 1, -1, -3]
 
-#Выводим три строки при помощи  range(3)
+# Выводим три строки при помощи  range(3)
 for i in range(3):
-    print(i,'Test')
-#Можно использовать range для непрямого прохода по последовательности
+    print(i, "Test")
+# Можно использовать range для непрямого прохода по последовательности
 
-my_str = 'Test'
+my_str = "Test"
 for it in my_str:
-    print(it, end='  ') #T  e  s  t   # простая итерация
+    print(it, end="  ")  # T  e  s  t   # простая итерация
 
 print("\n=== НАЧАЛО СКРИПТА ===")
-print(len(my_str)) #4
+print(len(my_str))  # 4
 print(list(range(len(my_str))))
 
 
-my_str = 'Test'
+my_str = "Test"
 i = 0
 while i < len(my_str):
     print(my_str[i])
@@ -1312,15 +1335,15 @@ i = 0
 while i < len(my_str):
     # Проверяем, не последний ли это элемент
     if i < len(my_str) - 1:
-        print(my_str[i], end=', ')  # Не последний - с запятой
+        print(my_str[i], end=", ")  # Не последний - с запятой
     else:
-        print(my_str[i], end='')    # Последний - без запятой
+        print(my_str[i], end="")  # Последний - без запятой
     i += 1
 
 print("\n=== НАЧАЛО СКРИПТА ===")
-my_str = 'Test'
+my_str = "Test"
 for it in range(len(my_str)):
-    print(my_str[it], end='\n')
+    print(my_str[it], end="\n")
 print("=== КОНЕЦ СКРИПТА ===")
 
 """Во второй части примера производится проход по списку смещений в строке my_str, а не по ее действительным элементам
@@ -1337,9 +1360,9 @@ print("=== КОНЕЦ СКРИПТА ===")
 серию кортежей, объединяющих в пары параллельные элементы из указанных последовательностей:
 """
 
-first_list  = [1,2,3,4,5]
-second_list = [6,7,8,9,10]
-print(list(zip(first_list, second_list))) #[(1, 6), (2, 7), (3, 8), (4, 9), (5, 10)]
+first_list = [1, 2, 3, 4, 5]
+second_list = [6, 7, 8, 9, 10]
+print(list(zip(first_list, second_list)))  # [(1, 6), (2, 7), (3, 8), (4, 9), (5, 10)]
 
 """Таким образом функция zip в сочетании с циклом for представляет возможность поддержки параллельных итераций
 эффект такого подхода заключается в том, что в цикле просматриваются оба списка: first_list и  second_list
@@ -1347,17 +1370,25 @@ print(list(zip(first_list, second_list))) #[(1, 6), (2, 7), (3, 8), (4, 9), (5, 
 Но этот способ потребовал бы большего объема кода и выполняется несколько медленее, чем использование
 связки for-zip
 """
-for a,b in zip(first_list, second_list):
-    print(a, '+', b, '=', a+b)
+for a, b in zip(first_list, second_list):
+    print(a, "+", b, "=", a + b)
 
 
-one, two, three = (1,2,3), (4,5,6,), (7,8,9)
+one, two, three = (
+    (1, 2, 3),
+    (
+        4,
+        5,
+        6,
+    ),
+    (7, 8, 9),
+)
 """"
 (1,2,3), (4,5,6,), (7,8,9)
 Это КОРТЕЖ из трех кортежей!
 Эквивалентно: ((1,2,3), (4,5,6), (7,8,9))
 """
-print(list(zip(one, two,three))) # [(1, 4, 7), (2, 5, 8), (3, 6, 9)]
+print(list(zip(one, two, three)))  # [(1, 4, 7), (2, 5, 8), (3, 6, 9)]
 
 """
 '({} - {}) * {} = {}'.format(b, a, c, (b-a)*c)
@@ -1368,29 +1399,29 @@ print(list(zip(one, two,three))) # [(1, 4, 7), (2, 5, 8), (3, 6, 9)]
 '({} - {}) * {} = {}'.format(4, 1, 7, 21)
 # становится: '(4 - 1) * 7 = 21'
 """
-for a,b,c in zip(one, two, three):
-    print('({} - {}) * {} = {}'.format(b,a,c, (b-a)*c))
+for a, b, c in zip(one, two, three):
+    print("({} - {}) * {} = {}".format(b, a, c, (b - a) * c))
 
 """Если на вход подаются последовательности различной длины, результирующие кортежи
 нормируются по длине самой короткой из них!!!"""
 
-one, two, three = (1,2,3,5,9), (4,5,6), (7,8,9,23)
-print(list(zip(one, two,three)))  #[(1, 4, 7), (2, 5, 8), (3, 6, 9)]
+one, two, three = (1, 2, 3, 5, 9), (4, 5, 6), (7, 8, 9, 23)
+print(list(zip(one, two, three)))  # [(1, 4, 7), (2, 5, 8), (3, 6, 9)]
 
 """В ряде случаев бывает необходимо производить итерацию по элементам последовательности
 и знать какой индекс у текущего итерируемого элемента
 Традиционно такая задача решается посредством простого цикла for с дополнительным счетчиком индекса
 итерируемого элемента"""
 
-my_str = 'Test'
+my_str = "Test"
 index = 0
 for it in my_str:
-    print('Индекс элемента ', it, '=', index)
+    print("Индекс элемента ", it, "=", index)
     index += 1
-#Индекс элемента  T = 0
-#Индекс элемента  e = 1
-#Индекс элемента  s = 2
-#Индекс элемента  t = 3
+# Индекс элемента  T = 0
+# Индекс элемента  e = 1
+# Индекс элемента  s = 2
+# Индекс элемента  t = 3
 
 """Функция enumerate возвращает генераторный объект - разновидность объекта, поддерживающая протокол
 итерации.
@@ -1401,9 +1432,9 @@ for it in my_str:
 также, как это делается для zip
 """
 
-my_str = 'Test'
+my_str = "Test"
 for index, it in enumerate(my_str):
-    print('Индекс элемента ', it, ' = ', index)
+    print("Индекс элемента ", it, " = ", index)
 
 """Списковые включения (list comprehension)
 Это мощный инструмент обработки структур 
@@ -1418,22 +1449,22 @@ new_list = [expression for member in iterable]
 member является объектом или значением в списке или итерируемом объекте iterable.
 """
 
-my_list = [1,2,3,4,5]
+my_list = [1, 2, 3, 4, 5]
 for i in range(len(my_list)):
     my_list[i] += 10
-print(my_list) #[11, 12, 13, 14, 15]
+print(my_list)  # [11, 12, 13, 14, 15]
 
-#Списковое включение можно записать следующим образом
-my_list = [1,2,3,4,5]
+# Списковое включение можно записать следующим образом
+my_list = [1, 2, 3, 4, 5]
 my_list = [it + 10 for it in my_list]
-print(my_list) #[11, 12, 13, 14, 15]
+print(my_list)  # [11, 12, 13, 14, 15]
 
 
-my_list = [1,2,3,4,5]
+my_list = [1, 2, 3, 4, 5]
 new_list = []
 for it in my_list:
     new_list.append(it + 10)
-print(new_list)  #[11, 12, 13, 14, 15]
+print(new_list)  # [11, 12, 13, 14, 15]
 
 """Наиболее распространенный способ использовать условную логику при работе со списковыми
 включениями - добавить условное выражение в конец выражения:
@@ -1442,10 +1473,10 @@ new_list = [expression for member in iterable (if conditional)]
 
 """
 
-new_list = [x for x in range(10) if x % 2 == 0] #[0, 2, 4, 6, 8]
+new_list = [x for x in range(10) if x % 2 == 0]  # [0, 2, 4, 6, 8]
 print(new_list)
 
-new_list = [x for x in range(10) if x % 2 != 0] #[1, 3, 5, 7, 9]
+new_list = [x for x in range(10) if x % 2 != 0]  # [1, 3, 5, 7, 9]
 print(new_list)
 
 """
@@ -1455,7 +1486,7 @@ new_list = [expression (if conditional) for member in iterable]]
 """
 
 new_list = [1.25, -9.45, 10.22, 3.78, -5.92, 1.16]
-new_list = [i if i > 0 else 0 for i in new_list] # [1.25, 0, 10.22, 3.78, 0, 1.16]
+new_list = [i if i > 0 else 0 for i in new_list]  # [1.25, 0, 10.22, 3.78, 0, 1.16]
 print(new_list)
 
 """Если необходимо использовать более сложную логику, то вместо выражения можно использовать функцию
@@ -1468,20 +1499,24 @@ print(new_list)
 
 """
 
+
 def test_func(value):
     return value if value < 0 else 0
 
+
 new_list = [1.25, -9.45, 10.22, 3.78, -5.92, 1.16]
-new_list = [test_func(i) for i in new_list] # [0, -9.45, 0, 0, -5.92, 0]
+new_list = [test_func(i) for i in new_list]  # [0, -9.45, 0, 0, -5.92, 0]
 print(new_list)
 
 """Включения можно использовать также для словарей и множеств"""
 
-my_list = [1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+my_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 my_set = {i for i in my_list if i % 2 == 0}
 print(my_set)
 
-my_dict = {i: i * i for i in range(15)} #{0: 0, 1: 1, 2: 4, 3: 9, 4: 16, 5: 25, 6: 36, 7: 49, 8: 64, 9: 81, 10: 100, 11: 121, 12: 144, 13: 169, 14: 196}
+my_dict = {
+    i: i * i for i in range(15)
+}  # {0: 0, 1: 1, 2: 4, 3: 9, 4: 16, 5: 25, 6: 36, 7: 49, 8: 64, 9: 81, 10: 100, 11: 121, 12: 144, 13: 169, 14: 196}
 print(my_dict)
 
 """Функция и модули
@@ -1836,39 +1871,50 @@ def имяфункции([имяАргумента1 ТипВходногоАрг
 Для рассмотрения особенностей передачи объектов в функцию используем следующий код:
 """
 
-def test(a,b,c):
-    print('a = {}; b = {}; c = {}'.format(a,b,c))
 
-x,y,z = (5,[1,4], 'Str')
-test(x,y,z) # a = 5; b = [1, 4]; c = Str
-print('x = {}; y = {}; z = {}'.format(x,y,z)) # x = 5; y = [1, 4]; z = Str
+def test(a, b, c):
+    print("a = {}; b = {}; c = {}".format(a, b, c))
+
+
+x, y, z = (5, [1, 4], "Str")
+test(x, y, z)  # a = 5; b = [1, 4]; c = Str
+print("x = {}; y = {}; z = {}".format(x, y, z))  # x = 5; y = [1, 4]; z = Str
 
 """Независимо от того, изменяемый или неизменяемый тип данных используется в качестве аргументов функции,
 в случае ее вызова аргументам присваиваются ссылки на объекты из вызывающей области.
 Чтобы убедиться в этом окончательно используем оператор id(), который возвращает уникальный идентификатор
 объекта, присваиваемый в момент выделения под него область памяти"""
 
-def test1(a,b,c):
-    print('a = {}; b = {}; c = {}'.format(id(a), id(b), id(c) ))
-x,y,z = (5,[1,4], 'Str')
-test1(x,y,z)                                                     #a = 140724244882680; b = 2205464740608; c = 2205465087840
-print('x = {}; y = {}; z = {}'.format(id(x),id(y),id(z))) # x = 140724244882680; y = 2205464740608; z = 2205465087840
+
+def test1(a, b, c):
+    print("a = {}; b = {}; c = {}".format(id(a), id(b), id(c)))
+
+
+x, y, z = (5, [1, 4], "Str")
+test1(x, y, z)  # a = 140724244882680; b = 2205464740608; c = 2205465087840
+print(
+    "x = {}; y = {}; z = {}".format(id(x), id(y), id(z))
+)  # x = 140724244882680; y = 2205464740608; z = 2205465087840
 
 """Теперь попробуем изменить значения объектов в функции и посмотрим, что из этого получится"""
 
-def test2(a,b,c):
+
+def test2(a, b, c):
     a = 2
-    b[0] = 'Oo'
-    c = '^_^'
-    print('a = {}; b = {}; c = {}'.format(a, b, c))
-    print('a = {}; b = {}; c = {}'.format(id(a),id(b),id(c)))
+    b[0] = "Oo"
+    c = "^_^"
+    print("a = {}; b = {}; c = {}".format(a, b, c))
+    print("a = {}; b = {}; c = {}".format(id(a), id(b), id(c)))
 
-x,y,z = (5,[1,4], 'Str')
-test2(x,y,z) #a = 2; b = ['Oo', 4]; c = ^_^
-             #a = 140724251174040; b = 1726918483712; c = 1726918988864
 
-print('x = {}; y = {}; z = {}'.format(x, y, z)) #x = 5; y = ['Oo', 4]; z = Str
-print('x = {}; y = {}; z = {}'.format(id(x),id(y),id(z))) #x = 140724251174136; y = 1726918483712; z = 1726918987616
+x, y, z = (5, [1, 4], "Str")
+test2(x, y, z)  # a = 2; b = ['Oo', 4]; c = ^_^
+# a = 140724251174040; b = 1726918483712; c = 1726918988864
+
+print("x = {}; y = {}; z = {}".format(x, y, z))  # x = 5; y = ['Oo', 4]; z = Str
+print(
+    "x = {}; y = {}; z = {}".format(id(x), id(y), id(z))
+)  # x = 140724251174136; y = 1726918483712; z = 1726918987616
 
 """В случае присваивания нового значения переменной, которая хранит ссылку на объект неизменяемого типа,
 создается новый объект, на который теперь и будет ссылаться данная переменная. Это видно по работе
@@ -1885,35 +1931,42 @@ Python поддерживает вызов функций и методов кл
 параметров.
 """
 
+
 def test_default(a=10):
     print(a)
-test_default('Hi!') #Hi!
-test_default() # 10
+
+
+test_default("Hi!")  # Hi!
+test_default()  # 10
+
 
 def test_default2(a=10, b=12):
-    print(a+b)
+    print(a + b)
 
-test_default2() #22
-test_default2(4) #16
-test_default2(4,2) #6
+
+test_default2()  # 22
+test_default2(4)  # 16
+test_default2(4, 2)  # 6
 
 """Из приведенных выше примеров видно, что данные аргументы не являются обязательными при вызове функции.
 Но если среди аргументов должны быть обязательные, то есть те, которые каждый раз при вызове функции
 необходимо передавать ей на вход, их необходимо указывать вначале списка аргументов"""
 
-def test_default3(a, b = 12):
-    print(a+b)
 
-test_default3(4) #16
-test_default3(4,2) #6
+def test_default3(a, b=12):
+    print(a + b)
+
+
+test_default3(4)  # 16
+test_default3(4, 2)  # 6
 
 """Если первыми аргументами сделать необязательные  аргументы а следом за ними обязательные аргументы,
 то интерпретатор Python выведет сообщение об ошибке: """
-#def test_default4(b=12, a):
+# def test_default4(b=12, a):
 #    print(a+b)
 
-#test_default3(4) #SyntaxError: parameter without a default follows parameter with a default
-#test_default3(4,2)  #SyntaxError: parameter without a default follows parameter with a default
+# test_default3(4) #SyntaxError: parameter without a default follows parameter with a default
+# test_default3(4,2)  #SyntaxError: parameter without a default follows parameter with a default
 
 """2.3.2
 Режимы сопоставления аргументов функции
@@ -1942,38 +1995,47 @@ kw1, ..., kwN - ключевые аргументы (значения котор
 При таком подходе выполняется сопоставление переданных значений аргументов с именами аргументов в заголовке функции 
 по позиции, слева направо
 """
-def custom_function(a,b,c):
-    print(a+b+c)
 
-custom_function(10,4,8) # 22
+
+def custom_function(a, b, c):
+    print(a + b + c)
+
+
+custom_function(10, 4, 8)  # 22
 
 """2. Передача по имени аргумента (сопоставляются по имени аргумента)
 в качестве альтернативы позиционному способу сопоставления в вызывающем коде можно
 указывать, какой аргумент в функции получает значение посредством синтаксиса "имя=значение" 
 """
 
-def custom_function(a,b,c=2):
-    print(a+b+c)
 
-custom_function(b=2, c=1, a=4) #7
+def custom_function(a, b, c=2):
+    print(a + b + c)
+
+
+custom_function(b=2, c=1, a=4)  # 7
 
 """3.Переменное количество позиционных аргументов (сначала сопоставляются единичные позиционные элементы,
 потом итерируемый список позиционных аргументов, а далее аргументы сопоставляются по имени)
 """
 
-def custom_function(a,b,c, *args):
+
+def custom_function(a, b, c, *args):
     print(a + b + c + sum(*args))
 
-custom_function(1,1,1, [10,20,30]) # 63
 
-#custom_function(a = 1, b = 1, c = 1, [10,20,30]) # SyntaxError: positional argument follows keyword argument
+custom_function(1, 1, 1, [10, 20, 30])  # 63
 
-def custom_function(a,b,c, *args, d):
+# custom_function(a = 1, b = 1, c = 1, [10,20,30]) # SyntaxError: positional argument follows keyword argument
+
+
+def custom_function(a, b, c, *args, d):
     print(a + b + c + sum(*args) - d)
 
-custom_function(1, 1, 1, [10, 20, 30], d = 4) #59
 
-#custom_function(1, 1, 1, [10, 20, 30], 4)
+custom_function(1, 1, 1, [10, 20, 30], d=4)  # 59
+
+# custom_function(1, 1, 1, [10, 20, 30], 4)
 """    custom_function(1, 1, 1, [10, 20, 30], 4)
     ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
 TypeError: custom_function() missing 1 required keyword-only argument: 'd'
@@ -1982,28 +2044,35 @@ TypeError: custom_function() missing 1 required keyword-only argument: 'd'
 """3.Передача произвольного количества позиционных и ключевых элементов 
 """
 
+
 def custom_function4(*args, **kwargs):
     if args:
         print(args)
     if kwargs:
         print(kwargs)
 
-custom_function4(10,20, key='Hi', Oo=100)
 
-#Имена args и kwargs не являются обязательными
+custom_function4(10, 20, key="Hi", Oo=100)
+
+
+# Имена args и kwargs не являются обязательными
 def custom_function4(*a, **b):
     if a:
         print(a)
     if b:
         print(b)
-custom_function4(10,20, key='Hi', Oo=100)
+
+
+custom_function4(10, 20, key="Hi", Oo=100)
 
 """Передача произвольного числа аргументов"""
+
 
 def custom_function5(**kwargs):
     print(kwargs)
 
-custom_function5(key='Hi', Oo=100)
+
+custom_function5(key="Hi", Oo=100)
 
 
 """Шаги, выполняемые Python для сопоставления аргументов перед присваиванием, могут быть грубо описаны
@@ -2030,39 +2099,46 @@ custom_function5(key='Hi', Oo=100)
 При его отсутствии в теле функции по умолчанию возвращается None:
 """
 
-def test_return(a,b):
+
+def test_return(a, b):
     c = a + b
-print(test_return(2,4)) #None
 
 
-def test_return(a,b):
+print(test_return(2, 4))  # None
+
+
+def test_return(a, b):
     return a + b
 
-print(test_return(2,4)) #6
 
-#Бывает так, что необходимо вернуть несколько значений, здесь на помощь приходят кортежи.
+print(test_return(2, 4))  # 6
 
-def test_return(a,b):
+# Бывает так, что необходимо вернуть несколько значений, здесь на помощь приходят кортежи.
+
+
+def test_return(a, b):
     c = a + b
     m = a * b
-    e = a ** b
+    e = a**b
     d = a / b
     s = a - b
-    return c,m,e,d,s
-print(test_return(4,2)) #(6, 8, 16, 2.0, 2)
+    return c, m, e, d, s
+
+
+print(test_return(4, 2))  # (6, 8, 16, 2.0, 2)
 
 """
 Чтобы присвоить значения из возвращаемого функцией кортежа переменным, можно
 применить следующие методы распаковки последовательностей: 
 """
 
-x, y, q, w, z = test_return(4,2) #(6, 8, 16, 2.0, 2)
-print(x, y, q, w, z) #6 8 16 2.0 2
+x, y, q, w, z = test_return(4, 2)  # (6, 8, 16, 2.0, 2)
+print(x, y, q, w, z)  # 6 8 16 2.0 2
 
-_, *my_list, _ = test_return(4,2)
-print(*my_list) # 8 16 2.0 --первое и последнее значение игнорируются
+_, *my_list, _ = test_return(4, 2)
+print(*my_list)  # 8 16 2.0 --первое и последнее значение игнорируются
 
-у, *my_list, q = test_return(4,2)
+у, *my_list, q = test_return(4, 2)
 print(у, *my_list, q)
 
 
@@ -2085,14 +2161,13 @@ print(у, *my_list, q)
 должны равняться количеству элементов этой самой последовательности:
 """
 
-#w, _ = test_return(4,2)
-#print(w, my_list) #    w, _ = test_return(4,2) ValueError: too many values to unpack (expected 2, got 5)
+# w, _ = test_return(4,2)
+# print(w, my_list) #    w, _ = test_return(4,2) ValueError: too many values to unpack (expected 2, got 5)
 
 """Также запрещается использовать несколько имен переменных с приставкой в виде символа "*"
 *first, *second = test_return(4,2)
 Вместо кортежей можно использовать словарь
 """
-
 
 
 """2.5.Принцип работы с областью видимости
@@ -2184,7 +2259,7 @@ print(x)    # 20 (глобальная изменилась)
 
 """
 
-#print(''.join(reversed('Время программировать')))
+# print(''.join(reversed('Время программировать')))
 
 """
 Локальная область видимости вложенных функций
@@ -2195,30 +2270,42 @@ print(x)    # 20 (глобальная изменилась)
 
 # Так как переменная X не была объявлена в области видимости функции, то Python обращается при ее поиске к области
 # видимости более высокого порядка
-X=6
+X = 6
+
+
 def test_func(y):
     print(X + y)
-test_func(7) # 13
 
-#Теперь добавим локальную переменную X=3 в функцию и посмотрим, что изменится
 
-X=6
+test_func(7)  # 13
+
+# Теперь добавим локальную переменную X=3 в функцию и посмотрим, что изменится
+
+X = 6
+
+
 def test_func(y):
     X = 3
     print(X + y)
-    print(X) #3
-test_func(7) # 10 (3X + 7y)
-print(X) #6
+    print(X)  # 3
 
-#Оператор global дает указание интерпретатору Python начинать поиск переменной X с глобальной области видимости.
-#Потом происходит изменение значения этой переменной, что можно заметить из результирующего вывода программы.
+
+test_func(7)  # 10 (3X + 7y)
+print(X)  # 6
+
+# Оператор global дает указание интерпретатору Python начинать поиск переменной X с глобальной области видимости.
+# Потом происходит изменение значения этой переменной, что можно заметить из результирующего вывода программы.
 X = 6
+
+
 def test_func(y):
     global X
     X = 3
     print(X + y)
-test_func(7) # 10
-print(X) # 3
+
+
+test_func(7)  # 10
+print(X)  # 3
 
 """Замыкания 
 Суть данного подхода заключается в том, что указанный объект функции помнит значения из объемлющих
@@ -2227,7 +2314,6 @@ print(X) # 3
 Замыкания иногда применяются в программах, которым необходимо генерировать обработчики событий на лету
 в ответ на условия, сложившиеся во время выполнения.
 """
-
 
 
 """Функция action сохраняет значение N из объемлющей области видимости, то есть области видимости
@@ -2249,34 +2335,42 @@ print(my_func(5))  # 5 ** 3 = 125
 памяти, потому что она нужна внутренней функции.
 
 """
+
+
 def marker(N):
-    def action(X): # Создание и возвращения функции action
-        return X ** N
+    def action(X):  # Создание и возвращения функции action
+        return X**N
+
     return action
 
+
 square = marker(2)  # функция возведения в квадрат
-cube = marker(3)    # функция возведения в куб
+cube = marker(3)  # функция возведения в куб
 
 print(square(5))  # 25
-print(cube(5))    # 125
+print(cube(5))  # 125
+
 
 def marker(N):
     print(f"Создаётся функция со степенью {N}")
+
     def action(X):
-        result = X ** N
+        result = X**N
         print(f"  Внутри action: {X}^{N} = {result}")
         return result
+
     return action
 
-my_func = marker(3)  # Напечатает: "Создаётся функция со степенью 3"
-my_func(2)          # Напечатает: "  Внутри action: 2^3 = 8"
-my_func(4)          # Напечатает: "  Внутри action: 4^3 = 64"
 
-#print(my_func.__closure__)        # Показывает ячейки с сохранёнными переменными
+my_func = marker(3)  # Напечатает: "Создаётся функция со степенью 3"
+my_func(2)  # Напечатает: "  Внутри action: 2^3 = 8"
+my_func(4)  # Напечатает: "  Внутри action: 4^3 = 64"
+
+# print(my_func.__closure__)        # Показывает ячейки с сохранёнными переменными
 print(my_func.__closure__[0].cell_contents)  # 3 (значение N)
 
-#Также замыкание можно сделать с использованием lambda функции, которую будет возвращать основная
-#оборачивающая функция
+# Также замыкание можно сделать с использованием lambda функции, которую будет возвращать основная
+# оборачивающая функция
 
 """Лямбда-функции
 Слово lambda предоставляет краткую форму для объявления небольших анонимных функций
@@ -2285,18 +2379,21 @@ print(my_func.__closure__[0].cell_contents)  # 3 (значение N)
 """
 
 my_add = lambda x, y: x + y
-print(my_add(1, 3)) #3
+print(my_add(1, 3))  # 3
 
-#Этот код эквивалентен следующему коду:
+# Этот код эквивалентен следующему коду:
+
 
 def my_add(x, y):
     return x + y
+
+
 print(my_add(1, 3))
 
 """Основное различие здесь в том, что перед использованием не производится связывание объекта функции с ее именем
 Лямбда выражение можно выполнить сразу при объявлении"""
 
-print((lambda x, y: x + y) (5,2))
+print((lambda x, y: x + y)(5, 2))
 
 """Лямбда функция ограничена одним единственным выражением, то есть в них не могут применяться инструкции или 
 аннотации, даже инструкция return
@@ -2308,13 +2405,13 @@ print((lambda x, y: x + y) (5,2))
 """
 
 users = [
-    {'name': 'Иван', 'age': 30},
-    {'name': 'Анна', 'age': 25},
-    {'name': 'Петр', 'age': 35}
+    {"name": "Иван", "age": 30},
+    {"name": "Анна", "age": 25},
+    {"name": "Петр", "age": 35},
 ]
 
 # sorted() возвращает НОВЫЙ отсортированный список
-sorted_users = sorted(users, key=lambda user: user['age'])
+sorted_users = sorted(users, key=lambda user: user["age"])
 print(sorted_users)
 # Исходный список остался без изменений
 print(users)  # Порядок сохранился
@@ -2339,6 +2436,7 @@ print(is_even(5))  # False
 
 # Сумма элементов списка (с reduce)
 from functools import reduce
+
 # Произведение элементов
 product = lambda lst: reduce(lambda a, b: a * b, lst, 1)
 print(product([1, 2, 3, 4]))  # 24
@@ -2362,23 +2460,27 @@ print(formatted)  # ['Иван', 'Анна', 'Петр']
 Рассмотрим различные варианты написания рекурсивной функции на примере задачи суммирования элементов последовательности.
 """
 
+
 def my_sum(l):
-    print (l)
+    print(l)
     if not (l):
         return 0
     else:
         return l[0] + my_sum(l[1:])
 
-print(my_sum([1,2,3,4,5,20,30]))
 
-#Решение через тернарный оператор
+print(my_sum([1, 2, 3, 4, 5, 20, 30]))
+
+
+# Решение через тернарный оператор
 def my_sum1(l):
     return 0 if not l else l[0] + my_sum1(l[1:])
-print(my_sum1([1,2,3,4,5,20,30]))
+
+
+print(my_sum1([1, 2, 3, 4, 5, 20, 30]))
 
 """В случаях, когда не получается выйти из рекурсии определенное количество шагов, то Python прервет выполнение
 кода и оповестит пользователя об исчерпании лимита рекурсивных вызовов"""
-
 
 
 """Декорирование функций
@@ -2413,10 +2515,12 @@ def free_decorator(function):
     print(f"Декоратор получил функцию: {function.__name__}")
     return function
 
+
 # 2. Применяем декоратор
 @free_decorator
 def my_func():
     return "It's work!!!"
+
 
 # 3. Проверяем
 print(my_func())  # It's work!!!
@@ -2426,6 +2530,7 @@ print(f"Имя my_func: {my_func.__name__}")
 
 import time
 
+
 def timer(func):
     def wrapper(*args, **kwargs):
         start = time.time()
@@ -2433,12 +2538,15 @@ def timer(func):
         end = time.time()
         print(f"{func.__name__} выполнялась {end - start:.4f} сек")
         return result
+
     return wrapper
+
 
 @timer
 def slow_function():
     time.sleep(2)
     return "Готово"
+
 
 slow_function()  # slow_function выполнялась 2.0001 сек
 
@@ -2450,17 +2558,22 @@ slow_function()  # slow_function выполнялась 2.0001 сек
 Рассмотрим как декоратор может менять поведение оборачиваемой в него функции. Для этого реализуем следующий декортатор:
 """
 
+
 def up_register(func):
     def wrapper():
         original_result = func()
         modified_result = original_result.upper()
         return modified_result
+
     return wrapper
+
 
 @up_register
 def my_func():
     return "It's work!!!"
-print(my_func()) # "IT'S WORK!!!"
+
+
+print(my_func())  # "IT'S WORK!!!"
 
 """
 Замыкание wrapper имеет доступ к недекорированной входной функции, 
@@ -2511,21 +2624,28 @@ def wrapper_body():
 └─────────────────────────────────────┘
 """
 
+
 def h1_html(function):
     def wrapper():
-        return '<h1>' + function() + '</h1>'
+        return "<h1>" + function() + "</h1>"
+
     return wrapper
+
 
 def body(function):
     def wrapper():
-        return '<body>' + function() + '</body>'
+        return "<body>" + function() + "</body>"
+
     return wrapper
+
 
 @body
 @h1_html
 def my_func():
     return "It's work!!!"
-print(my_func()) #<body><h1>It's work!!!</h1></body>
+
+
+print(my_func())  # <body><h1>It's work!!!</h1></body>
 
 
 """В ручном режиме декорирования такой подход выглядит следующим образом"""
@@ -2536,28 +2656,33 @@ print(my_decfunc())
 """Но такой подход к декорированию не сработает, когда начальная функция имеет аргументы:
 """
 
-#def body(function):
+# def body(function):
 #    def wrapper():
 #        return '<body>' + function() + '</body>'
 #    return wrapper
 
-#@body
-#def my_func(name):
+# @body
+# def my_func(name):
 #    return name + ", It's work!!!"
-#my_func('Alex')
+# my_func('Alex')
 
 """Чтобы избежать этой ошибки, замыкающая функция должна также принимать 
 аналогичный перечень аргументов:"""
 
+
 def body(function):
     def wrapper(name):
-        return '<body>' + function(name) + '</body>'
+        return "<body>" + function(name) + "</body>"
+
     return wrapper
+
 
 @body
 def my_func(name):
     return name + ", It's work!!!"
-print(my_func('Alex'))
+
+
+print(my_func("Alex"))
 
 """Генераторные функции и выражения
 являются синтаксическим сахаром для простого написания итератора и позволяет откладывать 
@@ -2581,42 +2706,48 @@ print(my_func('Alex'))
 
 """
 
+
 def gen_test():
     n = 0
     while n < 3:
         yield n
         n += 1
 
+
 for x in gen_test():
-    print(x) #0,1,2
+    print(x)  # 0,1,2
 
 """Чтобы лучше понять принцип работы реализуем следующую функцию, тело
 которой состоит только из  yield"""
+
 
 def gen_surprise_test():
     yield 0
     yield 1
     yield 2
 
+
 for x in gen_surprise_test():
-    print(x) #0,1,2
+    print(x)  # 0,1,2
 
 """Таким образом, генераторные функции позволяют избежать выполнения всей работы заранее, что
 особенно полезно когда результирующие списки большие или получение
 каждого значения требует длительных вычислений"""
 
+
 def gen_test_send(N):
     for x in range(N):
-        Y=yield x
+        Y = yield x
         print(Y)
+
 
 iterator = gen_test_send(6)
 print(next(iterator))
-print(iterator.send('Sst'))
+print(iterator.send("Sst"))
 
 
 """Код генераторного выражения"""
-new_func_iter = ('DDD' for _ in range(5))
+new_func_iter = ("DDD" for _ in range(5))
 for it in new_func_iter:
     print(it)
 
@@ -2627,7 +2758,6 @@ for it in new_func_iter:
 списковых включений, а потому их лучше всего применять для очень
 крупных результирующих наборов или в приложениях,
 которые не могут ожидать генерации полных результатов"""
-
 
 
 """Определение модуля
@@ -2671,12 +2801,12 @@ for it in new_func_iter:
 import my_module1
 
 # "Я сейчас буду использовать этот инструмент, а не просто держать в руках"
-#if __name__ == "__main__" позволяет файлу быть одновременно:
-#Библиотекой (можно импортировать функции)
-#Скриптом (можно запустить для демонстрации или тестирования
-#Не выполнять лишний код при импорте!!!
+# if __name__ == "__main__" позволяет файлу быть одновременно:
+# Библиотекой (можно импортировать функции)
+# Скриптом (можно запустить для демонстрации или тестирования
+# Не выполнять лишний код при импорте!!!
 if __name__ == "__main__":
-    my_module1.printer('Alex')
+    my_module1.printer("Alex")
     print(my_module1.str1)
     print(my_module1.a)
 
@@ -2693,16 +2823,18 @@ if __name__ == "__main__":
 Таким образом осуществляется более прямой доступ к именам импортируемого модуля"""
 
 from my_module1 import printer
+
 if __name__ == "__main__":
-    printer('Alex')
+    printer("Alex")
 
 """Запись вида from my_module1 import * копирует все имена на верхнем уровне
 импортируемого модуля"""
 
 
 from my_module1 import *
+
 if __name__ == "__main__":
-    printer('Alex')
+    printer("Alex")
     print(str1)
     print(a)
 
@@ -2743,26 +2875,31 @@ Type hinting — это способ объявить ожидаемый тип 
 его именем, а для возвращаемых значений после символа ->, следующего за списком аргументов
 """
 
+
 def add(a: int, b: int) -> int:
     return a + b
 
-c = print(add(3,5))
+
+c = print(add(3, 5))
 
 
 # Без подсказки
 def greet(name):
     return "Привет, " + name
 
+
 # С подсказкой
 def greet(name: str) -> str:
     return "Привет, " + name
 
-#Самодокументирование кода
+
+# Самодокументирование кода
 def calculate_discount(price: float, percent: float, is_vip: bool) -> float:
     """Понятно без документации: price - число, percent - число, is_vip - да/нет"""
     if is_vip:
         percent += 10
     return price * (1 - percent / 100)
+
 
 cv = calculate_discount(price=1000, percent=20, is_vip=True)
 print(cv)
@@ -2774,13 +2911,12 @@ y: float = 1.0
 y: bool = True
 y: str = "test"
 y: bytes = b"test"
-y: list[int] = [1,4,6]
-y: set[int] = {1,7,11,6,0}
-y: dict[str, int] = {"key":12}
+y: list[int] = [1, 4, 6]
+y: set[int] = {1, 7, 11, 6, 0}
+y: dict[str, int] = {"key": 12}
 y: tuple[int, str, float] = (7, "Oo", 1.45)
 # не фиксированный размер кортежа
-y: tuple[int, ...] = (1,2,3)
-
+y: tuple[int, ...] = (1, 2, 3)
 
 
 """
@@ -2796,11 +2932,14 @@ if __name__ == "__main__":
 
 
 """
+
+
 def foo(my_list: list[int]) -> int:
     return sum(my_list)
 
+
 if __name__ == "__main__":
-    my_list = [1,2,4.6,5,6,7]
+    my_list = [1, 2, 4.6, 5, 6, 7]
     result = foo(my_list)
     print(result)
 
@@ -2810,19 +2949,21 @@ if __name__ == "__main__":
 приложение начнет работать не так как мы задумывали, поскольку функция будет
 возвращать вещественный, а не целочисленный результат.
 """
-    # mypy Introduction_to_python_chernyshev.py
-    # Argument 1 to "foo" has incompatible type "list[str]"; expected "list[int]"  [arg-type]
+# mypy Introduction_to_python_chernyshev.py
+# Argument 1 to "foo" has incompatible type "list[str]"; expected "list[int]"  [arg-type]
 
 """Если функция должна работать из смеси целочисленных и вещественных элементов,
 то необходимо воспользоваться объединением"""
 
 from typing import Union
 
+
 def foo(my_list: list[Union[int, float]]) -> Union[int, float]:
     return sum(my_list)
 
+
 if __name__ == "__main__":
-    my_list = [1,2,4.6,5,6.1,10]
+    my_list = [1, 2, 4.6, 5, 6.1, 10]
     result = foo(my_list)
     print(result)
 
@@ -2832,15 +2973,18 @@ if __name__ == "__main__":
 Для работы с такими ситуациями используйте Optional из пакета typing"""
 
 from typing import Optional
-def foo(a:int, b: float, c:Optional[int | float]) -> Optional[float]:
+
+
+def foo(a: int, b: float, c: Optional[int | float]) -> Optional[float]:
     if c is not None:
-        return a+b+c
+        return a + b + c
     else:
         return None
 
+
 if __name__ == "__main__":
-    print(foo(2,4.6,8.6)) #15.2
-    print(foo(2, 4.6, None)) #None
+    print(foo(2, 4.6, 8.6))  # 15.2
+    print(foo(2, 4.6, None))  # None
 
 """Если же не имеет значения какой тип данных передается в качестве аргумента в или возвращается
 функцией, то можно использовать Any из пакета typing
@@ -2850,10 +2994,10 @@ Any также используется часто в качестве указ�
 
 from typing import Any
 
+
 def foo() -> dict[str, Any]:  # обратите внимание: dict[str, Any], а не dict(str, Any)
-    return {'name': 'Alex',
-            'age': 19,
-            'is_married': False}
+    return {"name": "Alex", "age": 19, "is_married": False}
+
 
 if __name__ == "__main__":
     my_dict = foo()
@@ -2908,19 +3052,18 @@ if __name__ == "__main__":
  ШАГ 6: ВЫВОД НА ЭКРАН    │    На экране: True
 ────────────────────────────────────────────────────────────────────
 """
-from typing import Any,Callable
-def foo( person:  dict[str,Any],
-         checker: Callable[[int],bool]
-        ) -> bool:
-    return checker(person['age'])
+from typing import Any, Callable
+
+
+def foo(person: dict[str, Any], checker: Callable[[int], bool]) -> bool:
+    return checker(person["age"])
+
 
 if __name__ == "__main__":
 
-    my_dict ={'name': 'Alex',
-            'age': 19,
-            'is_married': False}
+    my_dict = {"name": "Alex", "age": 19, "is_married": False}
 
-    def my_func(age:int) -> bool:
+    def my_func(age: int) -> bool:
         return age >= 18
 
     print(foo(my_dict, my_func))
@@ -2952,10 +3095,13 @@ if __name__ == "__main__":
 
 from typing import Callable
 
-def pow_n(n:int) -> Callable[[int],int]:
-    def action(x: int) ->int:
-        return  x ** n
+
+def pow_n(n: int) -> Callable[[int], int]:
+    def action(x: int) -> int:
+        return x**n
+
     return action
+
 
 if __name__ == "__main__":
     my_pow = pow_n(3)
@@ -2973,7 +3119,6 @@ if __name__ == "__main__":
 -main1.py
 -test_main1.py
 """
-
 
 
 """Объектно-ориентированное программирование
