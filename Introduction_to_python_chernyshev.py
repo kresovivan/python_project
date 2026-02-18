@@ -3387,22 +3387,3 @@ if __name__ == "__main__":
     обратиться через специальный атрибут экземпляра класса - __class__ Этот атрибут вернет класс,
     к которому принадлежит экземпляр.
     """
-    
-    
-    class MyClass3:
-        pow_val = 2 # переменная класса
-        def __init__(self,magic = 10):
-            self.magic = magic # переменная экземпляра класса
-        
-        def square_magic(self):
-            return self.magic ** MyClass3.pow_val # обращение к переменной класса через имя класса
-        
-if __name__ == "__main__":
-    my_test3 = MyClass3()
-    print(my_test3.square_magic())# 100
-    print(my_test3.pow_val)# 2
-    
-print(MyClass3) #<class '__main__.MyClass3'>
-print(my_test3.__class__.pow_val) #2
-print(my_test3.__class__) #<class '__main__.MyClass3'>
-
