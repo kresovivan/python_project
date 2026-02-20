@@ -1,4 +1,5 @@
 #Отформатировать код black my_script.py
+# rm -rf .codegraph
 
 
 """Встроенные типы данных Python

@@ -1,0 +1,4 @@
+# CodeGraph files
+.codegraph/
+.codegraph/**/*
+**/.codegraph/
