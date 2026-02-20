@@ -2638,3 +2638,5 @@ def is_between(x, y, z):
 
 print(f'Результат: {is_between(6, 4, 2)}')
 print(f'Результат: {is_between(2, 4, 6)}')
+
+#стр 95
