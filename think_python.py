@@ -3768,3 +3768,18 @@ print(is_reverse('порт', 'троп')) #IndexError: string index out of range
 Необязательный аргумент:
 Аргумент функции или метода, который использовать необязательно.
 """
+
+
+def find_duplicates(items):
+    seen = set()
+    duplicates = set()
+    for item in items:
+        if item in seen:
+            duplicates.add(item)
+        else:
+            seen.add(item)
+    return list(duplicates)
+
+print(find_duplicates([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 9, 8, 14, 3]))
+
+#125S
