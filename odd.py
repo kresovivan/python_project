@@ -475,3 +475,18 @@ print(found)
 А не лучше ли использовать в данном случае множества, разве множества
 не лучший выбор, если нужно избежать дублирования?
 """
+
+vowels = ['a', 'e', 'i', 'o', 'u'] 
+word = ['Mindripper']
+found = [] 
+
+for letter in word:      
+    if letter in vowels:
+        if letter not in found: 
+            found.append(letter) 
+for vowel in found: 
+    print(vowel)
+
+"""
+Удаление объектом из списка
+"""
