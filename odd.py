@@ -688,3 +688,8 @@ print(letters[:5]) # ['D', 'o', 'n', "'", 't']
 print(letters[::2]) # ['D', 'n', 't', 'p', 'n', 'c']
 
 """Конец и начало диапазона в списках"""
+
+book = "The Hitchhiker's Guide to the Galaxy"
+booklist = list(book)
+print(booklist)
+
