@@ -1,13 +1,62 @@
-
+import time  # Импортировать модуль time
+import random
+import html
+import time
+import datetime
+import os
+import sys
+from os import getcwd
 from datetime import datetime
-from turtle import backward
+
+
+"""
+📊 Изменяемые vs Неизменяемые коллекции
+Коллекция	Изменяемая?	Пример	Можно изменить?
+list (список)	✅ Да	[1, 2, 3]	Можно менять элементы, добавлять, удалять
+dict (словарь)	✅ Да	{"a": 1, "b": 2}	Можно менять значения, добавлять ключи
+set (множество)	✅ Да	{1, 2, 3}	Можно добавлять и удалять элементы
+tuple (кортеж)	❌ Нет	(1, 2, 3)	Нельзя изменить после создания
+str (строка)	❌ Нет	"hello"	Нельзя изменить символы
+frozenset	    ❌ Нет	frozenset([1,2,3])	Замороженное множество, нельзя изменить
+bytes	        ❌ Нет	b"hello"	Неизменяемая последовательность байт
+"""
+
 """
 Думайте о модулях как о коллекциях связанных функций
 """
 
-odds = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19,
-        21, 23, 25, 27, 29, 31, 33, 35, 37, 39,
-        41, 43, 45, 47, 49, 51, 53, 55, 57, 59]
+odds = [
+    1,
+    3,
+    5,
+    7,
+    9,
+    11,
+    13,
+    15,
+    17,
+    19,
+    21,
+    23,
+    25,
+    27,
+    29,
+    31,
+    33,
+    35,
+    37,
+    39,
+    41,
+    43,
+    45,
+    47,
+    49,
+    51,
+    53,
+    55,
+    57,
+    59,
+]
 
 right_this_minute = datetime.today().minute
 print(right_this_minute)
@@ -22,32 +71,35 @@ if right_this_minute in odds:
     print("This minute seems a little odd.")
 else:
     print("Not an odd minute.")
-    
-from os import getcwd
-where_am_i = getcwd()
-print(where_am_i) #PS C:\Users\Kresov Ivan\PycharmProjects\PythonProject> 
 
-import sys
-import os
-print(sys.platform) #win32 - обозначает семейство Windows, а не разрядность
-print(sys.version) #3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]
-print(os.getcwd()) #C:\Users\Kresov Ivan\PycharmProjects\PythonProject
-#print(os.listdir()) #['odd.py', 'odd.pyc', 'README.md']
-#print(os.environ)
-print(os.getenv('Path'))
+where_am_i = getcwd()
+print(
+    where_am_i
+)  # PS C:\Users\Kresov Ivan\PycharmProjects\PythonProject>
+
+print(
+    sys.platform
+)  # win32 - обозначает семейство Windows, а не разрядность
+# 3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]
+print(sys.version)
+print(
+    os.getcwd()
+)  # C:\Users\Kresov Ivan\PycharmProjects\PythonProject
+# print(os.listdir()) #['odd.py', 'odd.pyc', 'README.md']
+# print(os.environ)
+print(os.getenv("Path"))
 
 import datetime
-print(datetime.date.today()) #2026-02-24
-print(datetime.date.today().day) #24
-print(datetime.date.today().month) #2
-print(datetime.date.today().year) #2026
-print (datetime.date.isoformat(datetime.date.today())) #2026-02-24 дата в виде строки
 
+print(datetime.date.today())  # 2026-02-24
+print(datetime.date.today().day)
+print(datetime.date.today().month)  # 2
+print(datetime.date.today().year)  # 2026
+# 2026-02-24 дата в виде строки
+print(datetime.date.isoformat(datetime.date.today()))
 
-import time
-print(time.strftime("%I:%M")) #12:09
-print(time.strftime("%A:%p")) #Tuesday:AM
-
+print(time.strftime("%I:%M"))  # 12:09
+print(time.strftime("%A:%p"))  # Tuesday:AM
 """
 В качестве примера фнкциональных возможностей стандартной библиотеки представьте, что у вас есть некоторые 
 HTML документы, и вы беспокоитесь, что они могут содержать потенциоально опасные теги <script>
@@ -55,11 +107,17 @@ HTML документы, и вы беспокоитесь, что они мог�
 угловые скобки с помощью фннкции escape из модуля html?
 """
 
-import html
-print(html.escape('This HTML fragment contains a <script>alert("boo!")</script>')) 
-#This HTML fragment contains a &lt;script&gt;alert(&quot;boo!&quot;)&lt;/script&gt;
-print(html.unescape("I &hearts; Python's &lt;script&gt;alert(&quot;boo!&quot;)&lt;/script&gt"))
-
+print(
+    html.escape(
+        'This HTML fragment contains a <script>alert("boo!")</script>'
+    )
+)
+# This HTML fragment contains a &lt;script&gt;alert(&quot;boo!&quot;)&lt;/script&gt;
+print(
+    html.unescape(
+        "I &hearts; Python's &lt;script&gt;alert(&quot;boo!&quot;)&lt;/script&gt"
+    )
+)
 """
 Значения переменным в Python присваиваются динамически.
 Их типы не требуют предвариательного определения.
@@ -80,32 +138,58 @@ print(html.unescape("I &hearts; Python's &lt;script&gt;alert(&quot;boo!&quot;)&l
 Создается объект, представляющий текущее время, из него извлекается
 значение атрибута minute, которое затем присваивается переменной. 
 """
-from datetime import datetime
-odds = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19,
-        21, 23, 25, 27, 29, 31, 33, 35, 37, 39,
-        41, 43, 45, 47, 49, 51, 53, 55, 57, 59]
-
+odds = [
+    1,
+    3,
+    5,
+    7,
+    9,
+    11,
+    13,
+    15,
+    17,
+    19,
+    21,
+    23,
+    25,
+    27,
+    29,
+    31,
+    33,
+    35,
+    37,
+    39,
+    41,
+    43,
+    45,
+    47,
+    49,
+    51,
+    53,
+    55,
+    57,
+    59,
+]
 """Здесь создается перемення right_this_minute и ей присваивается значение
 right_this_minute = datetime.today().minute #Этот вызов генерирует значение присваеваемой переменной"""
-
-
 """Инструкция if определяет истинность или ложность выражения."""
-if right_this_minute in odds: #Оператор in может определеить находится ли одна сущность внутри другой
+if (
+    right_this_minute in odds
+):  # Оператор in может определеить находится ли одна сущность внутри другой
     print("This minute seems a little odd.")
 else:
     print("Not an odd minute.")
 """Оператор in вовзаращает True или False
 #Если значение right_this_minute  содержится в odds, выражение в инструкции if вернут True,
 #И она выполнит ассоциированный с ней блок кода"""
-    
 """
 Заманчиво разделить одну строчку на две, чтобы сделать ее проще для понимания
 """
-from datetime import datetime
-time_now = datetime.today()
+import datetime
+
+time_now = datetime.datetime.today()  # или .now()
 right_this_minute = time_now.minute
 print(right_this_minute)
-
 """
 Двоеточие очень важно, поскольку вводит
 новый блок кода, который должен быть смещен на один отступ вправо.
@@ -118,62 +202,88 @@ else - блок кода который выполняется, когда ус�
 возвращает значение false.
 Если есть несколько условий, то можно исползовать elif - кажду со своим собственным блоком кода.
 """
-today = datetime.today().strftime("%A")
+import datetime
+
+today = datetime.datetime.today().strftime(
+    "%A"
+)  # Вот так правильно!
 print(today)
-if today == 'Saturday':
+if today == "Saturday":
     print("Party!!!")
-elif today == 'Sunday':
+elif today == "Sunday":
     print("Recover")
 else:
     print("Work, work,work")
-    
 """
 Важно понимать, что Python отступы используются для отделения блоков кода.
 Отступы это единственный механизм группировки кода, который представляет Python
 """
-condition = 'Headache'
-if today == 'Saturday':
+condition = "Headache"
+if today == "Saturday":
     print("Party!!!")
-elif today == 'Sunday':
-    if condition == 'Headache':
+elif today == "Sunday":
+    if condition == "Headache":
         print("Recover, then rest")
     else:
         print("Rest")
 else:
     print("Work, work,work")
-    
-
 "Перебор последовательности объектов"
-for i in [1,2,3]:
+for i in [1, 2, 3]:
     print(i)
-    
+
 for ch in "Hi!":
     print(ch)
-    
+
 for num in range(5):
-    print('Head First Rocks!!!')
-  
-    
+    print("Head First Rocks!!!")
 """
 Последние пять строк нужно повторить пять раз с помощью for
 В эти пять строк кода нужно добавить отступы, чьобы превратить их в блок кода for
 """
 
-from datetime import datetime
+import datetime
 
-odds = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19,
-        21, 23, 25, 27, 29, 31, 33, 35, 37, 39,
-        41, 43, 45, 47, 49, 51, 53, 55, 57, 59]
+odds = [
+    1,
+    3,
+    5,
+    7,
+    9,
+    11,
+    13,
+    15,
+    17,
+    19,
+    21,
+    23,
+    25,
+    27,
+    29,
+    31,
+    33,
+    35,
+    37,
+    39,
+    41,
+    43,
+    45,
+    47,
+    49,
+    51,
+    53,
+    55,
+    57,
+    59,
+]
 
 for i in range(5):
-    right_this_minute = datetime.today().minute
+    right_this_minute = datetime.datetime.today().minute
 
     if right_this_minute in odds:
         print("This minute seems a little odd.")
     else:
         print("Not an odd minute.")
-        
-
 """ 
 Python поддерживает два механизма импортирования модулей.
 Однако инструкцию import можно использовать двумя способами.
@@ -185,32 +295,61 @@ from datetime import datetime
 import time
 """
 
-import time #Импортировать модуль time
-time.sleep(1) #Вызвать метод sleep() из модуля time, чтобы программа ждала 1 секунду перед повторением цикла
+# Вызвать метод sleep() из модуля time, чтобы программа ждала 1 секунду перед повторением цикла
+time.sleep(1)
 
-import random
+# Получить список всех доступных функций и переменных в модуле random
+print(dir(random))
 
-print(dir(random)) #Получить список всех доступных функций и переменных в модуле random
-
-help(random.randint) #Получить информацию о функции randint() в модуле random
+help(
+    random.randint
+)  # Получить информацию о функции randint() в модуле random
 """Help on method randint in module random:
 
 randint(a, b) method of random.Random instance
     Return random integer in range [a, b], including both end points.
 """
 
-print(random.randint(1, 10)) #Вывести случайное число в диапазоне от 1 до 10 включительно
+# Вывести случайное число в диапазоне от 1 до 10 включительно
+print(random.randint(1, 10))
 
-from datetime import datetime
-import random
-import time 
+odds = [
+    1,
+    3,
+    5,
+    7,
+    9,
+    11,
+    13,
+    15,
+    17,
+    19,
+    21,
+    23,
+    25,
+    27,
+    29,
+    31,
+    33,
+    35,
+    37,
+    39,
+    41,
+    43,
+    45,
+    47,
+    49,
+    51,
+    53,
+    55,
+    57,
+    59,
+]
 
-odds = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19,
-        21, 23, 25, 27, 29, 31, 33, 35, 37, 39,
-        41, 43, 45, 47, 49, 51, 53, 55, 57, 59]
+import datetime
 
 for i in range(5):
-    right_this_minute = datetime.today().minute
+    right_this_minute = datetime.datetime.today().minute
 
     if right_this_minute in odds:
         print("This minute seems a little odd.")
@@ -219,23 +358,22 @@ for i in range(5):
     wait_time = random.randint(0, 1)
     time.sleep(wait_time)
 
-
-word = 'bottles'
+word = "bottles"
 for beer_num in range(99, 0, -1):
-    print(beer_num, word, 'of beer on the wall.')
-    print(beer_num, word, 'of beer.')
-    print('Take one down, pass it around,')
-    
+    print(beer_num, word, "of beer on the wall.")
+    print(beer_num, word, "of beer.")
+    print("Take one down, pass it around,")
+
     if beer_num == 1:
         print("No more bottles of beer on the wall.")
     else:
         new_num = beer_num - 1
         if new_num == 1:
-            word = 'bottle'
-        print(new_num, word, 'of beer on the wall.')  # ← ИСПРАВЛЕНО!
-    
+            word = "bottle"
+        print(
+            new_num, word, "of beer on the wall."
+        )  # ← ИСПРАВЛЕНО!
     print()  # пустая строка между куплетами
-    
 """
 В основном программирование это работа с даннвми, получение данных, 
 обработка данных, интерпретация данных
@@ -338,21 +476,19 @@ Python имеет 4 встроенные структуры данных:
 а для удовлетворения оставшихся 20% требуется выполнить дополнительную работу.
 """
 
-import sys
 # Пустые структуры
 empty_list = []
 empty_tuple = ()
 
-print(sys.getsizeof(empty_list))    # 56 байт (CPython 3.11)
-print(sys.getsizeof(empty_tuple))   # 48 байт
+print(sys.getsizeof(empty_list))  # 56 байт (CPython 3.11)
+print(sys.getsizeof(empty_tuple))  # 48 байт
 
 # С данными
 data_list = [1, 2, 3, 4, 5]
 data_tuple = (1, 2, 3, 4, 5)
 
-print(sys.getsizeof(data_list))     # 104 байта
-print(sys.getsizeof(data_tuple))    # 88 байт
-
+print(sys.getsizeof(data_list))  # 104 байта
+print(sys.getsizeof(data_tuple))  # 88 байт
 """
 Более детальное понимание списокв в Python
 Список упорядоченная коллекция объетов!!!
@@ -379,27 +515,46 @@ print(sys.getsizeof(data_tuple))    # 88 байт
 Рассмотрим несолько примеров литеральных списков.
 """
 # Имя переменной
-prices = [] # Литеральный пустой список
+prices = []  # Литеральный пустой список
 
-#Список с температурами в грудусах по Фаренгейту
-temps = [32.0, 212.0, 0.0, 81.6, 100.0, 45.3] #Объекты списка числа с плавающей точкой
-#Список слов
-words = ['Helo', 'World', 'Python', 'Programming'] #Список которых объектов
-#Список с подробными сведениями об автомобиле.
-car_details = ['Toyota','RAV4',2.2, 60807] #Список объектов различных типов
-everything = [prices, temps, words, car_details] #Список списков
-print(everything) #[[], [32.0, 212.0, 0.0, 81.6, 100.0, 45.3], ['Helo', 'World', 'Python', 'Programming'], ['Toyota', 'RAV4', 2.2, 60807]]
-#Списки внутри списков
-odds_and_ends = [[1,2,3],['a','b','c'],['One','Two','Three']]
-
+# Список с температурами в грудусах по Фаренгейту
+# Объекты списка числа с плавающей точкой
+temps = [32.0, 212.0, 0.0, 81.6, 100.0, 45.3]
+# Список слов
+words = [
+    "Helo",
+    "World",
+    "Python",
+    "Programming",
+]  # Список которых объектов
+# Список с подробными сведениями об автомобиле.
+car_details = [
+    "Toyota",
+    "RAV4",
+    2.2,
+    60807,
+]  # Список объектов различных типов
+everything = [
+    prices,
+    temps,
+    words,
+    car_details,
+]  # Список списков
+# [[], [32.0, 212.0, 0.0, 81.6, 100.0, 45.3], ['Helo', 'World', 'Python', 'Programming'], ['Toyota', 'RAV4', 2.2, 60807]]
+print(everything)
+# Списки внутри списков
+odds_and_ends = [
+    [1, 2, 3],
+    ["a", "b", "c"],
+    ["One", "Two", "Three"],
+]
 """
 Заставим списки работать
 """
 
-vowels = ['a', 'e', 'i', 'o', 'u'] #Список из пяти гласных
-#слово для проверки
-word = 'Milliways'
-
+vowels = ["a", "e", "i", "o", "u"]  # Список из пяти гласных
+# слово для проверки
+word = "Milliways"
 """
 Один объект внутри другого, проверим с помощью оператора in
 | Итерация | `letter` | Проверка `letter in vowels`    | Результат | Вывод |
@@ -419,10 +574,11 @@ i
 a
 """
 
-for letter in word:      #Берем каждую букву в слове
-    if letter in vowels: #Если буква аодержится в списке гласных
-        print(letter)    #Отображаем эту букву на экране
-
+for letter in word:  # Берем каждую букву в слове
+    if (
+        letter in vowels
+    ):  # Если буква аодержится в списке гласных
+        print(letter)  # Отображаем эту букву на экране
 """
 Сейчас программа выводит все гласные, в том числе встречающиеся повторно.
 Чтобы перечислить тоолько единичные вхождения гласных и избежать дублирования, нужно запомнить каждую
@@ -433,8 +589,7 @@ for letter in word:      #Берем каждую букву в слове
 """
 
 found = []
-print(len(found)) #0 Пустой список не содержит элементов
-
+print(len(found))  # 0 Пустой список не содержит элементов
 """
 Списки обладают набором встроенных методов, которые можно использовать для
 манипулирования объектами в списке. Вызов метода оформляется с использованием
@@ -443,19 +598,17 @@ print(len(found)) #0 Пустой список не содержит элеме�
 чтобы добавить объект в конец созданного пустого списка: 
 """
 
-found.append('a')
-print(found) #['a'] Объект тперь часть списка
-
+found.append("a")
+print(found)  # ['a'] Объект тперь часть списка
 """
 Повторные методы добавляют новые объекты в конец списка
 Списки обладают набором встроенных методов
 """
-found.append('e')
-found.append('i')
-found.append('o')
+found.append("e")
+found.append("i")
+found.append("o")
 print(len(found))
 print(found)
-
 """Содержится или нет объект в коллекции: операторы in и not in
 not in - определяет отсутствие объекта в списке
 in - определяет наличие объекта в списке
@@ -464,30 +617,29 @@ not in позвоолит нам добавлять элементы в спис
 точно известно, что они не являются его частью.
 """
 
-if 'u' not in found:
-    found.append('u')
-    
-if 'u' not in found:
-    found.append('u') # Этот вызов не будет выполнен поскольку 'u' уже есть в списке
+if "u" not in found:
+    found.append("u")
+
+if "u" not in found:
+    # Этот вызов не будет выполнен поскольку 'u' уже есть в списке
+    found.append("u")
 
 print(found)
-
 """
 А не лучше ли использовать в данном случае множества, разве множества
 не лучший выбор, если нужно избежать дублирования?
 """
 
-vowels = ['a', 'e', 'i', 'o', 'u'] 
-word = 'Mindripper'
-found = [] 
+vowels = ["a", "e", "i", "o", "u"]
+word = "Mindripper"
+found = []
 
-for letter in word:      
+for letter in word:
     if letter in vowels:
-        if letter not in found: 
-            found.append(letter) 
-for vowel in found: 
+        if letter not in found:
+            found.append(letter)
+for vowel in found:
     print(vowel)
-
 """
 Удаление объектом из списка 
 Когда список сокращается, интерпретатор автоматически освободит память, которая
@@ -496,25 +648,22 @@ for vowel in found:
 Есть и другие методы для работы со списками:
 remove, extend, insert
 """
-
-
 """
 remove принимает значение объекта в единственном аргументе.
 Удаляет первое вхождение указанного значения из списка. Если значение
 обнаружится в списке, объект, содержащий значение, будет удален из списка 
 и список сократится на один элемент.
 """
-nums = [1,2,3,4]
+nums = [1, 2, 3, 4]
 print(nums)
-nums.remove(3) #Это не индекс это значение
+nums.remove(3)  # Это не индекс это значение
 print(nums)
 
-nums = [1,2,3,4]
+nums = [1, 2, 3, 4]
 b = 1
 print(nums)
 nums.remove(b)
 print(nums)
-
 """
 Извлечение объектов из списка
 remove удобен, если заранее известно значение объекта для удаления
@@ -530,13 +679,12 @@ remove удобен, если заранее известно значение �
 перестает существовать. 
 """
 
-nums = [1,2,4]
-nums.pop() #Удаляет и возвращает последний элемент списка
-print(nums) #[1, 2]
+nums = [1, 2, 4]
+nums.pop()  # Удаляет и возвращает последний элемент списка
+print(nums)  # [1, 2]
 
-nums.pop(0) #Удаляет и возвращает элемент по индексу 0
-print(nums) #[2]
-
+nums.pop(0)  # Удаляет и возвращает элемент по индексу 0
+print(nums)  # [2]
 """
 Добавление элементов в список
 Метод extend принимает в качестве аргумента другой список и добавляет все его элементы в конец списка, 
@@ -544,9 +692,8 @@ print(nums) #[2]
 Метод очень удобно использовать для объединения двух списков в один.
 """
 
-nums.extend([3,4])
-print(nums) #[2, 3, 4]
-
+nums.extend([3, 4])
+print(nums)  # [2, 3, 4]
 """
 Вставка элементов в список
 Метод append и extend добавляют элементы в конец списка (справа), 
@@ -555,18 +702,16 @@ print(nums) #[2, 3, 4]
 Метод insert принимает два аргумента: индекс, по которому нужно вставить элемент, и сам элемент.
 """
 
-nums.insert(0,1)
-print(nums) #[1, 2, 3, 4]
+nums.insert(0, 1)
+print(nums)  # [1, 2, 3, 4]
 
-nums.insert(2,'two-and-a-half')
-print(nums) #[1, 2, 'two-and-a-half', 3, 4]
-
+nums.insert(2, "two-and-a-half")
+print(nums)  # [1, 2, 'two-and-a-half', 3, 4]
 """
 Обратиться к справке можно таким образом
 """
-#print(help(list))
+# print(help(list))
 help(list.extend)
-
 """
 Задание:
 Необходимо трансформировать строку Don't panic в строку on tap, используя методы списков.
@@ -580,50 +725,48 @@ for i in range(4):
     plist.pop()
 plist.pop(0)
 plist.remove("'")
-plist.extend([plist.pop(),plist.pop()])
-plist.insert(2,plist.pop(3))
-new_phrase = ''.join(plist)
+plist.extend([plist.pop(), plist.pop()])
+plist.insert(2, plist.pop(3))
+new_phrase = "".join(plist)
 print(plist)
 print(new_phrase)
-
 
 phrase = "Don't panic!"
 
 # Берём нужные символы по индексам и собираем в нужном порядке
-new_phrase = phrase[3:5] + phrase[7:9] + phrase[5] + phrase[10:8:-1]
+new_phrase = (
+    phrase[3:5] + phrase[7:9] + phrase[5] + phrase[10:8:-1]
+)
 
 print(new_phrase)  # "on tap"
 
-on = phrase[3:5]      # "on"
+on = phrase[3:5]  # "on"
 # "ta"  -> индексы 7,8
-ta = phrase[7:9]      # "ta"
+ta = phrase[7:9]  # "ta"
 # пробел -> индекс 5
-space = phrase[5]     # " "
+space = phrase[5]  # " "
 # "p" -> индекс 10
-p = phrase[10]        # "p" (это буква 'p' из "panic!")
+p = phrase[10]  # "p" (это буква 'p' из "panic!")
 
 new_phrase = on + space + ta + p
 print(new_phrase)  # "on tap"
-
 """
 Выглядит как копия, но не копия
 Когда требуетсся скопировать один список в другой, возникает
 соблазн использовать оператор присваивания
 """
 
-first = [1,2,3,4,5]
+first = [1, 2, 3, 4, 5]
 second = first
 print(first)
 print(second)
-
 """Посмотрим что получится, если добавить несколько элементов в список 
 second при помощи метода .append
 Казалось бы, совершенно нормальное действие, но приводит к проблеме"""
 
 second.append(6)
-print(first) #[1, 2, 3, 4, 5, 6]
-print(second) #[1, 2, 3, 4, 5, 6]
-
+print(first)  # [1, 2, 3, 4, 5, 6]
+print(second)  # [1, 2, 3, 4, 5, 6]
 """
 Если мы меняем второй список, то изменяется и первый список.
 Это неправильно, если мы хотим делать копию списка.
@@ -631,8 +774,6 @@ print(second) #[1, 2, 3, 4, 5, 6]
 в другой. Он записывает в переменные first и second ссылку 
 на один и тот же список.
 """
-
-
 """
 Как скопировать структуру данных
 Использовать метод copy
@@ -641,11 +782,10 @@ print(second) #[1, 2, 3, 4, 5, 6]
 """
 
 third = second.copy()
-print(third) #[1, 2, 3, 4, 5, 6]
+print(third)  # [1, 2, 3, 4, 5, 6]
 
 third.append(7)
-print(third) #[1, 2, 3, 4, 5, 6, 7]
-
+print(third)  # [1, 2, 3, 4, 5, 6, 7]
 """
 Python поддерживает несколько вариантов использования квадратных скобок
 Квадратные скобки используются для доступа к элементам массива,
@@ -660,7 +800,9 @@ names[0]
 
 saying = "Don't panic!"
 letters = list(saying)
-print(letters) #['D', 'o', 'n', "'", 't', ' ', 'p', 'a', 'n', 'i', 'c', '!']
+print(
+    letters
+)  # ['D', 'o', 'n', "'", 't', ' ', 'p', 'a', 'n', 'i', 'c', '!']
 print(letters[0])
 print(letters[3])
 print(letters[6])
@@ -669,12 +811,10 @@ print(letters[-3])
 print(letters[-6])
 first = letters[0]
 last = letters[-1]
-
 """
 В квадратных скобках также можно указывать и диапазоны
 (начало, конец, шаг) со списками можно использовать диапазоны 
 """
-
 """
 Срезы в действии
 Для существующего списка letters можно получить новый список.
@@ -683,11 +823,12 @@ last = letters[-1]
 и мы советуем вам потратить немного времени, чтобы понять как работают эти примеры.
 """
 
-print(letters[0:10:3]) # ['D', "'", 'p', 'i']
-print(letters[3:]) # ["'", 't', ' ', 'p', 'a', 'n', 'i', 'c', '!']
-print(letters[:5]) # ['D', 'o', 'n', "'", 't']
-print(letters[::2]) # ['D', 'n', 't', 'p', 'n', 'c']
-
+print(letters[0:10:3])  # ['D', "'", 'p', 'i']
+print(
+    letters[3:]
+)  # ["'", 't', ' ', 'p', 'a', 'n', 'i', 'c', '!']
+print(letters[:5])  # ['D', 'o', 'n', "'", 't']
+print(letters[::2])  # ['D', 'n', 't', 'p', 'n', 'c']
 """Конец и начало диапазона в списках"""
 
 book = "The Hitchhiker's Guide to the Galaxy"
@@ -695,13 +836,12 @@ booklist = list(book)
 print(booklist)
 booklist[0:3]
 print(booklist)
-print(' '.join(booklist[0:3])) #Thу
-print(' '.join(booklist[-6:])) #Galaxy
+print(" ".join(booklist[0:3]))  # Thу
+print(" ".join(booklist[-6:]))  # Galaxy
 """
 Строка перед .join (в данном случае пустая '') становится разделителем
 Так как разделитель пустой, элементы склеиваются без пробелов и запятых
 """
-
 """
 Шаг диапазона в списках
 вот еще два примера, как можно организовать обход списков
@@ -709,15 +849,13 @@ print(' '.join(booklist[-6:])) #Galaxy
 
 book = "The Hitchhiker's Guide to the Galaxy"
 booklist = list(book)
-
 """Перевернутая входная строка"""
 backwards = booklist[::-1]
-print(' '.join(backwards)) #y x a l a G   e h t   o t   e d i u G   s ' r e k i h h c t i H   e h T
-
+# y x a l a G   e h t   o t   e d i u G   s ' r e k i h h c t i H   e h T
+print(" ".join(backwards))
 """Список составлен из каждого второго элемента списка(Буквы), начиная с первого и заканчивая последним"""
 every_other = booklist[::2]
-print(''.join(every_other)) #TeHthie' ud oteGlx
-
+print("".join(every_other))  # TeHthie' ud oteGlx
 """Этип примеры подвтерждают возможность произвольного выбора начала и конца диапазона выбираемых
 элементов в списке.
 Возвращаемые в таком случае данные являются срезом.
@@ -726,8 +864,8 @@ print(''.join(every_other)) #TeHthie' ud oteGlx
 Первый из них выбирает слово в прямом, а в торой в обратном направлении.
 """
 
-print(' '.join(booklist[4:14])) #H i t c h h i k e r
-print(' '.join(booklist[13:3:-1])) #r e k i h h c t i H
+print(" ".join(booklist[4:14]))  # H i t c h h i k e r
+print(" ".join(booklist[13:3:-1]))  # r e k i h h c t i H
 """
 start = 13 (начинаем с индекса 13)
 stop = 3 (заканчиваем перед индексом 3, не включая его)
@@ -752,25 +890,26 @@ step = -1 (двигаемся назад)
 А вот методы pop, remove, extend и insert изменяют список,
 так как они необходимы именно для внесения изменений
 """
-
 """Работаем со срезами в списке
 нужно Dont't panic! первратить в on tap с ипользованием квадратных скобок"""
 phrase = "Dont't panic!"
 plist = list(phrase)
 print(phrase)
-print(plist) #['D', 'o', 'n', "'", 't', ' ', 'p', 'a', 'n', 'i', 'c', '!']
+print(
+    plist
+)  # ['D', 'o', 'n', "'", 't', ' ', 'p', 'a', 'n', 'i', 'c', '!']
 
-new_phrase = "".join(plist[1:3]) #Вырежем on из plist
-new_phrase = new_phrase + "".join([plist[6], plist[5], plist[8], plist[7]]) 
+new_phrase = "".join(plist[1:3])  # Вырежем on из plist
+new_phrase = new_phrase + "".join(
+    [plist[6], plist[5], plist[8], plist[7]]
+)
 
 print(plist)
 print(new_phrase)
-
 """
 Методы списков изменяют состояние данных,
 а квадртные скобки и срезы - нет.
 """
-
 """
 Использование циклов for со списками в Python
 Цикл for в Python знает все о списках, и когда получает любой список,
@@ -792,27 +931,25 @@ print(new_phrase)
 работу.
 """
 
-paranoid_android = 'Marvin'
+paranoid_android = "Marvin"
 letters = list(paranoid_android)
 for char in letters:
-    print('\t',char)
-    
-paranoid_android = 'Marvin'
-letters = list(paranoid_android)
-for char in letters:
-    print(char, end=' ')
+    print("\t", char)
 
-paranoid_android = 'Marvin'
+paranoid_android = "Marvin"
+letters = list(paranoid_android)
+for char in letters:
+    print(char, end=" ")
+
+paranoid_android = "Marvin"
 letters = list(paranoid_android)
 for char in letters:
     print(char)
-    
 
 paranoid_android = [2020, 2021, 2022, 2024, 2025]
 letters = paranoid_android
 for char in letters:
     print(char)
-
 """
 Цикл умеет работать со срезами
 !!!При использовании нотации с квадратными скобками для выбора среза из списка цикла
@@ -821,16 +958,15 @@ for будет выполнять итерации только по выбра�
 поставить во втором и третьем циклах for
 """
 
-paranoid_android = 'Marvin, the Paranoid Android'
+paranoid_android = "Marvin, the Paranoid Android"
 letters = list(paranoid_android)
 for char in letters[:6]:
-    print('\t',char)
+    print("\t", char)
 print()
 for char in letters[-7:]:
-    print('\t'*2,char)
+    print("\t" * 2, char)
 for char in letters[12:20]:
-    print('\t'*3,char)
-
+    print("\t" * 3, char)
 """
 Список нужен, когда у вас есть несколько похожих вещей, и с ними нужно что-то делать. 
 Вместо того чтобы давать каждой вещи отдельное имя (как с коробками: коробка1, коробка2...), 
@@ -856,7 +992,6 @@ for char in letters[12:20]:
 В программировании: Ваша программа считает что-то сложное и выдает не один ответ, 
 а много. Вы собираете их в список, чтобы потом показать пользователю или обработать дальше.
 """
-
 """
 Какие поблемы могут возникать  со списками?
 Когда у программистов возникает потребность сохранить коллеекцию похожих объектов
@@ -874,7 +1009,6 @@ temperatures = [23.5, 24.1, 22.8, 23.9]
 # Координаты точки на карте
 point = [55.7558, 37.6176]
 """
-
 """
 Когда не нужно использовать списки
 У нас есть пример данных и мы решили сохранить этот пример в списке
@@ -885,9 +1019,13 @@ point = [55.7558, 37.6176]
 Планета: Betelgeuse Seven
 """
 
-person1 = ['Ford Perfect', 'Male', 'Researcher', 'Betelgeuse Seven']
+person1 = [
+    "Ford Perfect",
+    "Male",
+    "Researcher",
+    "Betelgeuse Seven",
+]
 print(person1)
-
 """В результате получается спиоск объектов, и все работает прекрасно.
 Однако проблема заключается в необходимости помнитьь, что под первым индексом
 (индекс 0) хранится имя, а затем следует пол (тндекс 1) и так далее
@@ -895,18 +1033,23 @@ print(person1)
 что требуется гораздо большее количество элементов (например,
 для поддержки профиля в Facebook)
 С подобными данными списки использовать неудобно"""
-
-
 """
 Попытаемся исправить ситуацию, добавив теги в список, чтобы каждый элемент
 данных предварялся соотвествующим тегом.
 У нас получится вот такой список person2 
 """
 
-person2 = ['Name', 'Ford Perfect', 'Gender', 'Male', 'Occupation', 
-           'Researcher', 'Home Planet', 'Betelgeuse Seven']
+person2 = [
+    "Name",
+    "Ford Perfect",
+    "Gender",
+    "Male",
+    "Occupation",
+    "Researcher",
+    "Home Planet",
+    "Betelgeuse Seven",
+]
 print(person2)
-
 """
 Все это работает, но теперь нужно помнить, что индексы 0, 2, 4, 6 являются тегами,
 а индексы 1, 3, 5, 7 являются значениями.
@@ -917,12 +1060,143 @@ print(person2)
 Если данные, которые нужно хранить, имеют определенную структуру, подумайте об использовании
 другого контейнера вместо списков.
 """
-
-
 """
 Работа со струткурированными данными
 Когда имеются структурированные данные (для хранения которых список это не лучший кандидат),
 спасееение приходит от встроенных словарей Python.
 Словари — это контейнеры, которые позволяют хранить данные в виде пар ключ-значение.
 В этой главе мы изучим словари, множества и кортежи.
+
+Определять словарь необходимо в легкочитаемом виде
+Cловари хранят пары ключ/значение, где каждому никальному ключу
+Созадим словарь:
 """
+
+person3 = {
+    "Name": "Ford Perfect",
+    "Gender": "Male",
+    "Occupation": "Researcher",
+    "Home Planet": "Betelgeuse Seven",
+}
+print(person3)
+"""
+Это более сложная структура данных, чем списки, похожие на массивы.
+Переменная person3 в данном случае ссылается на весь словарь, который является
+коллекцией пар ключ-значение.
+Представляйте словарь как таблицы поиска, ключ используется для поиска значения (как 
+в обычных бумажных словарях)
+
+
+Как определяются словари в коде - их код заключен в фигурные скобки {}.
+Все ключи взяты в кавычки, потому что являются строкамим, так же как и все 
+ассофициированные значения, которые в этом примере тоже являются
+строками. Однако эти ключи и значения не обязательно должны быть строками. 
+Какждый ключ отделен от асофиированного значения сиволом двоеточия(:), а
+каждая пара ключ - значение (то есть запись) отделена от следующей 
+запятой.
+
+Со ловарями можно использовать квадратные скобки
+"""
+person = {
+    "Name": "Ford Perfect",
+    "Gender": "Male",
+    "Occupation": "Researcher",
+}
+
+# Доступ по ключу (как person["Name"])
+print(
+    person["Name"]
+)  # Ford Perfect - значение данных ассоциированное с ключом
+
+"""
+Выбор значений с помощью квадртаных скобок
+В отличие от списков, доступ к данным словарям производится по ключу,
+а не по индексу.
+
+Поиск данных в словарях работает быстро!
+Не важно в каком порядке хранятся данные с ловаре, все что нужно -
+это чтобы интерпретатор возвращал хначение по ключу быстро, не важно,
+как велик словарь.
+Самое заметчальное, что инетрпретатор прекрасно спарвляется с этой задачей, благодаря
+до предела оптимизированному алгоритму хэширования.
+
+Работа со словарями во время выполнения программы
+Знание того, как квадраатные скобки работают со словарями, дает ключ к пониманию, как можно заполнять словари
+во время выполнения программы.
+Есди у нас есть словарь, вы всегда можете добавить в него новую пару ключ значение,
+присвоив объект новому ключу, заключенному в квааратные скобки.
+
+Например, выведем текущее состояние словаря person3 и добавим в него новую 
+пару ключ-значение, связав число 33 с ключом "Age", зачетем снова выведем на экране
+содержимое словаря person3 чтобы убедиться, что данные добавлены верно.
+"""
+
+print(
+    person3
+)  # {'Name': 'Ford Perfect', 'Gender': 'Male', 'Occupation': 'Researcher', 'Home Planet': 'Betelgeuse Seven'}
+person3["Age"] = 33
+print(
+    person3
+)  # {'Name': 'Ford Perfect', 'Gender': 'Male', 'Occupation': 'Researcher', 'Home Planet': 'Betelgeuse Seven', 'Age': 33}
+
+"""
+Вспомним: вывод найденных гласных(списки)
+Возможность добавлять новые записи с ловари, как показано выше, можно использовать
+в различных ситуациях. 
+Например подсчет частоты: лбработка некоторыз данных и подсчет найденного.
+"""
+
+
+"""
+Выбор стркутуры данных для подсчета частоты, например, гласных
+"""
+
+found = {}
+print(found)
+found["a"] = 0
+found["e"] = 0
+found["i"] = 0
+found["o"] = 0
+found["u"] = 0
+print(found)  # Значение 0 во всех счетчиках гласных
+
+"""
+Теперь изменим в галсных соответствующие счетчики 
+Когда все счетчики установлены в ноль, не составляет труда 
+увеличить любой их них при необходимости.
+"""
+found["e"] = (
+    found["a"] + 1
+)  # Увеличение счетчика гласной "e"
+print(found)
+
+# Аналог
+found["e"] += +1  # Увеличение счетчика гласной "e"
+print(found)
+found["e"] += -1  # Уменьшение счетчика гласной "e"
+print(found)
+
+"""
+Итерации по зписям в словаряхъ
+"""
+
+for key in found:
+    print(key)
+
+"""
+Выполняя итерации по парам ключ-значение цикл for  присваивает ключ 
+текущей записи переменной k, а затем для доступа к значению используется
+found[k]. Кроме того, мы вывовдим данные в более друженственной форме,
+передавая обе строки в вызов функции print.
+"""
+for key in found:
+    print(key, found[key])
+
+
+"""
+Меняем порядок выворда записей из словаря
+Передайце в словарь в функцию sorted внутри цикла for
+"""
+
+for key in sorted(found):
+    print(key, found[key])

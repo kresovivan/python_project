@@ -12,5 +12,6 @@
             "database": "postgres",
             "username": "postgres"
         }
-    ]
+    ],
+    "editor.formatOnType": true
 }

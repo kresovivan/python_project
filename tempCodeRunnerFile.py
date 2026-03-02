@@ -1,2 +1,2 @@
-
-    right_this_minute = datet
+person1 = ["Ford Perfect", "Male", "Researcher", "Betelgeuse Seven"]
+print(person1)
