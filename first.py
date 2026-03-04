@@ -1,2 +1,2 @@
 def function():
-    print('first')
+    print("first")

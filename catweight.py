@@ -1,8 +1,19 @@
 import sys
 import pickle
 from datetime import datetime, timedelta
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton,
-                             QLabel, QLineEdit, QComboBox, QWidget, QScrollArea, QMessageBox)
+from PyQt5.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QVBoxLayout,
+    QHBoxLayout,
+    QPushButton,
+    QLabel,
+    QLineEdit,
+    QComboBox,
+    QWidget,
+    QScrollArea,
+    QMessageBox,
+)
 from PyQt5.QtCore import Qt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -37,13 +48,13 @@ class Cat:
                 weights.append(current_weight)
 
                 if prev_weight is None:
-                    colors.append('blue')  # Первая точка
+                    colors.append("blue")  # Первая точка
                 elif current_weight > prev_weight:
-                    colors.append('red')  # Увеличение веса
+                    colors.append("red")  # Увеличение веса
                 elif current_weight < prev_weight:
-                    colors.append('green')  # Уменьшение веса
+                    colors.append("green")  # Уменьшение веса
                 else:
-                    colors.append('blue')  # Без изменений
+                    colors.append("blue")  # Без изменений
 
                 prev_weight = current_weight
             current_date += timedelta(days=1)
@@ -157,7 +168,9 @@ class CatApp(QMainWindow):
             if weight <= 0:
                 raise ValueError
         except ValueError:
-            QMessageBox.warning(self, "Ошибка", "Введите корректный вес (положительное число)")
+            QMessageBox.warning(
+                self, "Ошибка", "Введите корректный вес (положительное число)"
+            )
             return
 
         today = datetime.now().date()
@@ -168,7 +181,9 @@ class CatApp(QMainWindow):
 
     def plot_weight_chart(self):
         if not self.cat or not self.cat.weight_data:
-            QMessageBox.warning(self, "Ошибка", "Нет данных о весе для построения графика")
+            QMessageBox.warning(
+                self, "Ошибка", "Нет данных о весе для построения графика"
+            )
             return
 
         today = datetime.now().date()
@@ -186,7 +201,9 @@ class CatApp(QMainWindow):
         dates, weights, colors = self.cat.get_weight_changes(start_date, today)
 
         if not dates:
-            QMessageBox.warning(self, "Ошибка", f"Нет данных о весе за выбранный период ({period})")
+            QMessageBox.warning(
+                self, "Ошибка", f"Нет данных о весе за выбранный период ({period})"
+            )
             return
 
         self.figure.clear()
@@ -194,12 +211,17 @@ class CatApp(QMainWindow):
 
         # Рисуем линии между точками с разными цветами
         for i in range(len(dates) - 1):
-            ax.plot([dates[i], dates[i + 1]], [weights[i], weights[i + 1]],
-                    color=colors[i + 1], marker='o', linestyle='-')
+            ax.plot(
+                [dates[i], dates[i + 1]],
+                [weights[i], weights[i + 1]],
+                color=colors[i + 1],
+                marker="o",
+                linestyle="-",
+            )
 
         # Первая точка
         if len(dates) > 0:
-            ax.plot(dates[0], weights[0], 'bo')
+            ax.plot(dates[0], weights[0], "bo")
 
         # Форматирование графика
         ax.set_title(f"Вес кота {self.cat.name} за {period.lower()}")
@@ -208,18 +230,18 @@ class CatApp(QMainWindow):
         ax.grid(True)
 
         # Формат дат на оси X
-        ax.xaxis.set_major_formatter(mdates.DateFormatter('%d.%m.%Y'))
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%d.%m.%Y"))
         self.figure.autofmt_xdate()
 
         self.canvas.draw()
 
     def save_data(self):
-        with open(self.data_file, 'wb') as f:
+        with open(self.data_file, "wb") as f:
             pickle.dump(self.cat, f)
 
     def load_data(self):
         try:
-            with open(self.data_file, 'rb') as f:
+            with open(self.data_file, "rb") as f:
                 self.cat = pickle.load(f)
                 self.update_ui()
         except (FileNotFoundError, EOFError):

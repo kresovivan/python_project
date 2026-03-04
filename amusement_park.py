@@ -1,7 +1,7 @@
 age = 22
 if age < 4:
     price = 0
-elif age <18:
+elif age < 18:
     price = 25
 else:
     price = 40

@@ -1,10 +1,10 @@
 def build_person(first_name, last_name, age=None):
     """Возвращает словарь с информацией о человеке."""
-    person = {'first': first_name, 'last': last_name}
+    person = {"first": first_name, "last": last_name}
     if age:
-        person['age'] = age
+        person["age"] = age
     return person
 
-musician = build_person('jimi', 'hendrix', age=28)
-print(musician)
 
+musician = build_person("jimi", "hendrix", age=28)
+print(musician)

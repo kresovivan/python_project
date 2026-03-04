@@ -1,22 +1,22 @@
 try:
     while True:
-        print('введи число: ')
+        print("введи число: ")
         Number1 = float(input())
-        print('Введи еще одно число: ')
+        print("Введи еще одно число: ")
         Number2 = float(input())
-        print('А теперь выбери операцию (+,-,*,/): ')
+        print("А теперь выбери операцию (+,-,*,/): ")
         Operator = input()
-        print('Результат = ')
-        if Operator == '+':
+        print("Результат = ")
+        if Operator == "+":
             print(Number1 + Number2)
-        if Operator == '-':
+        if Operator == "-":
             print(Number1 - Number2)
-        if Operator == '*':
+        if Operator == "*":
             print(Number1 * Number2)
-        if Operator == '/':
-            if Number2 !=0:
+        if Operator == "/":
+            if Number2 != 0:
                 print(Number1 / Number2)
             else:
-                print('Невозможно вычислить')
+                print("Невозможно вычислить")
 except:
-    print('Не число!')
+    print("Не число!")

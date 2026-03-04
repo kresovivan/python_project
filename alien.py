@@ -20,10 +20,10 @@
 # del alien_0["points"]
 # print(alien_0)
 
-#Создание пустого списка
+# Создание пустого списка
 aliens = []
-#Создание 30 пришельцев зеленого цвета
-for alien_number in range(0,30):
+# Создание 30 пришельцев зеленого цвета
+for alien_number in range(0, 30):
     new_alien = {"color": "green", "points": 5, "speed": "slow"}
     aliens.append(new_alien)
 

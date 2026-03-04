@@ -10,6 +10,7 @@ def is_bitwise_or_even(arr):
     # Проверка чётности
     return result % 2 == 0
 
+
 # Примеры
 print(is_bitwise_or_even([1, 2, 3]))  # 1|2|3 = 3 → "Нечётное (3)"
 print(is_bitwise_or_even([2, 4, 6]))  # 2|4|6 = 6 → "Чётное (6)"

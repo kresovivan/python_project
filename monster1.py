@@ -1,13 +1,14 @@
 class Monster:
-    #Аттрибут
+    # Аттрибут
     Name = "Фрэнки"
     Character = "Необычный"
-    #Метод
+
+    # Метод
     def show(self):
         print("Имя: " + self.Name)
         print("Особенность: " + self.Character)
 
-#Основная программа
+
+# Основная программа
 Frank = Monster()
 Frank.show()
-

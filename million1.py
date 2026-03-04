@@ -3,7 +3,7 @@ Capital = float(input())
 print("Процентная ставка: ")
 Percent = float(input())
 print("На какой срок ты вкладываешь деньги: ")
-Term=int(input())
+Term = int(input())
 for Value in range(Term):
     Fee = Capital * Percent / 100
     Capital = Capital + Fee

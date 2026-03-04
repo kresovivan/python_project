@@ -215,6 +215,7 @@ Python поддерживает функции, которые преобраз�
 
 from numpy import angle
 import math
+
 print(type(42))  # <class 'int'>
 print(int("32"))  # 32
 # print(int('Привет')) #ValueError: invalid literal for int(): 'Привет'
@@ -1539,7 +1540,7 @@ arc() и polygon() используется похожий код, поэтом
 
 
 def polyline(t, n, length, angle):
-    """ Рисует n отрезков с заданной длиной length и углами angle
+    """Рисует n отрезков с заданной длиной length и углами angle
     (в градусах) между ними. t — это черепашка.
     """
     for i in range(n):
@@ -1841,7 +1842,7 @@ n % 2 == 0 or n % 3 == 0 истинно, если выполняется одн�
 """
 
 if x > 0:
-    print('x — положительное число')
+    print("x — положительное число")
 
 """
 Логическое выражение после if называется условием (condition).
@@ -1869,9 +1870,9 @@ if x < 0:
 
 x = 3
 if x % 2 == 0:
-    print('x — четное число')
+    print("x — четное число")
 else:
-    print('x — нечетное число')
+    print("x — нечетное число")
 
 """Если остаток от деления x на 2 равен 0, то мы знаем, что x — четное число,
 и программа отображает соответствующее сообщение. Если условие ложно,
@@ -1889,11 +1890,11 @@ else:
 x = 3
 y = 3
 if x < y:
-    print('x меньше, чем y')
+    print("x меньше, чем y")
 elif x > y:
-    print('x больше, чем y')
+    print("x больше, чем y")
 else:
-    print('x и y равны')
+    print("x и y равны")
 
 """
 elif — это аббревиатура для “else if”. Напомню, выполняться будет только
@@ -1922,12 +1923,12 @@ else должны быть указаны в конце, сколько бы и
 """
 
 if x == y:
-    print('x и y равны')
+    print("x и y равны")
 else:
     if x < y:
-        print('x меньше, чем y')
+        print("x меньше, чем y")
     else:
-        print('x больше, чем y')
+        print("x больше, чем y")
 
 """
 Внешняя условная инструкция содержит две ветви.
@@ -1946,7 +1947,7 @@ else:
 
 if 0 < x:
     if x < 10:
-        print('x — положительное однозначное число.')
+        print("x — положительное однозначное число.")
 
 """
 Инструкция print запустится только в том случае, если выполнены оба
@@ -1954,7 +1955,7 @@ if 0 < x:
 """
 
 if 0 < x and x < 10:
-    print('x — положительное однозначное число.')
+    print("x — положительное однозначное число.")
 
 """
 Для такого рода условий Python предоставляет более краткий вариант
@@ -1962,7 +1963,7 @@ if 0 < x and x < 10:
 """
 
 if 0 < x < 10:
-    print('x — положительное однозначное число.')
+    print("x — положительное однозначное число.")
 
 """
 РЕКУРСИЯ
@@ -1974,10 +1975,10 @@ if 0 < x < 10:
 
 def countdown(n):
     if n <= 0:
-        print('Готово!')
+        print("Готово!")
     else:
         print(n)
-        countdown(n-1)
+        countdown(n - 1)
 
 
 """Если значение переменной n равно 0 или отрицательно, выводится слово
@@ -2021,11 +2022,12 @@ def print_n(s, n):
     if n <= 0:
         return
     print(s)
-    print_n(s, n-1)
-    
-#Объявление переменых
+    print_n(s, n - 1)
+
+
+# Объявление переменых
 nomer = 5
-slovo = 'Привет Андрей!'
+slovo = "Привет Андрей!"
 
 print_n(slovo, nomer)
 
@@ -2054,8 +2056,10 @@ print_n(slovo, nomer)
 не очень хорошая идея. Ниже представлена маленькая программа с бесконечной рекурсией:
 """
 
+
 def recurse():
     recurse()
+
 
 """
 В большинстве языков программирования программа с бесконечной
@@ -2092,8 +2096,8 @@ input() возвращает ввод пользователя в виде ст�
 указывающую пользователю, что вводить. Функция input() принимает подсказку в качестве аргумента:
 """
 
-#name = input('Как... вас зовут?\n')
-#print(f"Привет, меня зовут {name}!")
+# name = input('Как... вас зовут?\n')
+# print(f"Привет, меня зовут {name}!")
 
 """
 Последовательность 'n' в конце подсказки — это специальный символ
@@ -2103,9 +2107,9 @@ input() возвращает ввод пользователя в виде ст�
 Если пользователь должен ввести целое число, то вы можете попробовать
 преобразовать возвращаемое значение в тип int:"""
 
-#prompt = 'Какова... скорость ласточки без груза?\n'
-#speed = input(prompt)
-#print(int(speed))
+# prompt = 'Какова... скорость ласточки без груза?\n'
+# speed = input(prompt)
+# print(int(speed))
 
 """
 ОТЛАДКА
@@ -2206,7 +2210,7 @@ time.time()
 import time
 
 # Получаем текущее время в секундах с начала эпохи
-t= time.localtime()
+t = time.localtime()
 print(t)
 
 # Преобразование в часы, минуты, секунды
@@ -2252,10 +2256,11 @@ an + bn = cn не имеет решений в целых ненулевых �
 и использует функцию ch
 """
 
+
 def check_fermat(a, b, c, n):
     """
     Проверяет теорему Ферма для заданных параметров.
-    
+
     Аргументы:
         a, b, c: целые числа (основания)
         n: целое число (степень)
@@ -2263,12 +2268,13 @@ def check_fermat(a, b, c, n):
     # Вычисляем левую и правую части уравнения
     left = a**n + b**n
     right = c**n
-    
+
     # Проверяем условие теоремы
     if n > 2 and left == right:
         print("Не может быть, Ферма ошибся!")
     else:
         print("Нет, это не работает.")
+
 
 # def input_fermat():
 #     """
@@ -2276,24 +2282,24 @@ def check_fermat(a, b, c, n):
 #     """
 #     print("Проверка теоремы Ферма: a^n + b^n = c^n")
 #     print("-" * 40)
-    
+
 #     # Получаем ввод от пользователя
 #     a = int(input("Введите значение a (целое число): "))
 #     b = int(input("Введите значение b (целое число): "))
 #     c = int(input("Введите значение c (целое число): "))
 #     n = int(input("Введите степень n (целое число): "))
-    
+
 #     print("\nРезультат:")
 #     check_fermat(a, b, c, n)
-    
-    
+
+
 # # Пример с пифагоровой тройкой (n=2)
 # print("Пример 1: Пифагорова тройка (n=2)")
 # check_fermat(3, 4, 5, 2)
-    
+
 # print("\nПример 2: Попытка для n=3")
 # check_fermat(3, 4, 5, 3)
-    
+
 # print("\n" + "="*50)
 # print("Теперь проверьте сами:")
 # input_fermat()
@@ -2329,9 +2335,11 @@ print(height)
 круга с заданным радиусом:
 """
 
+
 def area(radius):
     a = math.pi * radius**2
     return a
+
 
 """
 Мы уже встречались с return, но в функции, возвращающей значение, 
@@ -2341,8 +2349,10 @@ def area(radius):
 Выражение может быть сколь угодно сложным, поэтому мы могли бы записать эту функцию более кратко:
 """
 
+
 def area(radius):
     return math.pi * radius**2
+
 
 """
 С другой стороны, временные переменные (temporary variables) наподобие "a" могут облегчить отладку.
@@ -2350,12 +2360,14 @@ def area(radius):
 ветви условной конструкции:
 """
 
+
 def absolute_value(x):
     if x < 0:
         return -x
     else:
         return x
-    
+
+
 print(absolute_value(5))
 
 """
@@ -2378,8 +2390,9 @@ def absolute_value(x):
         return -x
     if x > 0:
         return x
-    
-print(absolute_value(0)) #None
+
+
+print(absolute_value(0))  # None
 
 """ 
 Эта функция некорректна, так как если переменной x присвоено значение 
@@ -2397,17 +2410,19 @@ print(absolute_value(0)) #None
 и -1, если x < y.
 """
 
-def abs_sign(x,y):
+
+def abs_sign(x, y):
     if x > y:
         return 1
     if x == y:
         return 0
     if x < y:
         return -1
-    
-print(abs_sign(1,2))
-print(abs_sign(2,1))
-print(abs_sign(2,2))
+
+
+print(abs_sign(1, 2))
+print(abs_sign(2, 1))
+print(abs_sign(2, 2))
 
 
 """
@@ -2435,6 +2450,7 @@ result = math.sqrt(dsquared)
 Сразу же вы можете написать каркас функции:
 """
 
+
 def distance(x1, y1, x2, y2):
     return 0.0
 
@@ -2446,7 +2462,7 @@ def distance(x1, y1, x2, y2):
 что вы можете проверить ее, прежде чем сделать что-то более сложное.
 Чтобы проверить новую функцию, вызовите ее с примерами аргументов:
 """
-print(distance(1,2,4,6))
+print(distance(1, 2, 4, 6))
 
 """
 Я выбрал эти значения так, чтобы горизонтальное расстояние было 3, 
@@ -2460,12 +2476,14 @@ print(distance(1,2,4,6))
 Следующая версия функции сохраняет эти значения во временных переменных и печатает их:
 """
 
+
 def distance(x1, y1, x2, y2):
     dx = x2 - x1
     dy = y2 - y1
-    print('значение dx равно:', dx)
-    print('значение dy равно:', dy)
+    print("значение dx равно:", dx)
+    print("значение dy равно:", dy)
     return 0.0
+
 
 """
 Если функция работает, она должна отображать значение переменной dx, 
@@ -2477,14 +2495,17 @@ def distance(x1, y1, x2, y2):
 
 """Далее мы вычисляем сумму квадратов 
 значений переменных dx и dy:"""
+
+
 def distance(x1, y1, x2, y2):
     dx = x2 - x1
     dy = y2 - y1
     dsquared = dx**2 + dy**2
-    print('Cумма квадратов равна: ', dsquared) #Отладочная строка
+    print("Cумма квадратов равна: ", dsquared)  # Отладочная строка
     return 0.0
 
-print(distance(1,2,4,6))
+
+print(distance(1, 2, 4, 6))
 
 """
 Опять же, нужно запустить программу на этом этапе и проверить вывод 
@@ -2493,12 +2514,14 @@ print(distance(1,2,4,6))
 окончательное значение и вернуть его:
 """
 
+
 def distance(x1, y1, x2, y2):
     dx = x2 - x1
     dy = y2 - y1
     dsquared = dx**2 + dy**2
     result = math.sqrt(dsquared)
     return result
+
 
 """
 Если все работает, то мы выполнили поставленную задачу. 
@@ -2534,18 +2557,20 @@ hypotenuse(), которая возвращает длину гипотенуз�
 Фиксируйте каждый шаг процесса разработки по мере продвижения.
 """
 
+
 def hypotenuse(a, b):
     """
     Вычисляет гипотенузу по двум катетам.
-    
+
     Параметры:
         a (int/float): первый катет
         b (int/float): второй катет
-    
+
     Возвращает:
         float: длина гипотенузы
     """
     return math.sqrt(a**2 + b**2)
+
 
 katet1 = 6
 katet2 = 8
@@ -2563,13 +2588,15 @@ print(hypotenuse(katet1, katet2))
 И мы только что написали функцию, distance(), которая делает это:
 """
 
-xc = 1   # x координата центра
-yc = 2   # y координата центра
-xp = 4   # x координата точки
-yp = 6   # y координата точки
+xc = 1  # x координата центра
+yc = 2  # y координата центра
+xp = 4  # x координата точки
+yp = 6  # y координата точки
 
 radius = distance(xc, yc, xp, yp)
-print(f"Радиус = {radius}") #. Фигурные скобки {} внутри такой строки автоматически заменяются на значения переменных.
+print(
+    f"Радиус = {radius}"
+)  # . Фигурные скобки {} внутри такой строки автоматически заменяются на значения переменных.
 
 """Следующий шаг — найти площадь круга с этим радиусом; мы только что 
 написали и это тоже:"""
@@ -2578,10 +2605,12 @@ result = area(radius)
 
 """Инкапсулируя эти шаги в функцию, получаем:"""
 
+
 def circle_area(xc, yc, xp, yp):
     radius = distance(xc, yc, xp, yp)
     result = area(radius)
     return result
+
 
 """
 Временные переменные result и radius полезны для разработки и отладки, 
@@ -2589,8 +2618,12 @@ def circle_area(xc, yc, xp, yp):
 вызовы функций:
 """
 
+
 def circle_area(xc, yc, xp, yp):
-    return area(distance(xc, yc, xp, yp)) #Функция area() принимает этот радиус и вычисляет площадь круга.
+    return area(
+        distance(xc, yc, xp, yp)
+    )  # Функция area() принимает этот радиус и вычисляет площадь круга.
+
 
 print(circle_area(1, 2, 4, 6))
 
@@ -2602,11 +2635,13 @@ print(circle_area(1, 2, 4, 6))
 Например:
 """
 
+
 def is_divisible(x, y):
     if x % y == 0:
         return True
     else:
         return False
+
 
 """
 Логическим функциям принято присваивать имена, которые звучат как 
@@ -2622,8 +2657,11 @@ print(is_divisible(6, 3))
 Результат оператора == — логическое значение, поэтому мы можем 
 оформить функцию более лаконично, возвращая напрямую это значение:
 """
+
+
 def is_divisible2(x, y):
     return x % y == 0
+
 
 print(is_divisible2(6, 3))
 print(is_divisible2(6, 4))
@@ -2633,13 +2671,15 @@ print(is_divisible2(6, 4))
 возвращает True, если истинно выражение x ≤ y ≤ z, и False в противном случае.
 """
 
+
 def is_between(x, y, z):
     return x <= y <= z
 
-print(f'Результат: {is_between(6, 4, 2)}')
-print(f'Результат: {is_between(2, 4, 6)}')
 
-#стр 95
+print(f"Результат: {is_between(6, 4, 2)}")
+print(f"Результат: {is_between(2, 4, 6)}")
+
+# стр 95
 
 """
 Если вы можете написать рекурсивное определение чего-либо, вы можете 
@@ -2650,25 +2690,28 @@ factorial() принимает целое число:
 
 """
 
+
 def factorial(n):
     if n == 0:
         return 1
     else:
-        recurse = factorial(n-1)
-        result = n * recurse # если передаем 3, то 3 - 1 = 2 и 3 * 2 = 6
+        recurse = factorial(n - 1)
+        result = n * recurse  # если передаем 3, то 3 - 1 = 2 и 3 * 2 = 6
         return result
-    
+
+
 print(factorial(3))
 
 
-
-def fibonacci (n):
+def fibonacci(n):
     if n == 0:
         return 0
     elif n == 1:
         return 1
     else:
-        return fibonacci(n-1) + fibonacci(n-2)
+        return fibonacci(n - 1) + fibonacci(n - 2)
+
+
 """
 Компьютер останавливает вычисление fibonacci(3) и говорит: 
 "Ой, мне нужен результат fibonacci(2) и fibonacci(1), 
@@ -2747,7 +2790,7 @@ print(fibonacci(3))
 значение 1.5 в качестве аргумента?
 """
 
-#print(factorial(1.5)) #RecursionError: maximum recursion depth exceeded
+# print(factorial(1.5)) #RecursionError: maximum recursion depth exceeded
 
 """
 Это похоже на бесконечную рекурсию. Как такое может быть?! 
@@ -2765,18 +2808,20 @@ factorial() для работы с числами с плавающей точ
 Мы также можем убедиться, что аргумент — положительное число:
 """
 
-def factorial (n):
+
+def factorial(n):
     if not isinstance(n, int):
-        print('Факториал определяется только для целых чисел.')
+        print("Факториал определяется только для целых чисел.")
         return None
     elif n < 0:
-        print('Факториал не определяется для отрицательных целых чисел.')
+        print("Факториал не определяется для отрицательных целых чисел.")
         return None
     elif n == 0:
         return 1
     else:
-        return n * factorial(n-1)
-    
+        return n * factorial(n - 1)
+
+
 """
 Первый случай обрабатывает нецелые числа; второй обрабатывает 
 отрицательные целые числа. 
@@ -2784,7 +2829,7 @@ def factorial (n):
 значение None, чтобы указать, что что-то пошло не так:
 """
 
-print(factorial('fred'))
+print(factorial("fred"))
 print(factorial(-2))
 
 
@@ -2832,16 +2877,17 @@ print в начале функции и отобразить значения 
 
 
 def factorial(n):
-    space = ' ' * (4 * n)
-    print(space, 'факториал', n)
+    space = " " * (4 * n)
+    print(space, "факториал", n)
     if n == 0:
-        print(space, 'возвращает 1')
+        print(space, "возвращает 1")
         return 1
     else:
-        recurse = factorial(n-1)
+        recurse = factorial(n - 1)
         result = n * recurse
-        print(space, 'возвращает', result)
+        print(space, "возвращает", result)
         return result
+
 
 print(factorial(4))
 
@@ -2956,11 +3002,13 @@ Python предоставляет встроенные конструкции, �
 Ниже представлена версия функции countdown(), в которой используется инструкция while:
 """
 
+
 def countdown(n):
     while n > 0:
         print(n)
         n = n - 1
-    print('Готово!')
+    print("Готово!")
+
 
 print(countdown(20))
 
@@ -2996,13 +3044,16 @@ while:
 Для некоторых других циклов все не так просто. Например:
 """
 
+
 def sequence(n):
     while n != 1:
         print(n)
-        if n % 2 == 0: # n = четное значение
+        if n % 2 == 0:  # n = четное значение
             n = n / 2
-        else: n = n * 3 + 1 # n = нечетное значение
-        
+        else:
+            n = n * 3 + 1  # n = нечетное значение
+
+
 print(sequence(32))
 
 """
@@ -3082,19 +3133,21 @@ print(sequence(32))
 Это алгоритм!
 """
 
+
 def multiplication_table():
     """
     Выводит таблицу умножения от 1 до 9
     """
     print("Таблица умножения:")
     print("=" * 70)
-    
-    for i in range(1, 11):        # i - первый множитель (строки)
-        for j in range(1, 11):     # j - второй множитель (столбцы)
-            result = i * j          # ← ВОТ ГЛАВНЫЙ АЛГОРИТМ!
+
+    for i in range(1, 11):  # i - первый множитель (строки)
+        for j in range(1, 11):  # j - второй множитель (столбцы)
+            result = i * j  # ← ВОТ ГЛАВНЫЙ АЛГОРИТМ!
             print(f"{i}×{j}={result}", end="\t")
         print()  # Переход на новую строку после каждого i
         print()  # Пустая строка между таблицами для красоты
+
 
 # Запускаем
 multiplication_table()
@@ -3179,19 +3232,21 @@ multiplication_table()
 
 import math
 
+
 def mysqrt(a):
     """
     Вычисляет квадратный корень из a методом Ньютона
     """
     if a < 0:
         return None  # Квадратный корень из отрицательного числа не определен
-    
+
     x = a / 2  # Начальное приближение
     while True:
         y = (x + a / x) / 2  # Формула Ньютона
         if abs(y - x) < 1e-15:  # Проверка точности
             return y
         x = y
+
 
 def test_square_root():
     """
@@ -3200,21 +3255,22 @@ def test_square_root():
     # Заголовок таблицы
     print("a    mysqrt(a)      math.sqrt(a)      diff")
     print("-    ---------      ------------      ----")
-    
+
     # Тестируем числа от 1 до 9
     for a in range(1, 10):
         a_float = float(a)
-        
+
         # Вычисляем корни
         my_result = mysqrt(a_float)
         math_result = math.sqrt(a_float)
-        
+
         # Вычисляем разницу
         diff = abs(my_result - math_result)
-        
+
         # Печатаем строку таблицы
         print(f"{a_float}  {my_result:.11f}  {math_result:.11f}     {diff}")
-        
+
+
 test_square_root()
 
 
@@ -3231,7 +3287,7 @@ test_square_root()
 к любому символу, используя квадратные скобки:
 """
 
-fruit = 'банан'
+fruit = "банан"
 letter = fruit[1]
 print(letter)
 
@@ -3254,9 +3310,9 @@ print(letter)
 В качестве индекса вы можете использовать выражение, которое содержит 
 переменные и операторы:
 """
-i=1
-fruit = 'банан'
-letter = fruit[i+1]
+i = 1
+fruit = "банан"
+letter = fruit[i + 1]
 print(letter)
 
 """
@@ -3264,8 +3320,8 @@ print(letter)
 вы получите ошибку:
 """
 
-#letter = fruit[1.5]
-#print(letter) #string indices must be integers, not 'float'
+# letter = fruit[1.5]
+# print(letter) #string indices must be integers, not 'float'
 
 """
 ФУНКЦИЯ LEN()
@@ -3273,12 +3329,12 @@ print(letter)
 Встроенная функция len() возвращает количество символов в строке:
 """
 
-fruit = 'банан'
+fruit = "банан"
 print(len(fruit))
 
 """ Чтобы получить последний символ, вы должны вычесть 1 из значения """
 length = len(fruit)
-last = fruit[length-1]
+last = fruit[length - 1]
 print(last)
 
 """
@@ -3286,8 +3342,8 @@ print(last)
 Выражение fruit[-1] возвращает последнюю букву, fruit[-2] — вторую с конца и так далее
 """
 
-#Стр. 116
-#help(print)
+# Стр. 116
+# help(print)
 
 """
 ОБХОД ЭЛЕМЕНТОВ 
@@ -3300,22 +3356,24 @@ print(last)
 Один из способов написать обход — использовать цикл while:
 """
 
-fruit = 'банан'
+fruit = "банан"
 index = 0
 while index < len(fruit):
     letter = fruit[index]
     print(letter)
-    index = index + 1   
-    
+    index = index + 1
+
+
 def strfunc_reverse(word):
     index = len(word) - 1  # Начинаем с последнего индекса
-    while index >= 0:       # Пока не дошли до первого
+    while index >= 0:  # Пока не дошли до первого
         letter = word[index]
         print(letter)
-        index = index - 1   # Двигаемся назад
-        
-strfunc_reverse('Программирование')
-    
+        index = index - 1  # Двигаемся назад
+
+
+strfunc_reverse("Программирование")
+
 """
 Этот цикл обходит строку и выводит каждую букву в отдельной строке. 
 Условие цикла — index < len(fruit), поэтому, когда значение переменной 
@@ -3330,7 +3388,7 @@ len(fruit)–1, он и является последним символом в
 
 for letter in fruit:
     print(letter)
-    
+
 """
 В цикле каждый следующий символ в строке присваивается переменной letter. 
 Цикл продолжается до тех пор, пока не останется ни одного символа
@@ -3349,36 +3407,36 @@ for letter in fruit:
 Этот цикл выводит эти имена в следующем порядке:
 """
 
-prefixes = 'БВККЛМНШ'
-suffix = 'ряк'
+prefixes = "БВККЛМНШ"
+suffix = "ряк"
 for letter in prefixes:
     print(letter + suffix)
-    
+
 """
 Конечно, это не совсем верно, потому что в списке оказались два Кряка, 
 а Ляк, Мяк и Няк написаны с ошибками. 
 В качестве упражнения измените программу, чтобы исправить эти ошибки.
 """
 
-prefixes = 'БВККЛМНШ'
-suffixes = ('ряк', 'ряк', 'ряк', 'ряк', 'як', 'як', 'як', 'мяк')
+prefixes = "БВККЛМНШ"
+suffixes = ("ряк", "ряк", "ряк", "ряк", "як", "як", "як", "мяк")
 
 for i in range(len(prefixes)):
     print(prefixes[i] + suffixes[i])
 
 data = {
-    'Б': 'ряк',
-    'В': 'ряк',
-    'К': 'ряк',
-    'К': 'ряк',
-    'Л': 'як',
-    'М': 'як',
-    'Н': 'як',
-    'Ш': 'мяк'
+    "Б": "ряк",
+    "В": "ряк",
+    "К": "ряк",
+    "К": "ряк",
+    "Л": "як",
+    "М": "як",
+    "Н": "як",
+    "Ш": "мяк",
 }
 for letter, suf in data.items():
     print(letter + suf)
-    
+
 """
 СРЕЗЫ СТРОК
 Сегмент строки называется срезом (slice). 
@@ -3403,7 +3461,7 @@ for letter, suf in data.items():
 Если вы опустите второй индекс, срез продолжится до конца строки:
 """
 
-fruit = 'банан'
+fruit = "банан"
 print(fruit[:3])
 print(fruit[3:])
 
@@ -3413,8 +3471,8 @@ print(fruit[3:])
 строка, окруженная двумя кавычками:
 """
 
-fruit = 'банан'
-print(fruit[3:3]) # ''
+fruit = "банан"
+print(fruit[3:3])  # ''
 
 """ 
 Пустая строка не содержит символов и имеет длину 0, но в остальном 
@@ -3423,8 +3481,8 @@ print(fruit[3:3]) # ''
 запрос fruit[:]? Попробуйте и изучите.
 """
 
-fruit = 'банан'
-print(fruit[:]) # ''
+fruit = "банан"
+print(fruit[:])  # ''
 
 """
 СТРОКИ — 
@@ -3434,8 +3492,8 @@ print(fruit[:]) # ''
 Например, так:
 """
 
-greeting = 'Добрый день!'
-#greeting[0] = 'Б' #'str' object does not support item assignment
+greeting = "Добрый день!"
+# greeting[0] = 'Б' #'str' object does not support item assignment
 
 """
 В данном случае объект — это строка, а элемент — символ, который вы 
@@ -3448,14 +3506,15 @@ greeting = 'Добрый день!'
 Лучшее, что вы можете сделать, это создать новую строку — вариацию оригинала:
 """
 
-greeting = 'Добрый день!'
-new_greeting = 'Б' + greeting[1:]
+greeting = "Добрый день!"
+new_greeting = "Б" + greeting[1:]
 print(new_greeting)
 
 """
 Этот пример объединяет новую первую букву со срезом строки greeting. 
 Исходная строка (переменная greeting) остается без изменений.
 """
+
 
 def find(word, letter):
     index = 0
@@ -3465,6 +3524,7 @@ def find(word, letter):
         index = index + 1
     return -1
 
+
 """
 В некотором смысле функция find() обратна инструкции []. 
 Вместо того чтобы брать индекс и извлекать соответствующий символ, 
@@ -3472,7 +3532,7 @@ def find(word, letter):
 Если символ не найден, функция возвращает –1.
 """
 
-print(find('программирование','м'))
+print(find("программирование", "м"))
 
 
 def find2(word, letter, start_index=0):
@@ -3483,7 +3543,8 @@ def find2(word, letter, start_index=0):
         index = index + 1
     return -1
 
-print(find2("hello world", "o", 3))   
+
+print(find2("hello world", "o", 3))
 
 
 """
@@ -3500,10 +3561,10 @@ print(count) — выводит результат (количество бук�
 
 """
 
-word = 'банан'
+word = "банан"
 count = 0
 for letter in word:
-    if letter == 'а':
+    if letter == "а":
         count = count + 1
 print(count)
 
@@ -3520,6 +3581,8 @@ print(count)
 Затем перепишите функцию так, чтобы вместо обхода строки она использовала версию 
 функции find() с тремя параметрами из предыдущего раздела.
 """
+
+
 def count_letters2(words, letters):
     word = words
     count1 = 0
@@ -3528,22 +3591,24 @@ def count_letters2(words, letters):
             count1 = count1 + 1
     return print(count1)  # Возвращаем результат
 
+
 # Вызываем функцию и печатаем результат
-count_letters2('паталогоанатом', 'а')
+count_letters2("паталогоанатом", "а")
 
 
 def count_letters3(words, letters, start_indexes=0):
     word = words[start_indexes:]  # Берем подстроку с указанного индекса
     count = 0
-    
+
     for letter in word:
         if letter == letters:
             count = count + 1
-    
+
     return count
 
+
 # Вызываем функцию и печатаем результат
-print(count_letters3('паталогоанатом', 'а', 4))
+print(count_letters3("паталогоанатом", "а", 4))
 
 
 """
@@ -3556,10 +3621,9 @@ print(count_letters3('паталогоанатом', 'а', 4))
 Вместо синтаксиса функции upper(word) используется синтаксис метода word.upper() !!!
 """
 
-word = 'Hello'
+word = "Hello"
 new_word = word.upper()
 print(new_word)
-
 
 
 """
@@ -3572,8 +3636,8 @@ upper() объекта word!!!
 Существует строковый метод find(), который удивительно похож на функцию, которую мы написали:
 """
 
-word = 'банан'
-index = word.find('н')
+word = "банан"
+index = word.find("н")
 print(index)
 
 """
@@ -3583,21 +3647,21 @@ print(index)
 Он может найти подстроки, а не только символы.
 """
 
-print(word.find('на'))
+print(word.find("на"))
 
 """
 По умолчанию поиск начинается с начала строки, но данный метод может 
 принимать второй аргумент, индекс, с которого поиск должен начинаться:
 """
-print(word.find('на',1))
+print(word.find("на", 1))
 
 """
 Это пример необязательного аргумента (optional argument). 
 Метод find() также может принимать и третий аргумент, индекс, на котором поиск 
 должен остановиться:
 """
-name='Боб'
-print(name.find('б',1, 2))
+name = "Боб"
+print(name.find("б", 1, 2))
 
 """
 Этот поиск завершается неудачно, потому что символ б не встречается 
@@ -3611,8 +3675,8 @@ print(name.find('б',1, 2))
 Слово in — это логический оператор, который принимает две строки и 
 возвращает True, если первая является подстрокой для второй:
 """
-print('а' in 'банан')
-print('я' in 'банан')
+print("а" in "банан")
+print("я" in "банан")
 
 """
 Например, показанная ниже функция печатает все буквы из аргумента 
@@ -3624,22 +3688,24 @@ word1, которые также есть в аргументе word2
 напечатать (эту) букву».
 """
 
+
 def in_both(word1, word2):
     for letter in word1:
         if letter in word2:
             print(letter)
-            
-in_both('апельсин', 'абрикос')
+
+
+in_both("апельсин", "абрикос")
 
 """
 СРАВНЕНИЕ СТРОК
 Операторы сравнения работают и со строками. 
 Чтобы увидеть, равны ли две строки, нужно сделать следующее:
 """
-word = 'банан'
-if word == 'банан':
-    print('Шикрано, бананы!')
-    
+word = "банан"
+if word == "банан":
+    print("Шикрано, бананы!")
+
 """
 Другие операторы сравнения полезны для сортировки слов в алфавитном 
 порядке.
@@ -3651,32 +3717,35 @@ Python не воспринимает прописные и строчные б
 в стандартный формат, например во все строчные буквы, перед выполнением 
 сравнения. Имейте это в виду, если придется иметь дело с человеком с дынями
 """
-word = 'Дыня'
-if word < 'банан':
-    print('Ваше слово, ' + word + ', располагается до слова банан.')
-elif word > 'банан':
-    print('Ваше слово, ' + word + ', располагается после слова банан.')
+word = "Дыня"
+if word < "банан":
+    print("Ваше слово, " + word + ", располагается до слова банан.")
+elif word > "банан":
+    print("Ваше слово, " + word + ", располагается после слова банан.")
 else:
-    print('Шикарно, бананы.')
-    
+    print("Шикарно, бананы.")
+
 """
 Распространенный способ решить эту проблему — преобразовать строки 
 в стандартный формат, например во все строчные буквы, перед выполнением 
 сравнения. 
 Имейте это в виду, если придется иметь дело с человеком с дынями.
 """
-word1 = 'дыня'
-word1 = 'банан'
+word1 = "дыня"
+word1 = "банан"
+
+
 def compare_words(word1, word2):
     # Приводим оба слова к нижнему регистру для сравнения
     if word1.lower() < word2.lower():
-        print(f'Ваше слово, {word1}, располагается до слова {word2}.')
+        print(f"Ваше слово, {word1}, располагается до слова {word2}.")
     elif word1.lower() > word2.lower():
-        print(f'Ваше слово, {word1}, располагается после слова {word2}.')
+        print(f"Ваше слово, {word1}, располагается после слова {word2}.")
     else:
-        print('Шикарно, слова одинаковы.')
-        
-compare_words('дыня', 'банан')
+        print("Шикарно, слова одинаковы.")
+
+
+compare_words("дыня", "банан")
 
 """
 ОТЛАДКА
@@ -3687,18 +3756,20 @@ compare_words('дыня', 'банан')
 
 """
 
+
 def is_reverse(word1, word2):
     if len(word1) != len(word2):
         return False
     i = 0
-    j = len(word2)-1
+    j = len(word2) - 1
     while j > 0:
-        print(i, j) # выводим индексы
+        print(i, j)  # выводим индексы
         if word1[i] != word2[j]:
             return False
-        i = i+1
-        j = j-1
+        i = i + 1
+        j = j - 1
     return True
+
 
 """
 Первая инструкция if проверяет, одинаковы ли слова по длине. 
@@ -3715,7 +3786,7 @@ def is_reverse(word1, word2):
 но появляется ошибка IndexError:
 """
 
-print(is_reverse('порт', 'троп')) #IndexError: string index out of range
+print(is_reverse("порт", "троп"))  # IndexError: string index out of range
 
 """
 Для отладки подобных ошибок первым делом я должен вывести значения 
@@ -3780,6 +3851,7 @@ def find_duplicates(items):
             seen.add(item)
     return list(duplicates)
 
-print(find_duplicates([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 9, 8, 14, 3]))
 
-#125S
+print(find_duplicates([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 9, 8, 14, 3]))
+
+# 125S

@@ -33,26 +33,26 @@ class ProgrammingDictionaryTranslator:
 
     def _parse_github_content(self, content):
         """Парсинг содержимого GitHub README"""
-        lines = content.split('\n')
+        lines = content.split("\n")
 
         for line in lines:
             line = line.strip()
 
-            if line.startswith('## ') and not line.startswith('## Table of Contents'):
-                term = line.replace('## ', '').strip()
-                if len(term) > 2 and '#' not in term:
+            if line.startswith("## ") and not line.startswith("## Table of Contents"):
+                term = line.replace("## ", "").strip()
+                if len(term) > 2 and "#" not in term:
                     self.english_terms.append(term)
 
-            elif line.startswith('- **') and '**' in line:
-                parts = line.split('**')
+            elif line.startswith("- **") and "**" in line:
+                parts = line.split("**")
                 if len(parts) >= 3:
                     term = parts[1].strip()
                     if len(term) > 2:
                         self.english_terms.append(term)
 
-            elif line.startswith('**') and '**' in line[2:]:
-                term_match = line.split('**')[1]
-                if term_match and len(term_match) > 2 and ':' not in term_match:
+            elif line.startswith("**") and "**" in line[2:]:
+                term_match = line.split("**")[1]
+                if term_match and len(term_match) > 2 and ":" not in term_match:
                     self.english_terms.append(term_match)
 
         self.english_terms = list(set(self.english_terms))
@@ -61,7 +61,7 @@ class ProgrammingDictionaryTranslator:
         """2. Перевод терминов с английского на русский"""
         print("Перевод терминов...")
 
-        translator = GoogleTranslator(source='en', target='ru')
+        translator = GoogleTranslator(source="en", target="ru")
         successful_translations = 0
 
         for i, term in enumerate(self.english_terms):
@@ -77,7 +77,9 @@ class ProgrammingDictionaryTranslator:
                 print(f"Ошибка перевода '{term}': {e}")
                 self.translated_dict[term] = "перевод не доступен"
 
-        print(f"Успешно переведено терминов: {successful_translations}/{len(self.english_terms)}")
+        print(
+            f"Успешно переведено терминов: {successful_translations}/{len(self.english_terms)}"
+        )
 
     def save_to_excel(self, filename="programming_dictionary.xlsx"):
         """3. Сохранение словаря в Excel файл"""
@@ -87,10 +89,7 @@ class ProgrammingDictionaryTranslator:
 
         data = []
         for english, russian in self.translated_dict.items():
-            data.append({
-                "English Term": english,
-                "Russian Translation": russian
-            })
+            data.append({"English Term": english, "Russian Translation": russian})
 
         df = pd.DataFrame(data)
 
@@ -103,8 +102,8 @@ class ProgrammingDictionaryTranslator:
         except Exception as e:
             print(f"Ошибка сохранения файла: {e}")
             try:
-                csv_filename = filename.replace('.xlsx', '.csv')
-                df.to_csv(csv_filename, index=False, encoding='utf-8')
+                csv_filename = filename.replace(".xlsx", ".csv")
+                df.to_csv(csv_filename, index=False, encoding="utf-8")
                 print(f"Файл сохранен как CSV: {csv_filename}")
                 return True
             except Exception as e2:

@@ -1,4 +1,4 @@
-#Отформатировать код black my_script.py
+# Отформатировать код black my_script.py
 # rm -rf .codegraph
 
 
@@ -59,11 +59,12 @@
 Разница между ними заключается в том, что в случае объявления имени переменной неизменяемого типа
 ей задается идентификатор, который невозможно изменить.
 """
+
 n = 10
 b = n
 print("id n=", id(n))
 print("id b=", id(b))
-     
+
 """ 
 При этом переменные n и b ссылаются на один и тот же объект, так как идентификаторы у них одинаковые
 Реузльтат:
@@ -221,7 +222,7 @@ my_list = []
 my_list = list()
 
 # Если список необходимо инициализировать переменными в момент его объявления, используют следующие конструкции
-my_list1: list[str,int] = ["one", "two"]
+my_list1: list[str, int] = ["one", "two"]
 my_list2 = list(["one", "two"])
 
 # Добавление в список осуществляется через вызов у него метода .append(val), где val - добавляемое значение в конец списка
@@ -375,7 +376,6 @@ print(my_tuple1)
 
 """Можно использовать именованные кортежи"""
 from collections import namedtuple
-
 
 ItemRec = namedtuple("ItemRec", ["name", "age", "jobs"])
 my_tuple = ItemRec(name="Alex", age=24, jobs=["Python", "Java"])
@@ -3208,14 +3208,16 @@ Instance = TestClass()
 экземпляра класса присваивается значение
 """
 
+
 class MyClass:
-    def __init__ (self):
+    def __init__(self):
         self.magic = 5
+
 
 if __name__ == "__main__":
     my_test = MyClass()
     print(my_test.magic)
-    
+
 """
 1. Что такое __init__?
 Это магический метод (конструктор). Это специальная функция, которая автоматически 
@@ -3238,26 +3240,32 @@ Python сразу же заглядывает внутрь класса, нах�
 "У этого конкретного объекта (у этого экземпляра класса) создай свойство magic и положи туда 5".
 self передается автоматически. Вы его не указываете при вызове.
 """
+
+
 class Cat:
     def __init__(self, name, age):
         self.name = name
         self.age = age
         print(f"Родился кот {self.name}!")
 
+
 # Теперь при создании кота мы сразу даем ему имя и возраст
 my_cat = Cat("Барсик", 3)
 print(my_cat.name)  # Барсик
-print(my_cat.age)   # 3
+print(my_cat.age)  # 3
 
 """Классы могут иметь только один метод __init__, которому присваивается создаваемый
 экземпляр при выполнении __init__
 Последующие аргументы можно использовать для инициализации полей (переменных) экземпляра
 класса. 
 """
+
+
 class MyClass:
     def __init__(self, value):
         self.magic = value
-    
+
+
 if __name__ == "__main__":
     my_test = MyClass(7)
     print(my_test.magic)  # 7
@@ -3277,14 +3285,16 @@ __new__ создает пустой объект (выделяет память)
 Объект возвращается вам
 """
 
+
 class MyInt(int):
     def __new__(cls, value):
         # Можем изменить значение до создания
         return super().__new__(cls, value * 2)
-    
+
     def __init__(self, value):
         # Этот метод уже не может изменить значение
         print(f"Создано число {self}")
+
 
 num = MyInt(5)
 print(num)  # 10 (а не 5!)
@@ -3310,12 +3320,15 @@ my_test.new_magic = value
 Метода класса - функция, которая связана с конкретным классом
 """
 
+
 class MyClass:
-    def __init__(self, magic = 3):
+    def __init__(self, magic=3):
         self.magic = magic
-        
+
     def square_magic(self):
-        return self.magic ** 2
+        return self.magic**2
+
+
 """
 if __name__ == "__main__":
 Что делает: Проверяет, запущен ли этот файл напрямую (а не импортирован как модуль).
@@ -3335,12 +3348,12 @@ if __name__ == "__main__":
 "Этот файл не главный, его просто подключают, значит __name__ у него не __main__, а kombayn". 
 Он пропускает демо-режим и просто дает другу функции rezat и mesit
 
-"""    
+"""
 if __name__ == "__main__":
     my_test1 = MyClass()
-    print(my_test1.square_magic())# 9
+    print(my_test1.square_magic())  # 9
     my_test2 = MyClass(5)
-    print(my_test2.square_magic())# 25
+    print(my_test2.square_magic())  # 25
 
 """Существует несколько способов вызова метода класса: связный или несвязный
 При связном способе вызова метода класса, он вызывается через экземпляр класса,
@@ -3348,18 +3361,20 @@ if __name__ == "__main__":
 вызове метода в его первом аргументе должен передаваться экземляр класса, что делает
 код менее понятным"""
 
+
 class MyClass2:
-    def __init__(self, magic = 3):
+    def __init__(self, magic=3):
         self.magic = magic
-        
+
     def square_magic(self):
         return self.magic
 
+
 if __name__ == "__main__":
     my_test2 = MyClass2()
-    print(my_test2.square_magic())# 9
-    print (MyClass2.square_magic(my_test2)) # 9 Несвязный способ вызова метода класса
-    
+    print(my_test2.square_magic())  # 9
+    print(MyClass2.square_magic(my_test2))  # 9 Несвязный способ вызова метода класса
+
     """В первом аргуменете любого метода передается экземпляр класса, для которого он
     вызывается - self, который является аналогом this во вногих других языках программирования.
     Python преобразует вызов метода класса в обычный вызов функции по следующим правилам:
@@ -3373,7 +3388,7 @@ if __name__ == "__main__":
     Получается, что запись вида instance.method(arg1, arg2,...) первращается в
     class.method(instance,arg1, arg2,...)
     """
-    
+
     """Переменные и методы класса
     Переменная класса связана непосредственно с классом, не с его конкретным экземляром
     и доступна всем его экземплярам
@@ -3384,22 +3399,25 @@ if __name__ == "__main__":
     земпляров.
     После создания переменной класса она становится видимой для всех его экземпляров.
     """
-    
+
+
 class MyClass4:
-    pow_val = 2 # переменная класса
-    def __init__(self, magic = 10):
-        self.magic = magic # переменная экземпляра класса
+    pow_val = 2  # переменная класса
+
+    def __init__(self, magic=10):
+        self.magic = magic  # переменная экземпляра класса
 
     def square_magic(self):
-        return self.magic ** MyClass4.pow_val
+        return self.magic**MyClass4.pow_val
+
 
 if __name__ == "__main__":
     my_test4 = MyClass4()
-    print(my_test4.square_magic())# 100
+    print(my_test4.square_magic())  # 100
     my_test5 = MyClass4(5)
-    print(my_test5.square_magic())# 25
+    print(my_test5.square_magic())  # 25
     my_test6 = MyClass4(3)
-    print(my_test6.square_magic())# 9
+    print(my_test6.square_magic())  # 9
 
 
 """
@@ -3408,17 +3426,21 @@ if __name__ == "__main__":
 к которому принадлежит экземпляр.
 """
 my_test4 = MyClass4()
-print(my_test4.__class__) # <class '__main__.MyClass4'>
+print(my_test4.__class__)  # <class '__main__.MyClass4'>
 """
 Таким образом посредством атрибута __class__ можно можно получить значение MyClass.pow_val без
 явного указания имени класса MyClass.
 """
-print(my_test4.__class__.pow_val) # 2
+print(my_test4.__class__.pow_val)  # 2
 
 
 my_test5 = MyClass4()
+
+
 # Этот метод определен где-то в другом месте
 def new_square_magic(self):
-    return self.magic ** self.__class__.pow_val
+    return self.magic**self.__class__.pow_val
+
+
 # Создаем объект MyClass4
 print(my_test5.new_square_magic())  # Ошибка! метод не в классе

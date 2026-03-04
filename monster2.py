@@ -1,9 +1,10 @@
 class Monster:
-    #Инициализация аттрибутов
+    # Инициализация аттрибутов
     def __init__(self, name, character):
         self.Name = name
         self.Character = character
-    #Метод
+
+    # Метод
     def show(self):
         print("Имя: " + self.Name)
         print("Особенность: " + self.Character)
@@ -12,15 +13,15 @@ class Monster:
 class GMonster(Monster):
     pass
 
+
 class SMonster(Monster):
     pass
-#Основная программа
-Frank = Monster("Фрэнки","Необычный")
+
+
+# Основная программа
+Frank = Monster("Фрэнки", "Необычный")
 Frank.show()
-Albert = GMonster("Альберт","Задумчивый")
+Albert = GMonster("Альберт", "Задумчивый")
 Albert.show()
-Sigmund = SMonster("Зигмунд","Веселый")
+Sigmund = SMonster("Зигмунд", "Веселый")
 Sigmund.show()
-
-
-

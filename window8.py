@@ -1,8 +1,9 @@
 from tkinter import *
 from tkinter import messagebox
 
-class Dialog():
-    #Инициализация
+
+class Dialog:
+    # Инициализация
     def __init__(self, Title, Text, But1, But2):
         self.Window = Tk()
         self.Window.title(Title)
@@ -15,10 +16,13 @@ class Dialog():
         self.Button2.place(x=140, y=70, width=100, height=30)
         self.Window.mainloop()
 
-        #Метод
+        # Метод
+
     def button1Click(self):
         messagebox.showinfo("Ответ", "Это радует!")
+
     def button2Click(self):
         messagebox.showinfo("Ответ", "Это огорчает!")
+
 
 Window = Dialog("Привет", "Ка дела?", "Хорошо", "Плохо")

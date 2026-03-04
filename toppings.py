@@ -1,5 +1,11 @@
-available_toppings = ["mushrooms", "olives", "green peppers", "pepproni",
-                      "pineaple", "extra cheese"]
+available_toppings = [
+    "mushrooms",
+    "olives",
+    "green peppers",
+    "pepproni",
+    "pineaple",
+    "extra cheese",
+]
 
 requested_toppings = ["mushrooms", "french fries", "chipps", "extra cheese"]
 

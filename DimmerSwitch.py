@@ -1,5 +1,5 @@
-#Класс DimmerSwitch
-class DimmerSwitch():
+# Класс DimmerSwitch
+class DimmerSwitch:
     def __init__(self, label):
         self.label = label
         self.switchIsOn = False
@@ -18,26 +18,27 @@ class DimmerSwitch():
     def lowerLevel(self):
         if self.brightness > 0:
             self.brightness = self.brightness - 1
-    #Дополнительный метод для отладки
+
+    # Дополнительный метод для отладки
     def show(self):
-        print('Label:', self.label)
-        print('Switch is on?',  self.switchIsOn)
-        print('Brightness is:', self.brightness)
+        print("Label:", self.label)
+        print("Switch is on?", self.switchIsOn)
+        print("Brightness is:", self.brightness)
 
 
-oDimmer1 = DimmerSwitch('Dimmer1')
+oDimmer1 = DimmerSwitch("Dimmer1")
 oDimmer1.turnOn()
 oDimmer1.raiseLevel()
 oDimmer1.raiseLevel()
 oDimmer1.show()
 
 
-oDimmer2 = DimmerSwitch('Dimmer2')
+oDimmer2 = DimmerSwitch("Dimmer2")
 oDimmer2.turnOn()
 oDimmer2.raiseLevel()
 oDimmer2.raiseLevel()
 oDimmer2.raiseLevel()
 oDimmer2.show()
 
-oDimmer3 = DimmerSwitch('Dimmer3')
+oDimmer3 = DimmerSwitch("Dimmer3")
 oDimmer3.show()

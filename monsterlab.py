@@ -1,9 +1,10 @@
 class Monster:
-    #Инициализация аттрибутов
+    # Инициализация аттрибутов
     def __init__(self, name, character):
         self.Name = name
         self.Character = character
-    #Метод
+
+    # Метод
     def Type(self):
         return "Монстр"
 
@@ -16,6 +17,7 @@ class Monster:
 class GMonster(Monster):
     def Type(self):
         return "Дух монстра"
+
 
 class SMonster(Monster):
     def Type(self):

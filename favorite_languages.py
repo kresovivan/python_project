@@ -1,9 +1,9 @@
 favorite_languages = {
-    "jen":    "python",
-    "sarah":  "c",
+    "jen": "python",
+    "sarah": "c",
     "edward": "ruby",
-    "phil":   "python",
-    "raul":   "python",
+    "phil": "python",
+    "raul": "python",
 }
 
 for name, language in favorite_languages.items():
@@ -28,11 +28,11 @@ for name in set(favorite_languages.values()):
     print(f"{name.title()}")
 
 favorite_languages = {
-    "jen":    ["python", "ruby"],
-    "sarah":  ["c", "c++", "pascal"],
+    "jen": ["python", "ruby"],
+    "sarah": ["c", "c++", "pascal"],
     "edward": ["ruby"],
-    "phil":   ["python"],
-    "raul":   ["python"],
+    "phil": ["python"],
+    "raul": ["python"],
 }
 
 for name, languages in favorite_languages.items():
@@ -42,4 +42,3 @@ for name, languages in favorite_languages.items():
             print(f"\t{language.title()}")
     else:
         print(f"\n{name.title()}'s favorite language is {language.title()}")
-

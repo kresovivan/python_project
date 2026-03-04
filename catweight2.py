@@ -1,9 +1,21 @@
 import sys
 import pickle
 from datetime import datetime, timedelta
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QVBoxLayout, QHBoxLayout,
-                             QPushButton, QLabel, QLineEdit, QComboBox, QWidget,
-                             QScrollArea, QMessageBox, QCalendarWidget, QGraphicsDropShadowEffect)
+from PyQt5.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QVBoxLayout,
+    QHBoxLayout,
+    QPushButton,
+    QLabel,
+    QLineEdit,
+    QComboBox,
+    QWidget,
+    QScrollArea,
+    QMessageBox,
+    QCalendarWidget,
+    QGraphicsDropShadowEffect,
+)
 from PyQt5.QtCore import QDate, Qt, QPropertyAnimation, QEasingCurve
 from PyQt5.QtGui import QColor, QFont
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -39,13 +51,13 @@ class Cat:
                 weights.append(current_weight)
 
                 if prev_weight is None:
-                    colors.append('blue')
+                    colors.append("blue")
                 elif current_weight > prev_weight:
-                    colors.append('red')
+                    colors.append("red")
                 elif current_weight < prev_weight:
-                    colors.append('green')
+                    colors.append("green")
                 else:
-                    colors.append('blue')
+                    colors.append("blue")
 
                 prev_weight = current_weight
             current_date += timedelta(days=1)
@@ -275,14 +287,14 @@ class CatApp(QMainWindow):
 
     def load_data(self):
         try:
-            with open(self.data_file, 'rb') as f:
+            with open(self.data_file, "rb") as f:
                 self.cat = pickle.load(f)
                 self.update_ui()
         except (FileNotFoundError, EOFError):
             self.cat = None
 
     def save_data(self):
-        with open(self.data_file, 'wb') as f:
+        with open(self.data_file, "wb") as f:
             pickle.dump(self.cat, f)
 
     def save_cat_data(self):
@@ -299,7 +311,9 @@ class CatApp(QMainWindow):
             if birth_year < 1900 or birth_year > datetime.now().year:
                 raise ValueError
         except ValueError:
-            QMessageBox.warning(self, "Ошибка", "Год рождения должен быть корректным числом!")
+            QMessageBox.warning(
+                self, "Ошибка", "Год рождения должен быть корректным числом!"
+            )
             return
 
         self.cat = Cat(name, breed, birth_year)
@@ -331,7 +345,9 @@ class CatApp(QMainWindow):
         self.cat.add_weight(date, weight)
         self.save_data()
         self.update_ui()
-        QMessageBox.information(self, "Успех", f"Вес {weight} кг добавлен на {date.strftime('%d.%m.%Y')}!")
+        QMessageBox.information(
+            self, "Успех", f"Вес {weight} кг добавлен на {date.strftime('%d.%m.%Y')}!"
+        )
 
     def plot_weight_chart(self):
         if not self.cat or not self.cat.weight_data:
@@ -364,13 +380,13 @@ class CatApp(QMainWindow):
 
         # Рисуем график с разными цветами точек
         for i in range(len(dates)):
-            ax.plot(mdates_dates[i], weights[i], 'o', color=colors[i], markersize=10)
+            ax.plot(mdates_dates[i], weights[i], "o", color=colors[i], markersize=10)
 
         # Соединяем точки линиями
-        ax.plot(mdates_dates, weights, 'b-', alpha=0.3)
+        ax.plot(mdates_dates, weights, "b-", alpha=0.3)
 
         # Форматируем оси
-        ax.xaxis.set_major_formatter(mdates.DateFormatter('%d.%m.%Y'))
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%d.%m.%Y"))
         ax.xaxis.set_major_locator(mdates.AutoDateLocator())
         self.figure.autofmt_xdate()
 
@@ -394,7 +410,7 @@ class CatApp(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
-    app.setStyle('Fusion')
+    app.setStyle("Fusion")
     window = CatApp()
     window.show()
     sys.exit(app.exec_())

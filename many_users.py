@@ -5,9 +5,9 @@ users = {
         "location": "princeton",
     },
     "mcurie": {
-        "first":"marie",
+        "first": "marie",
         "last": "curie",
-        "location" : "paris",
+        "location": "paris",
     },
 }
 

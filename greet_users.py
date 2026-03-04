@@ -4,5 +4,6 @@ def greet_users(names):
         msg = f"Hello, {name.title()}!"
         print(msg)
 
-usernames = ['hannah', 'ivan', 'alex']
-greet_users(usernames) 
+
+usernames = ["hannah", "ivan", "alex"]
+greet_users(usernames)

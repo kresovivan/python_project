@@ -4,7 +4,7 @@ message = ""
 active = True
 while active:
     message = input(prompt)
-    if message == 'q':
+    if message == "q":
         active = False
     else:
         print(message)

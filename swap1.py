@@ -2,9 +2,10 @@ def exchange(x1, x2):
     Swap = x1
     x1 = x2
     x2 = Swap
-    return x1,x2
+    return x1, x2
 
-#Основная программа
+
+# Основная программа
 print("Введите число: ", end="")
 Number1 = int(input())
 print("И еще одно: ", end="")
