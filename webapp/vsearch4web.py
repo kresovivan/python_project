@@ -1,17 +1,34 @@
 import html
+import os
 
 from flask import Flask, render_template, request
+from markupsafe import escape
 from vsearch import search4letters
 
 app = Flask(__name__)  # Создание экземпляра приложения Flask
 
 
+def get_log_path():
+    """Возвращает путь к файлу лога"""
+    script_dir = os.path.dirname(__file__)
+    return os.path.join(script_dir, "vsearch.log")
+
+
+def log_request(req: "flask_request", res: str) -> None:
+    with open(get_log_path(), "a") as log:
+        print(req.form, req.remote_addr, req.user_agent, res, file=log, sep=" | ")
+
+
 @app.route("/search4", methods=["POST"])
 def do_search() -> "html":
+    print(f"Текущая директория: {os.getcwd()}")
+    print(f"Где лежит скрипт: {os.path.dirname(__file__)}")
+
     phrase = request.form["phrase"]
     letters = request.form["letters"]
     title = "Here are your results:"
     results = str(search4letters(phrase, letters))
+    log_request(request, results)
     return render_template(
         "results.html",
         the_phrase=phrase,
@@ -32,12 +49,23 @@ def entry_page() -> str:
     )
 
 
+@app.route("/viewlog")
+def view_the_log() -> str:
+    contents = []
+    with open(get_log_path()) as log:
+        for line in log:
+            contents.append([])
+            for item in line.split("|"):
+                contents[-1].append(escape(item))
+    return str(contents)
+
+
 """Функция entry_page() — это обработчик URL-путей / и /entry."""
 
 # http://127.0.0.1:5000/search4
 
 if __name__ == "__main__":
-    app.run(debug=True)  # Запускаем сервер только при прямом вызове
+    app.run(debug=True)  # debug=True Запускаем программу только при прямом вызове
 
 
 """Декораторы апозволяют вхять существующий код и добавить к нему дополнительное поведение.
