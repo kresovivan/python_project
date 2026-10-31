@@ -1,0 +1,24 @@
+"""Реэкспорт констант для удобного импорта."""
+
+from .colors import COLORS, FONTS
+from .columns import (
+    APP_NAME,
+    BASE_COLUMNS,
+    CUSTOM_TAG,
+    DEFAULT_MARKERS,
+    DEFAULT_MERGED_NAME,
+    MARKERS_FILENAME,
+    NONE_TAG,
+    ONLY_LABELS,
+    SETTINGS_FILENAME,
+    STD_TAG,
+)
+from .translations import KIND_TRANSLATIONS, TYPE_TRANSLATIONS
+
+__all__ = [
+    'COLORS', 'FONTS',
+    'APP_NAME', 'BASE_COLUMNS', 'CUSTOM_TAG', 'DEFAULT_MARKERS',
+    'DEFAULT_MERGED_NAME', 'MARKERS_FILENAME', 'NONE_TAG', 'ONLY_LABELS',
+    'SETTINGS_FILENAME', 'STD_TAG',
+    'KIND_TRANSLATIONS', 'TYPE_TRANSLATIONS',
+]
