@@ -2,7 +2,16 @@
 
 import unittest
 
-from core.session import Session
+from core.session import (
+    CARDS,
+    CHOICE,
+    EXCELLENT,
+    GOOD,
+    KEEP_GOING,
+    STUDY_MODES,
+    TYPING,
+    Session,
+)
 
 
 class NewSessionTests(unittest.TestCase):
@@ -57,6 +66,80 @@ class ScoreTests(unittest.TestCase):
         session = Session("cards", "Тема", ["a", "b"], index=2)
 
         self.assertTrue(session.finished)
+
+
+class RecordAnswerTests(unittest.TestCase):
+    """Сессия сама ведёт свой счёт: Lesson не меняет её поля напрямую."""
+
+    def test_right_answer_increases_right_and_moves_on(self):
+        session = Session("cards", "Тема", ["a", "b"])
+
+        session.record_answer(True)
+
+        self.assertEqual((session.right, session.wrong, session.index), (1, 0, 1))
+
+    def test_wrong_answer_increases_wrong_and_moves_on(self):
+        session = Session("cards", "Тема", ["a", "b"])
+
+        session.record_answer(False)
+
+        self.assertEqual((session.right, session.wrong, session.index), (0, 1, 1))
+
+    def test_wrong_answer_remembers_word_for_retry(self):
+        session = Session("cards", "Тема", ["a", "b"])
+
+        session.record_answer(False)
+
+        self.assertEqual(session.mistakes, ["a"])
+
+    def test_answer_after_last_word_is_an_error(self):
+        """Ответить на занятие, которое уже кончилось, - ошибка в программе."""
+        session = Session("cards", "Тема", ["a"], index=1)
+
+        with self.assertRaises(ValueError):
+            session.record_answer(True)
+
+    def test_skipped_word_is_not_counted_as_answer(self):
+        """Пропуск - для слов, которые удалили из словаря: ответа на них нет."""
+        session = Session("cards", "Тема", ["removed", "b"])
+
+        session.skip_word()
+
+        self.assertEqual((session.index, session.answered), (1, 0))
+
+    def test_current_key_is_word_at_current_place(self):
+        session = Session("cards", "Тема", ["a", "b"], index=1)
+
+        self.assertEqual(session.current_key, "b")
+
+    def test_finished_session_has_no_current_key(self):
+        self.assertIsNone(Session("cards", "Тема", ["a"], index=1).current_key)
+
+
+class RatingTests(unittest.TestCase):
+    """Оценка за занятие на экране итогов. Пороги: 100% и 70%."""
+
+    def rating(self, right: int, wrong: int) -> str:
+        keys = ["w"] * (right + wrong)
+        return Session("cards", "Тема", keys, right=right, wrong=wrong).rating
+
+    def test_all_right_is_excellent(self):
+        self.assertEqual(self.rating(10, 0), EXCELLENT)
+
+    def test_seventy_percent_is_good(self):
+        self.assertEqual(self.rating(7, 3), GOOD)
+
+    def test_below_seventy_percent_means_keep_going(self):
+        self.assertEqual(self.rating(6, 4), KEEP_GOING)
+
+
+class ModeConstantsTests(unittest.TestCase):
+    def test_study_modes_are_listed_in_menu_order(self):
+        self.assertEqual(STUDY_MODES, (CARDS, CHOICE, TYPING))
+
+    def test_mode_names_match_saved_sessions_of_old_versions(self):
+        """Эти строки уже записаны в state.json у пользователя: менять их нельзя."""
+        self.assertEqual((CARDS, CHOICE, TYPING), ("cards", "choice", "typing"))
 
 
 class SerializationTests(unittest.TestCase):

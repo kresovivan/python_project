@@ -8,13 +8,14 @@
 #
 # Голос заменён заглушкой FakeSpeaker. Настоящий голос запускает фоновый
 # процесс PowerShell и ходит в интернет: это медленно и не нужно, чтобы
-# проверить, ЧТО программа просит произнести.
+# проверить, ЧТО программа просит произнести. Заглушка передаётся окну
+# обычным параметром: App(..., speaker=FakeSpeaker()) - это и есть
+# "внедрение зависимостей", ничего подменять внутри программы не нужно.
 
 import tempfile
 import tkinter as tk
 import unittest
 from pathlib import Path
-from unittest.mock import patch
 
 import customtkinter as ctk
 
@@ -30,7 +31,7 @@ class FakeSpeaker:
     и проверяет, что программа попросила произнести нужное.
     """
 
-    def __init__(self, cache_dir, voice=DEFAULT_VOICE):
+    def __init__(self, voice=DEFAULT_VOICE):
         self.voice = voice
         self.spoken: list[tuple[str, bool]] = []
 
@@ -64,7 +65,15 @@ class GuiTestCase(unittest.TestCase):
         # Тема оформления (тёмная/светлая) - общая настройка CustomTkinter
         # для всей программы. Запоминаем её и вернём после теста.
         self.addCleanup(ctk.set_appearance_mode, ctk.get_appearance_mode())
+        self.prepare_user_data()
         self.app = self.open_app()
+
+    def prepare_user_data(self) -> None:
+        """Подготовить файлы в user_data ДО открытия окна.
+
+        Здесь пусто. Тест, которому нужен, например, испорченный progress.json,
+        переопределяет этот метод в своём классе.
+        """
 
     def open_app(self) -> App:
         """Открыть окно программы. Его закроют после теста.
@@ -72,8 +81,7 @@ class GuiTestCase(unittest.TestCase):
         data/ и assets/ берутся из проекта: программа их только читает.
         Всё, что программа пишет, попадает во временный user_data.
         """
-        with patch("gui.app.Speaker", FakeSpeaker):
-            app = App(ROOT, self.user_data)
+        app = App(ROOT, self.user_data, speaker=FakeSpeaker())
         self.addCleanup(self.close_app, app)
         pump(app, 0.1)
         return app
@@ -106,9 +114,8 @@ class GuiTestCase(unittest.TestCase):
         """Нажать клавишу в окне: press("space"), press("т", 78, ctrl=True)."""
         app = app or self.app
         state = (CTRL if ctrl else 0) | (SHIFT if shift else 0)
-        app._on_key(
-            event(keysym, keycode, state)
-        )  # так проверять клавиши велит CLAUDE.md
+        # Нажатие передаётся прямо в обработчик окна: так велит CLAUDE.md проекта.
+        app._on_key(event(keysym, keycode, state))
         pump(app, 0.02)
 
     def open_page(self, key: str):

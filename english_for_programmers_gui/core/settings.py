@@ -2,28 +2,35 @@
 # НАСТРОЙКИ И СОСТОЯНИЕ - всё, что нужно запомнить между запусками
 # =============================================================================
 #
-# Файл user_data/state.json:
-#   тема оформления, размер окна, последняя тема,
+# Что это в жизни: "закладка и записка на холодильнике". Программа помнит,
+# где вы остановились в каждом упражнении, какая была тема оформления,
+# голос, размер и место окна.
+#
+# Файл user_data/state.json (читает и пишет JsonStore из core/storage.py):
+#   тема оформления, размер окна, последняя тема, голос,
 #   незаконченные занятия по каждому режиму, место в разделе "Ошибки Python".
+#
+# Кто пользуется: окно App (тема, окно), Lesson (место остановки),
+# страницы (последняя тема, место в "Ошибках Python").
 
-import json
 from pathlib import Path
 
 from core.session import Session
+from core.storage import JsonStore
 
 
 class Settings:
     def __init__(self, path: Path):
-        self._path = path
-        try:
-            self._data = json.loads(path.read_text(encoding="utf-8"))
-        except (FileNotFoundError, json.JSONDecodeError):
-            self._data = {}
+        self._store = JsonStore(path)
+        self._data = self._store.load()
+
+    @property
+    def backup_path(self) -> Path | None:
+        """Куда отложен испорченный файл настроек (None - файл был в порядке)."""
+        return self._store.backup_path
 
     def save(self) -> None:
-        self._path.parent.mkdir(parents=True, exist_ok=True)
-        text = json.dumps(self._data, ensure_ascii=False, indent=1)
-        self._path.write_text(text, encoding="utf-8")
+        self._store.save(self._data)
 
     # --- простые значения ----------------------------------------------------
     # get/set - общие методы, остальные - удобные именованные обёртки.

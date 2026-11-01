@@ -43,7 +43,7 @@ def write_vocabulary(folder: Path, text: str) -> Vocabulary:
     (folder / "01.txt").write_text(
         textwrap.dedent(text).strip() + "\n", encoding="utf-8"
     )
-    return Vocabulary(folder)
+    return Vocabulary.from_folder(folder)
 
 
 def use_fixed_random(test, seed: int = 20260801) -> None:

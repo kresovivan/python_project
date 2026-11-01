@@ -63,7 +63,12 @@ DEFAULT_VOICE = "en-US-JennyNeural"
 
 
 class VoiceEngine(ABC):
-    """Общий интерфейс любого голоса."""
+    """Общий интерфейс любого голоса.
+
+    Что это в жизни: "должностная инструкция голоса". Любой голос обязан
+    уметь say (произнести), stop (замолчать) и close (уйти домой). Speaker
+    работает с любым голосом по этой инструкции и не знает, как тот устроен.
+    """
 
     @staticmethod
     def prepare(text: str) -> str:
@@ -114,6 +119,13 @@ while ($true) {
 
 
 class SystemVoice(VoiceEngine):
+    """Голос Windows (Zira): без интернета, звучит "роботом".
+
+    Что это в жизни: "запасной диктор", который всегда на месте. Живёт в
+    отдельном невидимом процессе PowerShell и читает фразы, которые ему
+    передают построчно.
+    """
+
     NORMAL_RATE = 0
     SLOW_RATE = -5
 
@@ -190,6 +202,8 @@ class SystemVoice(VoiceEngine):
 class Mp3Player:
     """Проигрывает MP3 средствами Windows, без сторонних библиотек.
 
+    Что это в жизни: "магнитофон". Ему дают файл - он его играет.
+
     ctypes позволяет вызвать функцию из системной библиотеки winmm.dll
     прямо из Python. Команды MCI - это обычные строки: "open ...", "play ...".
     Вызывать только из главного потока программы.
@@ -220,6 +234,14 @@ class Mp3Player:
 
 
 class NeuralVoice(VoiceEngine):
+    """Нейросетевые голоса Microsoft Edge (Jenny, Andrew ...): звучат как живой человек.
+
+    Что это в жизни: "диктор со студией звукозаписи". Каждую фразу он один
+    раз записывает в файл (скачивает через интернет) и кладёт на полку
+    (кэш user_data/audio/). Потом фраза звучит с полки мгновенно и без
+    интернета. Записывает в фоне, а проигрывает магнитофон Mp3Player.
+    """
+
     SLOW_RATE = "-35%"
     NORMAL_RATE = "+0%"
     ATTEMPTS = 3  # сервис иногда отвечает пустотой - пробуем ещё раз
@@ -247,7 +269,7 @@ class NeuralVoice(VoiceEngine):
         rate = self.SLOW_RATE if slow else self.NORMAL_RATE
         # Имя файла - "отпечаток" (хеш) голоса, скорости и текста: у одинакового
         # текста всегда одинаковое имя, у разного - разное.
-        digest = hashlib.sha1(f"{self.voice}|{rate}|{text}".encode("utf-8")).hexdigest()[:20]
+        digest = hashlib.sha1(f"{self.voice}|{rate}|{text}".encode()).hexdigest()[:20]
         return self.cache_dir / self.voice / f"{digest}.mp3"
 
     @staticmethod
@@ -333,7 +355,10 @@ class NeuralVoice(VoiceEngine):
                     self._download(text, voice, rate, path)
                     error = None
                     break
-                except Exception as exc:  # сеть, пустой ответ сервиса и т. п.
+                # Ловим ЛЮБУЮ ошибку намеренно: это фоновый поток, и если ошибка
+                # вылетит из него, он молча умрёт, и звук пропадёт до перезапуска.
+                # Ошибка не теряется: её текст уходит в очередь результатов.
+                except Exception as exc:  # noqa: BLE001 - сеть, пустой ответ сервиса и т. п.
                     error = f"{type(exc).__name__}: {exc}"
                     time.sleep(0.4 * (attempt + 1))
             self._results.put((path, error))
@@ -359,13 +384,33 @@ class NeuralVoice(VoiceEngine):
 class Speaker:
     """Выбирает голос по настройке и при сбое переключается на голос Windows.
 
+    Что это в жизни: "диктор", у которого два голоса. Обычно он читает живым
+    нейросетевым голосом, а если тот недоступен (нет интернета, нет
+    библиотеки) - голосом Windows. Окно программы говорит диктору только
+    "произнеси это", а какой голос выбрать, решает он сам.
+
     Сообщения для пользователя (например, 'нет интернета') копятся внутри,
     интерфейс забирает их методом pop_message() и показывает.
     """
 
-    def __init__(self, cache_dir: Path, voice: str = DEFAULT_VOICE):
-        self.system = SystemVoice()
-        self.neural = NeuralVoice(cache_dir, voice if voice != SYSTEM else DEFAULT_VOICE)
+    def __init__(
+        self,
+        cache_dir: Path,
+        voice: str = DEFAULT_VOICE,
+        *,
+        system: VoiceEngine | None = None,
+        neural: NeuralVoice | None = None,
+    ):
+        """cache_dir - папка для скачанных фраз; voice - выбранный голос.
+
+        system и neural - сами голоса. Обычно их не передают, и Speaker
+        создаёт настоящие. Тесты передают заглушки (tests/unit/test_speaker.py):
+        так правило выбора голоса проверяется без звука и интернета.
+        Звёздочка * в списке параметров значит: system и neural можно
+        передать только по имени, Speaker(..., system=...), не по порядку.
+        """
+        self.system = system or SystemVoice()
+        self.neural = neural or NeuralVoice(cache_dir, voice if voice != SYSTEM else DEFAULT_VOICE)
         self.voice = voice
         self._messages: list[tuple[str, str]] = []  # (текст, вид: "info" или "error")
         self._warned_offline = False

@@ -1,6 +1,10 @@
 # =============================================================================
 # ВСПЛЫВАЮЩЕЕ СООБЩЕНИЕ внизу окна ("Загружаю произношение...", ошибки)
 # =============================================================================
+#
+# Что это в жизни: "записка на стикере". Появляется внизу окна на несколько
+# секунд и исчезает сама. Голубая - для сведения, красная - что-то не так.
+# Пишут на ней пульт диктора (gui/voice.py) и окно App (испорченные файлы).
 
 import customtkinter as ctk
 
@@ -18,9 +22,9 @@ class Toast(ctk.CTkLabel):
     def show(self, text: str, kind: str = ERROR, ms: int = 2500) -> None:
         """Показать сообщение на ms миллисекунд. kind - Toast.INFO или Toast.ERROR."""
         if kind == self.ERROR:
-            colors = dict(fg_color=theme.DANGER, text_color=theme.ON_DANGER)
+            colors = {"fg_color": theme.DANGER, "text_color": theme.ON_DANGER}
         else:
-            colors = dict(fg_color=theme.ACCENT, text_color=theme.ON_ACCENT)
+            colors = {"fg_color": theme.ACCENT, "text_color": theme.ON_ACCENT}
         self.configure(text=f"     {text}     ", **colors)
         self.place(relx=0.5, rely=1.0, anchor="s", y=-24)
         self.lift()  # поверх страниц

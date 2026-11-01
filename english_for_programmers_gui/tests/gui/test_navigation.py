@@ -25,6 +25,18 @@ class StartTests(GuiTestCase):
     def test_menu_has_every_page(self):
         self.assertEqual(len(self.app.host.keys), len(PAGE_CLASSES))
 
+    def test_page_number_is_its_place_in_menu(self):
+        """Номер в шапке страницы: "02 / КАРТОЧКИ"."""
+        numbers = [self.app.pages[key].number for key in self.app.host.keys]
+
+        self.assertEqual(numbers, list(range(1, len(PAGE_CLASSES) + 1)))
+
+    def test_page_number_belongs_to_page_object_not_to_class(self):
+        """Раньше номер записывался в сам класс - общее состояние для всех окон."""
+        for page_class in PAGE_CLASSES:
+            with self.subTest(page=page_class.__name__):
+                self.assertNotIn("number", vars(page_class))
+
 
 class PageHotkeyTests(GuiTestCase):
     def test_ctrl_and_number_opens_page_with_that_number(self):

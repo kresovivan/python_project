@@ -8,6 +8,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from core.models import Word
 from core.vocabulary import Vocabulary
 from tests.support import DATA, use_fixed_random, write_vocabulary
 
@@ -90,6 +91,40 @@ class LoadingTests(VocabularyTestCase):
             )
 
 
+class ConstructionTests(unittest.TestCase):
+    """Три способа создать словарь: из файлов, из текста, из готовых слов."""
+
+    def test_dictionary_can_be_made_from_text_without_files(self):
+        vocabulary = Vocabulary.from_text("loop|цикл|луп")
+
+        self.assertEqual(vocabulary.get("loop").ru, "цикл")
+
+    def test_text_can_contain_topics(self):
+        vocabulary = Vocabulary.from_text("# topic: Циклы\nloop|цикл|луп")
+
+        self.assertEqual(vocabulary.topics(), ["Циклы"])
+
+    def test_dictionary_can_be_made_from_ready_words(self):
+        words = [
+            Word("loop", "цикл", "луп", "Циклы"),
+            Word("push", "отправить", "пуш", "Git"),
+        ]
+
+        vocabulary = Vocabulary(words)
+
+        self.assertEqual(vocabulary.topics(), ["Циклы", "Git"])
+
+    def test_files_are_read_in_order_of_names(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp)
+            (folder / "02_git.txt").write_text("push|отправить|пуш", encoding="utf-8")
+            (folder / "01_loops.txt").write_text("loop|цикл|луп", encoding="utf-8")
+
+            vocabulary = Vocabulary.from_folder(folder)
+
+        self.assertEqual(vocabulary.topics(), ["01_loops", "02_git"])
+
+
 class QuestionsTests(VocabularyTestCase):
     def test_unknown_word_is_none(self):
         vocabulary = self.load("loop|цикл|луп")
@@ -122,6 +157,51 @@ class QuestionsTests(VocabularyTestCase):
         found = vocabulary.search("ПЕРЕМЕН")
 
         self.assertEqual([word.en for word in found], ["variable"])
+
+
+class SearchOrderTests(VocabularyTestCase):
+    """Порядок результатов поиска: самое похожее на запрос - первым.
+
+    Раньше этот порядок задавала страница "Словарь", теперь - сам словарь.
+    """
+
+    WORDS = """
+        for loop|цикл for|фо луп
+        loopback|петля|лупбэк
+        loop|цикл|луп
+        infinite loop|бесконечный цикл|инфинит луп
+    """
+
+    def test_exact_match_comes_first(self):
+        vocabulary = self.load(self.WORDS)
+
+        found = vocabulary.search("loop")
+
+        self.assertEqual(found[0].en, "loop")
+
+    def test_words_starting_with_query_come_before_other_matches(self):
+        vocabulary = self.load(self.WORDS)
+
+        found = [word.en for word in vocabulary.search("loop")]
+
+        self.assertLess(found.index("loopback"), found.index("for loop"))
+
+    def test_shorter_word_comes_first_among_similar_matches(self):
+        vocabulary = self.load(self.WORDS)
+
+        found = [word.en for word in vocabulary.search("loop")]
+
+        self.assertLess(found.index("for loop"), found.index("infinite loop"))
+
+    def test_exact_match_ignores_case_and_note_in_brackets(self):
+        vocabulary = self.load(
+            """
+            loopback|петля|лупбэк
+            Loop (cycle)|цикл|луп
+            """
+        )
+
+        self.assertEqual(vocabulary.search("LOOP")[0].en, "Loop (cycle)")
 
 
 class DistractorsTests(VocabularyTestCase):
@@ -213,7 +293,7 @@ class RealDictionaryTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Словарь читается один раз на все тесты класса: он только читается и не меняется.
-        cls.vocabulary = Vocabulary(DATA)
+        cls.vocabulary = Vocabulary.from_folder(DATA)
         cls.words = cls.vocabulary.all_words()
 
     def test_dictionary_is_not_empty(self):

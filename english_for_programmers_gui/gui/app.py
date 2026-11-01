@@ -2,8 +2,13 @@
 # ГЛАВНОЕ ОКНО - собирает приложение из частей
 # =============================================================================
 #
-# App - "точка сборки": создаёт объекты и соединяет их друг с другом,
-# сам почти ничего не делает. Каждая часть - в своём файле:
+# Что это в жизни: "сборщик на конвейере". App при запуске берёт готовые
+# детали (словарь, дневник прогресса, настройки, диктора, страницы),
+# соединяет их друг с другом и дальше почти ничего не делает сам.
+# Такое место в программе называют "точкой сборки" (composition root):
+# только здесь решается, какие именно объекты создать.
+#
+# Каждая часть - в своём файле:
 #
 #   core/ (логика, без окон)    Vocabulary, Progress, Settings, Speaker, Lesson
 #   gui/voice.py                VoiceController - озвучка для интерфейса
@@ -31,13 +36,13 @@ from gui.context import AppContext
 from gui.help_overlay import HelpOverlay
 from gui.hotkeys import KeyPress
 from gui.page_host import PageHost
-from gui.screen import Screens, plan_window
 from gui.pages.base import Page
 from gui.pages.dictionary import DictionaryPage
 from gui.pages.errors_page import ErrorsPage
 from gui.pages.home import HomePage
 from gui.pages.stats import StatsPage
 from gui.pages.study import CardsPage, ChoicePage, TypingPage
+from gui.screen import Screens, plan_window
 from gui.sidebar import DARK, LIGHT, Sidebar
 from gui.toast import Toast
 from gui.voice import VoiceController
@@ -56,10 +61,14 @@ PAGE_CLASSES: list[type[Page]] = [
 
 
 class App(ctk.CTk):
-    def __init__(self, base_dir: Path, user_data: Path | None = None):
+    def __init__(self, base_dir: Path, user_data: Path | None = None, speaker: Speaker | None = None):
         """base_dir - где лежат data/ и assets/; user_data - где хранить прогресс.
 
         Обычно user_data = base_dir/user_data. В exe-версии они разные (см. main.py).
+
+        speaker - "диктор". Обычно не передаётся, и App создаёт настоящий
+        Speaker. Тесты окна передают заглушку (tests/gui/base.py, FakeSpeaker):
+        она не запускает голос Windows и не ходит в интернет.
         """
         user_data = user_data or base_dir / "user_data"
         # Настройки читаем ДО создания окна - тема оформления нужна сразу.
@@ -94,9 +103,9 @@ class App(ctk.CTk):
         self.rowconfigure(0, weight=1)
 
         # --- логика (core) ----------------------------------------------------
-        self.vocabulary = Vocabulary(base_dir / "data")
+        self.vocabulary = Vocabulary.from_folder(base_dir / "data")
         self.progress = Progress(user_data / "progress.json")
-        self.speaker = Speaker(user_data / "audio", self.settings.get("voice", DEFAULT_VOICE))
+        self.speaker = speaker or Speaker(user_data / "audio", self.settings.get("voice", DEFAULT_VOICE))
 
         # --- интерфейс --------------------------------------------------------
         self.toast = Toast(self)
@@ -128,6 +137,20 @@ class App(ctk.CTk):
         # Программа всегда открывается на главной. Незаконченное занятие не теряется:
         # оно показано на главной в блоке "Вы остановились здесь" (Enter - продолжить).
         self.show_page("home")
+        self._warn_about_damaged_files()
+
+    def _warn_about_damaged_files(self) -> None:
+        """Сказать пользователю, если файл прогресса или настроек был испорчен.
+
+        Сам файл не потерян: JsonStore (core/storage.py) отложил его копию
+        рядом под именем вида progress.broken-20261102-011500.json.
+        """
+        damaged = [path.name for path in (self.progress.backup_path, self.settings.backup_path) if path]
+        if damaged:
+            self.toast.show(
+                f"Файл был повреждён, программа начала с чистого листа. Копия: {', '.join(damaged)}",
+                ms=12000,  # 12 секунд: сообщение важное и длинное
+            )
 
     # --- навигация (договор Navigator из gui/context.py) ----------------------
 

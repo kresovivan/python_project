@@ -9,7 +9,7 @@ from tests.support import DATA
 
 
 def run():
-    vocabulary = Vocabulary(DATA)
+    vocabulary = Vocabulary.from_folder(DATA)
     english_words = ["variable", "loop", "function", "commit", "debug", "browser cache"]
     words = [vocabulary.get(text) for text in english_words]
     if not all(words):

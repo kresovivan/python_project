@@ -2,18 +2,27 @@
 # ПРОГРЕСС - статистика по каждому слову и история занятий по дням
 # =============================================================================
 #
-# Файл user_data/progress.json:
+# Что это в жизни: "дневник ученика". В нём записано, сколько раз на каждое
+# слово ответили верно и неверно, и сколько ответов было в каждый день.
+# По дневнику решается, какое слово уже выучено, а какое слабое, и какие
+# слова дать в следующем занятии.
+#
+# Файл user_data/progress.json (читает и пишет JsonStore из core/storage.py):
 # {
 #   "words": {"variable": {"right": 3, "wrong": 1, "last": "2026-11-01"}, ...},
 #   "days":  {"2026-11-01": {"right": 25, "wrong": 7}, ...}
 # }
+#
+# Кто пользуется: Lesson (core/lesson.py) записывает ответы и подбирает слова,
+# страницы "Главная" и "Прогресс" показывают статистику.
 
-import json
 import random
+from collections.abc import Callable
 from datetime import date, timedelta
 from pathlib import Path
 
 from core.models import Word
+from core.storage import JsonStore
 
 # Статусы слова. Константы вместо "магических строк": опечатка в имени
 # константы сразу даст ошибку, а опечатка в строке "lerned" - нет.
@@ -35,24 +44,28 @@ class Progress:
 
     LEARNED_AFTER = 3  # верных ответов, чтобы слово считалось выученным
 
-    def __init__(self, path: Path):
-        self._path = path
-        data = self._load()
+    def __init__(self, path: Path, today: Callable[[], date] = date.today):
+        """path - файл progress.json; today - "часы": функция, которая отвечает, какой сегодня день.
+
+        Программа передаёт настоящие часы (date.today, по умолчанию). Тест
+        передаёт свои, например lambda: date(2026, 11, 1), и сам решает,
+        какой сегодня день. Без этого нельзя проверить, что будет в полночь.
+        """
+        self._today = today
+        self._store = JsonStore(path)  # как хранить файл - забота JsonStore
+        data = self._store.load()
         self._words: dict[str, dict] = data.get("words", {})
         self._days: dict[str, dict] = data.get("days", {})
 
     # --- файл ----------------------------------------------------------------
 
-    def _load(self) -> dict:
-        try:
-            return json.loads(self._path.read_text(encoding="utf-8"))
-        except (FileNotFoundError, json.JSONDecodeError):
-            return {}
+    @property
+    def backup_path(self) -> Path | None:
+        """Куда отложен испорченный файл прогресса (None - файл был в порядке)."""
+        return self._store.backup_path
 
     def save(self) -> None:
-        self._path.parent.mkdir(parents=True, exist_ok=True)
-        data = {"words": self._words, "days": self._days}
-        self._path.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+        self._store.save({"words": self._words, "days": self._days})
 
     def reset(self) -> None:
         """Стереть весь прогресс."""
@@ -63,7 +76,7 @@ class Progress:
     # --- запись ответа -------------------------------------------------------
 
     def record(self, word: Word, is_right: bool) -> None:
-        today = date.today().isoformat()  # "2026-11-01"
+        today = self._today().isoformat()  # "2026-11-01"
         key = "right" if is_right else "wrong"
 
         stats = self._words.setdefault(word.en, {"right": 0, "wrong": 0})
@@ -114,7 +127,7 @@ class Progress:
 
     def history(self, days: int = 14) -> list[tuple[date, int, int]]:
         """Последние N дней: [(дата, верных, ошибок), ...] - от старых к новым."""
-        today = date.today()
+        today = self._today()
         result = []
         for offset in range(days - 1, -1, -1):
             day = today - timedelta(days=offset)
@@ -123,12 +136,12 @@ class Progress:
         return result
 
     def today_total(self) -> int:
-        stats = self._days.get(date.today().isoformat(), {"right": 0, "wrong": 0})
+        stats = self._days.get(self._today().isoformat(), {"right": 0, "wrong": 0})
         return stats["right"] + stats["wrong"]
 
     def streak(self) -> int:
         """Сколько дней подряд (до сегодня или вчера) были занятия."""
-        day = date.today()
+        day = self._today()
         if day.isoformat() not in self._days:
             day -= timedelta(days=1)  # сегодня ещё не занимались - считаем со вчера
         count = 0

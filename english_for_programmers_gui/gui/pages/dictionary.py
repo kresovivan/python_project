@@ -2,6 +2,10 @@
 # СЛОВАРЬ - поиск слова по-английски или по-русски
 # =============================================================================
 #
+# Что это в жизни: "поиск по словарю с закладками". Ищет и упорядочивает
+# слова сам словарь (Vocabulary.search, core/vocabulary.py), страница
+# показывает найденное и статус каждого слова из Progress.
+#
 # Результаты выводятся в одно текстовое поле (RichText), а не в сотни
 # отдельных меток: так поиск и изменение размера окна работают без задержек.
 
@@ -22,8 +26,8 @@ class DictionaryPage(Page):
     description = "Встретили незнакомое слово в книге или документации? Найдите его здесь."
     MAX_RESULTS = 200
 
-    def __init__(self, master, context: AppContext):
-        super().__init__(master, context)
+    def __init__(self, master, context: AppContext, number: int = 0):
+        super().__init__(master, context, number)
         self._after_id = None
         self._speak_tags: list[str] = []  # теги кнопок "Звук" прошлого поиска
 
@@ -97,10 +101,9 @@ class DictionaryPage(Page):
             self.results.write([("Например: loop, commit, refactor, кортеж, переменная.", "hint")])
             return
 
+        # Словарь сам отдаёт слова по порядку: от самого похожего на запрос.
+        # Это правило поиска, поэтому оно в core/vocabulary.py, а не здесь.
         found = self.vocabulary.search(text)
-        # Сначала точные совпадения, потом начинающиеся с запроса, потом остальные.
-        lowered = text.lower()
-        found.sort(key=lambda w: (w.answer.lower() != lowered, not w.en.lower().startswith(lowered), len(w.en)))
         shown = found[: self.MAX_RESULTS]
 
         if not found:
