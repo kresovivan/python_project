@@ -1,6 +1,11 @@
 # =============================================================================
 # ПРОГРЕСС - общая полоска, график активности за 2 недели, прогресс по темам
 # =============================================================================
+#
+# Что это в жизни: "табель успеваемости". Все числа берутся из дневника
+# Progress (core/progress.py), страница только рисует их:
+#   StatsPage - сама страница;
+#   TopicBars - список тем с полосками "выучено из стольких" (на одном холсте).
 
 import tkinter as tk
 from tkinter import messagebox
@@ -76,8 +81,8 @@ class StatsPage(Page):
     title = "Прогресс"
     tagline = "Шаг за шагом."
 
-    def __init__(self, master, context: AppContext):
-        super().__init__(master, context)
+    def __init__(self, master, context: AppContext, number: int = 0):
+        super().__init__(master, context, number)
 
         header = self.build_header()
         GhostButton(

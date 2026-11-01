@@ -8,20 +8,32 @@
 #       |-- ChoicePage  - выбрать перевод из 4 вариантов
 #       `-- TypingPage  - написать слово по-английски
 #
-# Вся логика занятия (какие слова, счёт, место остановки) - в классе Lesson
-# (core/lesson.py). Страница только показывает слова и передаёт ответы.
+# Что это в жизни: "доска в классе". На ней учитель (Lesson) показывает
+# слово, ученик отвечает, доска показывает, верно или нет. Сама доска
+# ничего не решает: все правила - в core/.
+#
+# Где какие правила:
+#   Lesson (core/lesson.py)          - какие слова, счёт, место остановки;
+#   ChoiceQuestion (core/questions.py) - варианты ответа в "Выборе перевода";
+#   AnswerChecker (core/answers.py)  - верно ли написано слово, подсказка;
+#   Session.rating (core/session.py) - оценка за занятие на экране итогов.
+# Страница только показывает слова и передаёт ответы: lesson.answer(True).
+#
 # Наследники пишут build_body() и render() - как выглядит упражнение
 # и как показать одно слово - и, если нужно, handle_key().
+# Это приём "шаблонный метод": общий ход занятия описан в StudyPage один
+# раз, а наследники заполняют только отличающиеся шаги.
 
-import random
 from abc import ABC, abstractmethod
+from typing import ClassVar
 
 import customtkinter as ctk
 
 from core.answers import AnswerChecker
 from core.lesson import Lesson
 from core.models import Word
-from core.session import Session
+from core.questions import ChoiceQuestion
+from core.session import CARDS, CHOICE, EXCELLENT, GOOD, TYPING, Session
 from gui import theme
 from gui.context import AppContext
 from gui.hotkeys import KeyPress
@@ -35,8 +47,8 @@ class StudyPage(Page, ABC):
     # нельзя - только наследников, которые написали build_body() и render().
     AUTO_NEXT_MS = 900  # пауза перед следующим словом после верного ответа
 
-    def __init__(self, master, context: AppContext):
-        super().__init__(master, context)
+    def __init__(self, master, context: AppContext, number: int = 0):
+        super().__init__(master, context, number)
         self.lesson = Lesson(self.key, self.vocabulary, self.progress, self.settings)
         self.word: Word | None = None  # слово на экране
         self._after_id = None  # отложенный переход к следующему слову
@@ -183,15 +195,21 @@ class StudyPage(Page, ABC):
             self.shift_topic(-1 if key.is_("Up") else 1)
         elif key.ctrl and key.is_letter("R") and self._screen is self.result:
             self.retry_mistakes()
-        elif self._screen is self.intro and key.is_("Return"):
-            self.start_new()
-        elif self._screen is self.result and key.is_("Return", "space"):
+        elif self._start_key_pressed(key):
             self.start_new()
         elif self._screen is self.body:
             return self.handle_key(key)
         else:
             return False
         return True
+
+    def _start_key_pressed(self, key: KeyPress) -> bool:
+        """Нажата ли клавиша "начать занятие": Enter до старта, Enter или Пробел на итогах."""
+        if self._screen is self.intro:
+            return key.is_("Return")
+        if self._screen is self.result:
+            return key.is_("Return", "space")
+        return False
 
     # === действия =============================================================
 
@@ -230,7 +248,7 @@ class StudyPage(Page, ABC):
 
     def answer(self, is_right: bool) -> None:
         """Передать ответ занятию и обновить счёт на экране."""
-        self.lesson.answer(self.word, is_right)
+        self.lesson.answer(is_right)  # ответ всегда на текущее слово занятия
         self._update_status()
 
     def next_word(self) -> None:
@@ -267,15 +285,18 @@ class StudyPage(Page, ABC):
         self.score.configure(text=f"ВЕРНО {s.right}    ОШИБОК {s.wrong}")
         self.bar.set(s.fraction)
 
+    # Оценку решает сессия (Session.rating, правило в core/), а страница
+    # только выбирает, какими словами её написать.
+    # ClassVar - подсказка "это общий атрибут класса, а не поле объекта".
+    RATING_TITLES: ClassVar[dict[str, str]] = {
+        EXCELLENT: "Excellent! Отлично!",
+        GOOD: "Good job! Хорошая работа!",
+    }
+    OTHER_RATING_TITLE = "Keep going! Продолжайте!"
+
     def show_result(self) -> None:
         s = self.session
-        if s.percent == 100:
-            title = "Excellent! Отлично!"
-        elif s.percent >= 70:
-            title = "Good job! Хорошая работа!"
-        else:
-            title = "Keep going! Продолжайте!"
-        self.result_title.configure(text=title)
+        self.result_title.configure(text=self.RATING_TITLES.get(s.rating, self.OTHER_RATING_TITLE))
         self.result_score.configure(text=f"{s.percent}%")
         self.result_text.configure(text=f"Верно: {s.right},   ошибок: {s.wrong},   всего: {s.answered}")
         self.retry_button.configure(state="normal" if s.mistakes else "disabled")
@@ -290,7 +311,7 @@ class StudyPage(Page, ABC):
 
 
 class CardsPage(StudyPage):
-    key = "cards"
+    key = CARDS
     title = "Карточки"
     tagline = "Слово за словом."
     description = "Посмотрите на слово, вспомните перевод, откройте ответ и честно отметьте: знаете или нет."
@@ -370,7 +391,7 @@ class CardsPage(StudyPage):
 
 
 class ChoicePage(StudyPage):
-    key = "choice"
+    key = CHOICE
     title = "Выбор перевода"
     tagline = "Один из четырёх."
     description = "Выберите правильный перевод. Можно мышью или клавишами 1-4."
@@ -410,14 +431,19 @@ class ChoicePage(StudyPage):
         self.feedback.pack(pady=(12, 0))
         self.next_button = GhostButton(parent, "Далее    Enter / Пробел", self.next_word, width=240)
         self.answered = False
-        self.options: list[str] = []
+        self.question: ChoiceQuestion | None = None  # вопрос, который сейчас на экране
+
+    @property
+    def options(self) -> tuple[str, ...]:
+        """Варианты ответа на экране, по порядку кнопок."""
+        return self.question.options if self.question else ()
 
     def render(self, word: Word) -> None:
         self.answered = False
         self.en_label.configure(text=word.en)
         self.sound_label.configure(text=f"[ {word.sound} ]")
-        self.options = self.vocabulary.distractors(word, self.OPTIONS - 1) + [word.ru]
-        random.shuffle(self.options)
+        # Какие варианты показать - правило упражнения, его решает ChoiceQuestion (core/).
+        self.question = ChoiceQuestion.create(word, self.vocabulary, self.OPTIONS)
         for number, (button, option) in enumerate(zip(self.option_buttons, self.options), start=1):
             button.configure(text=f"{number}.  {option}", fg_color=theme.CARD_ALT, text_color=theme.TEXT, state="normal")
         self.feedback.configure(text="")
@@ -427,7 +453,7 @@ class ChoicePage(StudyPage):
         if self.answered:
             return
         self.answered = True
-        is_right = self.options[index] == self.word.ru
+        is_right = self.question.is_correct(index)
         self.answer(is_right)
         self._paint_options(chosen=index)
         if is_right:
@@ -447,7 +473,7 @@ class ChoicePage(StudyPage):
         он серый и плохо читается на зелёном и красном, поэтому задаём сами.
         """
         for i, button in enumerate(self.option_buttons):
-            if self.options[i] == self.word.ru:
+            if i == self.question.correct_index:
                 button.configure(fg_color=theme.SUCCESS, text_color_disabled=theme.ON_SUCCESS)
             elif i == chosen:
                 button.configure(fg_color=theme.DANGER, text_color_disabled=theme.ON_DANGER)
@@ -471,7 +497,7 @@ class ChoicePage(StudyPage):
 
 
 class TypingPage(StudyPage):
-    key = "typing"
+    key = TYPING
     title = "Написание слова"
     tagline = "По памяти."
     description = "Напишите английское слово по переводу. Регистр и знаки препинания не важны."

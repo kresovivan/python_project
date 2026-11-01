@@ -122,7 +122,7 @@ class AnswerTests(LessonTestCase):
     def test_right_answer_is_counted_and_moves_to_next_word(self):
         lesson = self.started("Git")
 
-        lesson.answer(lesson.current_word(), True)
+        lesson.answer(True)
 
         self.assertEqual((lesson.session.right, lesson.session.index), (1, 1))
 
@@ -130,7 +130,7 @@ class AnswerTests(LessonTestCase):
         lesson = self.started("Git")
         word = lesson.current_word()
 
-        lesson.answer(word, False)
+        lesson.answer(False)
 
         self.assertEqual(lesson.session.wrong, 1)
         self.assertEqual(lesson.session.mistakes, [word.en])
@@ -139,7 +139,7 @@ class AnswerTests(LessonTestCase):
         lesson = self.started("Git")
         word = lesson.current_word()
 
-        lesson.answer(word, False)
+        lesson.answer(False)
 
         self.assertEqual(self.progress.status(word), WEAK)
 
@@ -147,7 +147,7 @@ class AnswerTests(LessonTestCase):
         """Если закрыть программу сразу после ответа, ответ не засчитается дважды."""
         lesson = self.started("Git")
 
-        lesson.answer(lesson.current_word(), True)
+        lesson.answer(True)
 
         self.assertEqual(Settings(self.root / "state.json").session("cards").index, 1)
 
@@ -155,7 +155,7 @@ class AnswerTests(LessonTestCase):
         lesson = self.started("Git")
 
         while lesson.active:
-            lesson.answer(lesson.current_word(), True)
+            lesson.answer(True)
 
         self.assertEqual(lesson.session.answered, len(GIT))
         self.assertIsNone(lesson.current_word())
@@ -164,7 +164,7 @@ class AnswerTests(LessonTestCase):
         lesson = self.started("Git")
 
         while lesson.active:
-            lesson.answer(lesson.current_word(), True)
+            lesson.answer(True)
 
         self.assertIsNone(Settings(self.root / "state.json").session("cards"))
 
@@ -172,7 +172,7 @@ class AnswerTests(LessonTestCase):
 class RestoreTests(LessonTestCase):
     def test_saved_lesson_continues_from_same_word(self):
         lesson = self.started("Циклы", mode="typing")
-        lesson.answer(lesson.current_word(), True)
+        lesson.answer(True)
         expected = lesson.current_word()
 
         restored = self.lesson_after_restart("typing")
@@ -204,14 +204,64 @@ class RestoreTests(LessonTestCase):
         self.assertEqual(lesson.session.index, 1)
 
 
+class QuestionsDoNotChangeLessonTests(LessonTestCase):
+    """Правило "раздели команды и вопросы".
+
+    current_word() - это вопрос ("какое слово сейчас?"). Вопрос не должен
+    ничего менять: ни номер слова, ни файл настроек. Меняют занятие только
+    команды: start, restore, answer, retry_mistakes.
+    """
+
+    def test_asking_current_word_twice_gives_same_word(self):
+        lesson = self.started("Git")
+
+        self.assertEqual(lesson.current_word(), lesson.current_word())
+
+    def test_asking_current_word_does_not_touch_saved_lesson(self):
+        self.settings.save_session(Session("typing", ALL_TOPICS, ["loop", "break"]))
+        lesson = self.new_lesson("typing")
+        lesson.restore()
+        saved_before = (self.root / "state.json").read_text(encoding="utf-8")
+
+        lesson.current_word()
+        lesson.current_word()
+
+        self.assertEqual(
+            (self.root / "state.json").read_text(encoding="utf-8"), saved_before
+        )
+        self.assertEqual(lesson.session.index, 0)
+
+    def test_removed_word_after_answer_is_skipped(self):
+        self.settings.save_session(
+            Session("typing", ALL_TOPICS, ["loop", "removed", "break"])
+        )
+        lesson = self.new_lesson("typing")
+        lesson.restore()
+
+        lesson.answer(True)
+
+        self.assertEqual(lesson.current_word().en, "break")
+
+    def test_lesson_with_only_removed_words_left_is_finished(self):
+        self.settings.save_session(
+            Session("typing", ALL_TOPICS, ["loop", "removed"], index=1)
+        )
+        lesson = self.new_lesson("typing")
+
+        lesson.restore()
+
+        self.assertFalse(lesson.active)
+        self.assertIsNone(Settings(self.root / "state.json").session("typing"))
+
+
 class RetryMistakesTests(LessonTestCase):
     def test_retry_takes_only_words_with_mistakes(self):
         lesson = self.started("Циклы")
         first = lesson.current_word()
-        lesson.answer(first, False)
-        lesson.answer(lesson.current_word(), True)
+        lesson.answer(False)
+        lesson.answer(True)
         third = lesson.current_word()
-        lesson.answer(third, False)
+        lesson.answer(False)
 
         lesson.retry_mistakes()
 
@@ -219,7 +269,7 @@ class RetryMistakesTests(LessonTestCase):
 
     def test_retry_starts_new_lesson_from_first_word(self):
         lesson = self.started("Циклы")
-        lesson.answer(lesson.current_word(), False)
+        lesson.answer(False)
 
         lesson.retry_mistakes()
 
@@ -229,8 +279,8 @@ class RetryMistakesTests(LessonTestCase):
         self.settings.save_session(Session("cards", "Циклы", ["loop", "loop"]))
         lesson = self.new_lesson()
         lesson.restore()
-        lesson.answer(lesson.current_word(), False)
-        lesson.answer(lesson.current_word(), False)
+        lesson.answer(False)
+        lesson.answer(False)
 
         lesson.retry_mistakes()
 
@@ -238,7 +288,7 @@ class RetryMistakesTests(LessonTestCase):
 
     def test_no_retry_without_mistakes(self):
         lesson = self.started("Git")
-        lesson.answer(lesson.current_word(), True)
+        lesson.answer(True)
 
         self.assertFalse(lesson.retry_mistakes())
 

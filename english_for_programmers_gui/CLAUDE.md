@@ -18,19 +18,31 @@
 
 `core/` - логика без окон, `gui/` - интерфейс. **Правила не нарушать:**
 
-1. Логика - в `core/` (`Lesson`, `AnswerChecker`, `Progress`). Страницы только показывают и передают.
+1. Логика - в `core/` (`Lesson`, `ChoiceQuestion`, `AnswerChecker`, `Progress`, порядок поиска
+   в `Vocabulary.search`, оценка `Session.rating`). Страницы только показывают и передают.
+   Любое новое правило - в `core/` и сначала падающий тест в `tests/unit/`.
 2. Страница получает `AppContext` (`gui/context.py`): vocabulary, progress, settings, errors,
    voice, navigator. **Не** передавать страницам окно `App` и не обращаться к нему из страниц.
 3. `App` (`gui/app.py`) только собирает части. Меню - `Sidebar`, страницы - `PageHost`,
    озвучка - `VoiceController`, сообщения - `Toast`, справка F1 - `HelpOverlay`.
+   Зависимости передаются снаружи: `App(..., speaker=)`, `Speaker(..., system=, neural=)`,
+   `Progress(path, today=)`. Тесты подставляют заглушки, `unittest.mock.patch` для этого не нужен.
 4. Новая страница: наследник `Page` в `gui/pages/` + строка в `PAGE_CLASSES` (`gui/app.py`).
-   Новый режим занятий: наследник `StudyPage` (`build_body`, `render`, при нужде `handle_key`).
+   Конструктор страницы: `__init__(self, master, context, number=0)` и `super().__init__(master, context, number)`.
+   Номер в меню - атрибут объекта (`self.number`), его передаёт `PageHost`; в класс не записывать.
+   Новый режим занятий: константа в `core/session.py` (+ `STUDY_MODES`), наследник `StudyPage`
+   с `key` = эта константа (`build_body`, `render`, при нужде `handle_key`). Значения режимов
+   `"cards"`, `"choice"`, `"typing"` не менять: они записаны в `state.json` пользователя.
    У страницы задать `key`, `title`, `tagline`, `description`; шапка - `self.build_header()`.
-   `number` проставляет `PageHost` по порядку в меню.
-5. Клавиши - через `KeyPress` (`gui/hotkeys.py`). Буквы проверять `key.is_letter("F")`
+5. Счёт занятия меняет только `Session` (`record_answer`, `skip_word`). `Lesson.answer(is_right)`
+   отвечает на текущее слово. Вопросы (`current_word`, `active`) ничего не меняют.
+6. Файлы `user_data/*.json` пишет только `JsonStore` (`core/storage.py`): запись через `.tmp`
+   и `os.replace`, испорченный файл откладывается как `*.broken-ДАТА.json`, окно предупреждает.
+   `build_exe.py` уносит `dist/.../user_data` в `build/user_data_backup` на время сборки.
+7. Клавиши - через `KeyPress` (`gui/hotkeys.py`). Буквы проверять `key.is_letter("F")`
    (по физической клавише, keycode) - иначе не работает в русской раскладке.
    Новое сочетание - описать в `HELP` в том же файле (это справка F1).
-6. Цвета и шрифты - **только** из `gui/theme.py`, пары (светлая, тёмная). Для `tk.Canvas`
+8. Цвета и шрифты - **только** из `gui/theme.py`, пары (светлая, тёмная). Для `tk.Canvas`
    и `tk.Text` - `theme.pick(...)`, для свечения - `theme.mix(...)`.
 
 ## Производительность (важно, было медленно)

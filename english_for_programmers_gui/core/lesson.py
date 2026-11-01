@@ -2,12 +2,22 @@
 # ЗАНЯТИЕ - логика одного режима (карточки, выбор, написание) без интерфейса
 # =============================================================================
 #
-# Раньше эта логика жила прямо в странице окна вперемешку с кнопками.
-# Теперь страница только показывает слова и передаёт ответы, а Lesson решает:
-#   - какие слова взять для занятия (из темы, все, только слабые);
-#   - какое слово сейчас;
-#   - как засчитать ответ и где сохранить место остановки.
-# Такой класс легко проверить без окна и легко поменять правила.
+# Что это в жизни: "учитель" одного упражнения. Он выбирает слова для
+# занятия, показывает их по одному, принимает ответы, записывает их в
+# дневник (Progress) и делает закладку (Settings), чтобы завтра продолжить.
+#
+# Кто с кем связан:
+#   Lesson берёт слова из Vocabulary (книга),
+#          ведёт счёт в Session (листок с заданием),
+#          записывает ответы в Progress (дневник),
+#          сохраняет место остановки через Settings (закладка).
+#   Страница окна (gui/pages/study.py) только показывает слово и передаёт
+#   ответ: lesson.answer(True). Поэтому всю логику занятия проверяют быстрые
+#   тесты без окна (tests/unit/test_lesson.py).
+#
+# Правило "раздели команды и вопросы":
+#   вопросы (current_word, active, last_topic) только отвечают и ничего не меняют;
+#   команды (start, restore, answer, retry_mistakes) меняют занятие и сохраняют его.
 
 import random
 
@@ -17,6 +27,7 @@ from core.session import Session
 from core.settings import Settings
 from core.vocabulary import Vocabulary
 
+# Особые пункты в списке тем: не тема из словаря, а правило подбора слов.
 ALL_TOPICS = "Все темы"
 WEAK_WORDS = "Слабые слова (работа над ошибками)"
 
@@ -25,7 +36,7 @@ class Lesson:
     SIZE = 20  # слов в одном занятии
 
     def __init__(self, mode: str, vocabulary: Vocabulary, progress: Progress, settings: Settings):
-        self.mode = mode  # "cards", "choice" или "typing"
+        self.mode = mode  # CARDS, CHOICE или TYPING (core/session.py)
         self._vocabulary = vocabulary
         self._progress = progress
         self._settings = settings
@@ -63,7 +74,7 @@ class Lesson:
             return [w for w in self._vocabulary.all_words() if self._progress.status(w) == WEAK]
         return self._vocabulary.words(topic)
 
-    # --- начало занятия -------------------------------------------------------
+    # --- команды: начать, продолжить, ответить -----------------------------------
 
     def start(self, topic: str) -> bool:
         """Новое занятие по теме. False - в теме нет подходящих слов."""
@@ -91,17 +102,32 @@ class Lesson:
             return False
         saved.topic = self.known_topic(saved.topic)
         self.session = saved
+        self._skip_missing_words()
         return True
+
+    def answer(self, is_right: bool) -> None:
+        """Засчитать ответ на ТЕКУЩЕЕ слово и СРАЗУ сохранить место остановки.
+
+        Слово не передаётся: ответить можно только на то слово, которое сейчас
+        на экране. Так счёт не собьётся, даже если вызвать answer() по ошибке
+        с чужим словом.
+
+        Номер слова увеличивается здесь, а не при переходе к следующему слову:
+        если закрыть программу, пока на экране подсветка ответа, при
+        следующем запуске ответ не засчитается второй раз.
+        """
+        word = self.current_word()
+        if word is None:
+            raise ValueError("Занятие закончено: отвечать больше не на что")
+        self._progress.record(word, is_right)
+        self.session.record_answer(is_right)  # счёт ведёт сама сессия
+        self._skip_missing_words()
 
     def forget(self) -> None:
         """Убрать занятие с экрана (сохранённое в настройках остаётся)."""
         self.session = None
 
-    def _begin(self, session: Session) -> None:
-        self.session = session
-        self._settings.save_session(session)
-
-    # --- ход занятия ----------------------------------------------------------
+    # --- вопросы: только отвечают, ничего не меняют --------------------------------
 
     @property
     def active(self) -> bool:
@@ -109,29 +135,25 @@ class Lesson:
         return self.session is not None and not self.session.finished
 
     def current_word(self) -> Word | None:
-        """Текущее слово или None, если занятие закончено."""
-        session = self.session
-        # Пропускаем слова, которых больше нет в словаре (например, удалили из файла).
-        while not session.finished and self._vocabulary.get(session.keys[session.index]) is None:
-            session.index += 1
-        if session.finished:
-            self._settings.save_session(session)  # законченное занятие удаляется из сохранённых
+        """Текущее слово или None, если занятия нет или оно закончено."""
+        if self.session is None or self.session.finished:
             return None
-        return self._vocabulary.get(session.keys[session.index])
+        return self._vocabulary.get(self.session.current_key)
 
-    def answer(self, word: Word, is_right: bool) -> None:
-        """Засчитать ответ и СРАЗУ сохранить место остановки.
+    # --- внутреннее ---------------------------------------------------------------
 
-        Номер слова увеличивается здесь, а не при переходе к следующему слову:
-        если закрыть программу, пока на экране подсветка ответа, при
-        следующем запуске ответ не засчитается второй раз.
+    def _begin(self, session: Session) -> None:
+        self.session = session
+        self._skip_missing_words()
+
+    def _skip_missing_words(self) -> None:
+        """Пропустить слова, которых больше нет в словаре, и сохранить место.
+
+        Слово могли удалить из data/*.txt, пока занятие лежало сохранённым.
+        Законченное занятие Settings.save_session не хранит: так оно пропадает
+        из кнопки "Продолжить".
         """
         session = self.session
-        self._progress.record(word, is_right)
-        if is_right:
-            session.right += 1
-        else:
-            session.wrong += 1
-            session.mistakes.append(word.en)
-        session.index += 1
+        while not session.finished and self._vocabulary.get(session.current_key) is None:
+            session.skip_word()
         self._settings.save_session(session)

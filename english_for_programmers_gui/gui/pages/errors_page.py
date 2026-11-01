@@ -1,6 +1,10 @@
 # =============================================================================
 # ЧИТАЕМ ОШИБКИ PYTHON - настоящие сообщения об ошибках с разбором
 # =============================================================================
+#
+# Что это в жизни: "листаем сборник ошибок". Одна карточка на экране,
+# пробел - открыть перевод и разбор, стрелки - листать. Карточки - список
+# ERRORS (core/errors_data.py), место в сборнике запоминается в Settings.
 
 import customtkinter as ctk
 
@@ -17,8 +21,8 @@ class ErrorsPage(Page):
     tagline = "Читаем как текст."
     description = "Прочитайте ошибку и попробуйте понять её сами. Потом откройте перевод."
 
-    def __init__(self, master, context: AppContext):
-        super().__init__(master, context)
+    def __init__(self, master, context: AppContext, number: int = 0):
+        super().__init__(master, context, number)
         self.errors = context.errors
         # Номер ошибки запоминается между запусками.
         self.index = self.settings.get("errors_index", 0) % len(self.errors)

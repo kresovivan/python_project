@@ -94,6 +94,19 @@ class SavingTests(ProgressTestCase):
 
         self.assertEqual(Progress(self.path).status(LOOP), NEW)
 
+    def test_broken_file_is_kept_so_progress_can_be_recovered(self):
+        self.path.write_text("{bad json", encoding="utf-8")
+
+        progress = Progress(self.path)
+        progress.record(LOOP, True)  # раньше эта запись стирала испорченный файл
+
+        self.assertEqual(progress.backup_path.read_text(encoding="utf-8"), "{bad json")
+
+    def test_good_file_has_no_backup(self):
+        self.answer(LOOP, True)
+
+        self.assertIsNone(Progress(self.path).backup_path)
+
 
 class HistoryTests(ProgressTestCase):
     def test_today_total_counts_right_and_wrong_answers(self):
@@ -137,6 +150,53 @@ class StreakTests(ProgressTestCase):
         self.write_days(0, 2)
 
         self.assertEqual(Progress(self.path).streak(), 1)
+
+
+class ClockTests(unittest.TestCase):
+    """Прогресс узнаёт сегодняшнюю дату у переданных ему "часов".
+
+    Так тест сам решает, какой сегодня день, и может проверить, например,
+    полночь между двумя занятиями. Программа передаёт настоящие часы
+    (date.today) - это значение по умолчанию.
+    """
+
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory(prefix="efp_clock_")
+        self.addCleanup(tmp.cleanup)
+        self.path = Path(tmp.name) / "progress.json"
+        self.day = date(2026, 11, 1)
+
+    def progress_on(self, day: date) -> Progress:
+        return Progress(self.path, today=lambda: day)
+
+    def test_answer_is_written_to_given_day(self):
+        progress = self.progress_on(self.day)
+
+        progress.record(LOOP, True)
+
+        self.assertEqual(progress.history(1), [(self.day, 1, 0)])
+
+    def test_lessons_before_and_after_midnight_make_streak_of_two(self):
+        self.progress_on(self.day).record(LOOP, True)  # 1 ноября, 23:59
+
+        tomorrow = self.progress_on(self.day + timedelta(days=1))
+        tomorrow.record(LOOP, True)  # 2 ноября, 00:01
+
+        self.assertEqual(tomorrow.streak(), 2)
+
+    def test_streak_is_lost_after_missing_whole_day(self):
+        self.progress_on(self.day).record(LOOP, True)
+
+        after_two_days = self.progress_on(self.day + timedelta(days=2))
+
+        self.assertEqual(after_two_days.streak(), 0)
+
+    def test_today_total_counts_only_given_day(self):
+        self.progress_on(self.day).record(LOOP, True)
+
+        self.assertEqual(
+            self.progress_on(self.day + timedelta(days=1)).today_total(), 0
+        )
 
 
 class PickTests(ProgressTestCase):

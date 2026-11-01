@@ -1,32 +1,47 @@
 # =============================================================================
 # ГЛАВНАЯ - заголовок, "Продолжить" со схемой, статистика, быстрый старт, слово дня
 # =============================================================================
+#
+# Что это в жизни: "обложка тетради с закладкой". Сразу видно, где вы
+# остановились (Enter - продолжить), сколько слов выучено, и можно
+# одной клавишей начать любое упражнение.
 
 import random
 
 import customtkinter as ctk
 
 from core.progress import LEARNED, LEARNING, NEW, WEAK
+from core.session import CARDS, CHOICE, TYPING
 from gui import theme
 from gui.context import AppContext
 from gui.diagram import LearningDiagram
 from gui.hotkeys import KeyPress
 from gui.pages.base import Page
-from gui.widgets import AccentButton, Box, Card, GhostButton, Muted, PageHeader, SectionLabel, SpeakButton, StatCard
+from gui.widgets import (
+    AccentButton,
+    Box,
+    Card,
+    GhostButton,
+    Muted,
+    PageHeader,
+    SectionLabel,
+    SpeakButton,
+    StatCard,
+)
 
 
 class HomePage(Page):
     key = "home"
     title = "Главная"
     QUICK_START = (  # клавиши 1-4 на главной открывают эти режимы
-        ("cards", "Карточки", "знакомство со словами"),
-        ("choice", "Выбор перевода", "один из четырёх"),
-        ("typing", "Написание слова", "по памяти"),
-        ("errors", "Ошибки Python", "читаем как текст"),
+        (CARDS, "Карточки", "знакомство со словами"),
+        (CHOICE, "Выбор перевода", "один из четырёх"),
+        (TYPING, "Написание слова", "по памяти"),
+        ("errors", "Ошибки Python", "читаем как текст"),  # не занятие, а страница чтения
     )
 
-    def __init__(self, master, context: AppContext):
-        super().__init__(master, context)
+    def __init__(self, master, context: AppContext, number: int = 0):
+        super().__init__(master, context, number)
         self.daily_word = None
 
         self.header = PageHeader(self, self.number, "Английский", "для программистов.", hero=True, label=self.title)
@@ -190,7 +205,7 @@ class HomePage(Page):
 
     def continue_session(self) -> None:
         session = self.settings.last_session()
-        self.navigator.show_page(session.mode if session else "cards")
+        self.navigator.show_page(session.mode if session else CARDS)
 
     def speak_text(self) -> str | None:
         return self.daily_word.answer if self.daily_word else None

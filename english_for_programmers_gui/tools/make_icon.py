@@ -39,7 +39,7 @@ class IconPainter:
     # Цвета - из gui/theme.py (тёмная тема).
     BG_TOP = rgb("#151d2c")
     BG_BOTTOM = rgb("#0a0a0b")
-    PLANES = [rgb("#1b2f52"), rgb("#13213a"), rgb("#0f1b2e")]  # верх, середина, низ
+    PLANES = (rgb("#1b2f52"), rgb("#13213a"), rgb("#0f1b2e"))  # верх, середина, низ (кортеж: не меняется)
     EDGE = rgb("#a6c2f5")
     GLOW = rgb("#5f8cf1")
     CORE = rgb("#e6f0ff")

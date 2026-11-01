@@ -36,6 +36,14 @@ class SimpleValuesTests(SettingsTestCase):
 
         self.assertIsNone(settings.get("theme"))
 
+    def test_broken_file_is_kept_as_backup(self):
+        self.path.write_text("{bad json", encoding="utf-8")
+
+        settings = Settings(self.path)
+        settings.set("theme", "Light")
+
+        self.assertEqual(settings.backup_path.read_text(encoding="utf-8"), "{bad json")
+
     def test_value_is_kept_after_restart(self):
         Settings(self.path).set("theme", "Light")
 

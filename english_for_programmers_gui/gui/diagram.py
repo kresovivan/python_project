@@ -2,6 +2,10 @@
 # АНИМИРОВАННАЯ СХЕМА для главной страницы: как в тренажёре учится слово
 # =============================================================================
 #
+# Что это в жизни: "живая иллюстрация на обложке". Она не влияет на
+# обучение, а наглядно показывает, как программа учит слово. Слова для неё
+# выбирает главная страница (gui/pages/home.py).
+#
 # Три "стеклянные" плоскости - три шага изучения слова:
 #
 #   СЛОВО     - по буквам печатается английское слово (с мигающим курсором);
@@ -113,7 +117,7 @@ class LearningDiagram(tk.Canvas):
         b = a * 0.42  # половина высоты ромба (вид сбоку под углом)
         step = b * 1.6  # расстояние между плоскостями
         levels = [cy - step, cy, cy + step]  # центры плоскостей: верх, середина, низ
-        self._geometry = dict(w=w, h=h, s=s, cx=cx, a=a, b=b, levels=levels)
+        self._geometry = {"w": w, "h": h, "s": s, "cx": cx, "a": a, "b": b, "levels": levels}
 
         self._draw_grid(w, h, s)
         self._draw_glow(cx, cy, a * 1.6, rings=14, strength=0.22, color=theme.ACCENT_STRONG)
@@ -236,7 +240,7 @@ class LearningDiagram(tk.Canvas):
         phase = t % self.CYCLE  # секунды от начала цикла текущего слова
         en, ru = self._words[(self._cycle_word + cycle) % len(self._words)]
         ru = self._short(ru)
-        top, mid = g["levels"][0], g["levels"][1]
+        top = g["levels"][0]
 
         # СЛОВО: печатается по буквам, в конце цикла гаснет.
         shown = en[: round(len(en) * min(1.0, phase / self.TYPE_END))]

@@ -1,6 +1,10 @@
 # =============================================================================
 # ДЕРЖАТЕЛЬ СТРАНИЦ - создаёт страницы и показывает одну из них
 # =============================================================================
+#
+# Что это в жизни: "папка-скоросшиватель". В ней лежат все страницы
+# программы, а открыта всегда одна. PageHost создаёт страницы по списку
+# PAGE_CLASSES (gui/app.py), нумерует их по порядку и переключает.
 
 from gui import theme
 from gui.context import AppContext
@@ -22,10 +26,9 @@ class PageHost(Box):
         self.pages: dict[str, Page] = {}
         self.current: Page | None = None
         for number, page_class in enumerate(page_classes, start=1):
-            # Номер страницы = её место в меню. Задаём его классу ДО создания
-            # страницы: шапка страницы "02 / КАРТОЧКИ" строится в __init__.
-            page_class.number = number
-            page = page_class(self, context)
+            # Номер страницы = её место в меню. Передаём его в конструктор:
+            # шапка страницы "02 / КАРТОЧКИ" строится уже в __init__.
+            page = page_class(self, context, number)
             page.grid(row=0, column=0, sticky="nsew")
             page.grid_remove()
             self.pages[page_class.key] = page
