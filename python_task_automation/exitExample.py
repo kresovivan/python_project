@@ -1,7 +1,7 @@
 import sys
 
 while True:
-    print("Введите exit для выхода") 
+    print("Введите exit для выхода")
     response = input()
     if response == "exit":
         sys.exit()
