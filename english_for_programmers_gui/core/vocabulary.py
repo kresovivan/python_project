@@ -94,10 +94,25 @@ class Vocabulary:
         Берём их из той же темы - так тест сложнее и полезнее.
         Если в теме слов мало - добираем из всего словаря.
         """
-        same_topic = [w.ru for w in self._topics[word.topic] if w.ru != word.ru]
-        if len(same_topic) < count:
-            same_topic = [w.ru for w in self.all_words() if w.ru != word.ru]
-        return random.sample(same_topic, count)
+        candidates = self._unique_translations(self._topics[word.topic], word)
+        if len(candidates) < count:
+            candidates = self._unique_translations(self.all_words(), word)
+        return random.sample(candidates, count)
+
+    @staticmethod
+    def _unique_translations(words: list[Word], word: Word) -> list[str]:
+        """Разные переводы слов из списка, кроме перевода самого слова.
+
+        В словаре есть синонимы с одинаковым переводом: "shut down" и
+        "turn off" - оба "выключить". Если брать переводы как есть, среди
+        вариантов ответа могли оказаться два одинаковых "выключить".
+
+        dict.fromkeys(...) убирает повторы и, в отличие от set(), сохраняет
+        порядок. Порядок важен: при одном и том же random.seed() варианты
+        будут одни и те же - так программу проще проверять тестами.
+        """
+        translations = dict.fromkeys(w.ru for w in words if w.ru != word.ru)
+        return list(translations)
 
     def search(self, text: str) -> list[Word]:
         """Найти слова, где текст встречается в английском слове или переводе."""
