@@ -154,30 +154,43 @@ class StatsPage(Page):
         if width < 50:
             return  # окно ещё не нарисовано
 
+        # tk.Canvas не масштабируется сам (см. CLAUDE.md), поэтому все отступы
+        # и шрифт умножаем на масштаб экрана s. Раньше отступы были заданы
+        # для масштаба 100%, и при 200% даты под графиком обрезались снизу.
+        s = ctk.ScalingTracker.get_widget_scaling(canvas)
+        # Минус перед размером шрифта - размер в пикселях, а не в пунктах.
+        # Так мы точно знаем высоту текста и можем оставить под него место.
+        font = (theme.MONO, -round(11 * s))
+        top_space = 22 * s  # место над самым высоким столбиком для его числа
+        bottom = height - 22 * s  # нижний край столбиков, ниже - подписи дат
+
         history = self.progress.history(14)
         top = max((right + wrong for _, right, wrong in history), default=0) or 1
         slot = width / len(history)
         bar_width = slot * 0.6
-        bottom = height - 20  # место под подписи дат
-        scale = (bottom - 16) / top
+        scale = (bottom - top_space) / top
 
         for i, (day, right, wrong) in enumerate(history):
             x0 = i * slot + (slot - bar_width) / 2
             x1 = x0 + bar_width
             green_top = bottom - right * scale
             # Тонкая "дорожка" под каждым днём - видно все 14 дней, даже пустые.
-            canvas.create_rectangle(x0, 16, x1, bottom, fill=theme.pick(theme.CARD_ALT), width=0)
+            canvas.create_rectangle(x0, top_space, x1, bottom, fill=theme.pick(theme.CARD_ALT), width=0)
             red_top = green_top - wrong * scale
             if right:
                 canvas.create_rectangle(x0, green_top, x1, bottom, fill=theme.pick(theme.SUCCESS), width=0)
             if wrong:
                 canvas.create_rectangle(x0, red_top, x1, green_top, fill=theme.pick(theme.DANGER), width=0)
+            # anchor="s" (south, юг) - точка (x, y) задаёт НИЖНИЙ край текста,
+            # а не его середину. Так текст никогда не залезет ниже этой точки.
             if right + wrong:
                 canvas.create_text(
-                    (x0 + x1) / 2, red_top - 8, text=str(right + wrong), fill=theme.pick(theme.MUTED), font=theme.LABEL
+                    (x0 + x1) / 2, red_top - 3 * s, text=str(right + wrong), anchor="s",
+                    fill=theme.pick(theme.MUTED), font=font,
                 )
             canvas.create_text(
-                (x0 + x1) / 2, height - 8, text=day.strftime("%d"), fill=theme.pick(theme.FAINT), font=theme.LABEL
+                (x0 + x1) / 2, height - 2 * s, text=day.strftime("%d"), anchor="s",
+                fill=theme.pick(theme.FAINT), font=font,
             )
 
     def reset(self) -> None:

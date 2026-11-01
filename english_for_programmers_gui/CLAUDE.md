@@ -72,6 +72,9 @@
 
 ## Как проверять изменения
 
+Сначала запустите `python -m unittest discover -s tests -t . -v`. Назначение тестов,
+необязательные проверки звука и сборки описаны в `tests/README.md`.
+
 1. `python -c "import gui.app"` и `py_compile` всех файлов.
 2. Запустить окно из скрипта во временной папке (скопировать `data/`, не трогать `user_data/`),
    вызвать методы страниц, подать нажатия через `app._on_key(SimpleNamespace(keysym=..., keycode=..., state=...))`.
