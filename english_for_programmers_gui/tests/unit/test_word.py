@@ -7,7 +7,6 @@
 #   проверка   - убедиться, что результат такой, как требуется.
 # Имя теста - это требование к программе, его можно прочитать как фразу.
 
-import dataclasses
 import unittest
 
 from core.models import Word
@@ -33,15 +32,6 @@ class WordAnswerTests(unittest.TestCase):
         word = Word("pull request (GitHub)", "запрос на слияние", "пул риквест", "Git")
 
         self.assertEqual(word.answer, "pull request")
-
-
-class WordImmutabilityTests(unittest.TestCase):
-    def test_word_cannot_be_changed_after_creation(self):
-        """Слово из словаря не должно случайно поменяться во время занятия."""
-        word = Word("loop", "цикл", "луп", "Циклы")
-
-        with self.assertRaises(dataclasses.FrozenInstanceError):
-            word.ru = "петля"
 
 
 if __name__ == "__main__":

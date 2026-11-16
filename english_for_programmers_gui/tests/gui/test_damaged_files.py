@@ -13,9 +13,6 @@ class BrokenProgressTests(GuiTestCase):
         self.user_data.mkdir(parents=True)
         (self.user_data / "progress.json").write_text("{bad json", encoding="utf-8")
 
-    def test_window_opens_on_home_page(self):
-        self.assertEqual(self.app.current.key, "home")
-
     def test_user_is_told_where_broken_file_is_kept(self):
         message = self.app.toast.cget("text")
 

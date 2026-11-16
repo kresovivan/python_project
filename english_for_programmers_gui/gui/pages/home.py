@@ -44,7 +44,9 @@ class HomePage(Page):
         super().__init__(master, context, number)
         self.daily_word = None
 
-        self.header = PageHeader(self, self.number, "Английский", "для программистов.", hero=True, label=self.title)
+        # "Английский для программистов." или "Китайский для программистов."
+        language = context.language.name_ru.capitalize()
+        self.header = PageHeader(self, self.number, language, "для программистов.", hero=True, label=self.title)
         self.header.pack(fill="x")
 
         self._build_hero()

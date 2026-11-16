@@ -98,7 +98,7 @@ class DictionaryPage(Page):
         text = self.query.get().strip()
         if not text:
             self.info.configure(text=f"В СЛОВАРЕ {len(self.vocabulary)} СЛОВ. НАЧНИТЕ ВВОДИТЬ СЛОВО")
-            self.results.write([("Например: loop, commit, refactor, кортеж, переменная.", "hint")])
+            self.results.write([(self.context.language.search_examples, "hint")])
             return
 
         # Словарь сам отдаёт слова по порядку: от самого похожего на запрос.

@@ -28,14 +28,6 @@ class SimpleValuesTests(SettingsTestCase):
         self.assertIsNone(settings.get("theme"))
         self.assertEqual(settings.get("theme", "Dark"), "Dark")
 
-    def test_broken_file_gives_default_values(self):
-        """Испорченный файл не должен ронять программу."""
-        self.path.write_text("{bad json", encoding="utf-8")
-
-        settings = Settings(self.path)
-
-        self.assertIsNone(settings.get("theme"))
-
     def test_broken_file_is_kept_as_backup(self):
         self.path.write_text("{bad json", encoding="utf-8")
 

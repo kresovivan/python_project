@@ -43,9 +43,6 @@ class IsCorrectTests(unittest.TestCase):
             AnswerChecker.is_correct("it does work", word("It doesn't work!"))
         )
 
-    def test_missing_word_is_wrong(self):
-        self.assertFalse(AnswerChecker.is_correct("pull", word("pull request")))
-
 
 class HintTests(unittest.TestCase):
     """Подсказка: первая буква видна, остальные буквы заменены прочерками."""

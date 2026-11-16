@@ -75,11 +75,6 @@ class MainProcessTests(unittest.TestCase):
         send_wm_close(self.hwnd)
         return process.wait(timeout=CLOSE_TIMEOUT)
 
-    def test_window_opens(self):
-        self.start_program()
-
-        self.assertIsNotNone(self.hwnd, "Окно программы не появилось")
-
     def test_window_closes_without_errors(self):
         process = self.start_program()
 

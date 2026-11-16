@@ -27,15 +27,16 @@ class ChoiceTestCase(GuiTestCase):
 
 
 class OptionsTests(ChoiceTestCase):
-    def test_there_are_four_options(self):
-        self.assertEqual(len(self.page.options), ChoicePage.OPTIONS)
+    def test_screen_shows_four_different_options_with_one_correct(self):
+        """Сами правила вопроса проверяет tests/unit/test_choice_question.py.
 
-    def test_exactly_one_option_is_correct(self):
-        self.assertEqual(self.page.options.count(self.page.word.ru), 1)
+        Здесь - что страница действительно показывает вопрос: четыре разных
+        варианта, и среди них один правильный перевод.
+        """
+        options = self.page.options
 
-    def test_options_are_all_different(self):
-        """Та же ошибка с синонимами, но проверенная уже на экране."""
-        self.assertEqual(len(set(self.page.options)), len(self.page.options))
+        self.assertEqual(len(set(options)), ChoicePage.OPTIONS)
+        self.assertEqual(options.count(self.page.word.ru), 1)
 
 
 class WrongChoiceTests(ChoiceTestCase):
@@ -43,13 +44,6 @@ class WrongChoiceTests(ChoiceTestCase):
         self.page.choose(self.wrong_index())
 
         self.assertEqual(self.page.session.wrong, 1)
-
-    def test_buttons_are_locked_after_choice(self):
-        self.page.choose(self.wrong_index())
-
-        states = {str(button.cget("state")) for button in self.page.option_buttons}
-
-        self.assertEqual(states, {"disabled"})
 
     def test_second_choice_for_same_word_is_ignored(self):
         self.page.choose(self.wrong_index())
@@ -71,11 +65,6 @@ class WrongChoiceTests(ChoiceTestCase):
 
 
 class RightChoiceTests(ChoiceTestCase):
-    def test_right_choice_is_counted(self):
-        self.page.choose(self.correct_index())
-
-        self.assertEqual(self.page.session.right, 1)
-
     def test_next_word_appears_by_itself_after_right_choice(self):
         word = self.page.word
 

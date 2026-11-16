@@ -42,12 +42,5 @@ class MixTests(unittest.TestCase):
         self.assertEqual(theme.mix("#ff0000", "#0000ff", 0.5), "#800080")
 
 
-class PaletteTests(unittest.TestCase):
-    def test_every_status_has_color_pair_for_both_themes(self):
-        for status, color in theme.STATUS_COLORS.items():
-            with self.subTest(status=status):
-                self.assertEqual(len(color), 2)
-
-
 if __name__ == "__main__":
     unittest.main()

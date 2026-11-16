@@ -21,6 +21,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:  # импорты только для подсказок типов, без циклических импортов
+    from core.language import Language
     from core.models import ErrorMessage
     from core.progress import Progress
     from core.settings import Settings
@@ -37,14 +38,17 @@ class Navigator(Protocol):
 
     def show_page(self, key: str) -> None: ...
 
+    def switch_language(self, code: str) -> None: ...
+
     def page_title(self, key: str) -> str: ...
 
 
 @dataclass(frozen=True)
 class AppContext:
-    vocabulary: Vocabulary  # слова
-    progress: Progress  # статистика ответов
-    settings: Settings  # настройки и место остановки
+    language: Language  # какой язык учим: правила проверки, грамматика, голоса
+    vocabulary: Vocabulary  # слова этого языка
+    progress: Progress  # статистика ответов по этому языку
+    settings: Settings  # настройки и место остановки (у каждого языка свои)
     errors: list[ErrorMessage]  # ошибки Python для страницы "Ошибки Python"
     voice: VoiceController  # озвучка
     navigator: Navigator  # переход между страницами

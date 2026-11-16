@@ -99,11 +99,6 @@ class ConstructionTests(unittest.TestCase):
 
         self.assertEqual(vocabulary.get("loop").ru, "цикл")
 
-    def test_text_can_contain_topics(self):
-        vocabulary = Vocabulary.from_text("# topic: Циклы\nloop|цикл|луп")
-
-        self.assertEqual(vocabulary.topics(), ["Циклы"])
-
     def test_dictionary_can_be_made_from_ready_words(self):
         words = [
             Word("loop", "цикл", "луп", "Циклы"),

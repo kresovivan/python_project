@@ -2,18 +2,18 @@
 # БОКОВОЕ МЕНЮ - пункты страниц, справка, озвучка, тема оформления
 # =============================================================================
 #
-# Что это в жизни: "оглавление на полях тетради" плюс переключатели: голос,
-# "Произносить сразу", светлая или тёмная тема.
+# Что это в жизни: "оглавление на полях тетради" плюс переключатели: язык
+# (English или 中文), голос, "Произносить сразу", светлая или тёмная тема.
 #
 # Меню ничего не делает само: о нажатиях оно сообщает через функции,
-# переданные в конструктор (on_navigate, on_help, on_theme). Так меню
+# переданные в конструктор (on_navigate, on_help, on_theme, on_language). Так меню
 # не зависит от окна App, и его можно переставить или заменить отдельно.
 
 from collections.abc import Callable
 
 import customtkinter as ctk
 
-from core.speech import VOICES
+from core.language import LANGUAGES
 from gui import theme
 from gui.voice import VoiceController
 from gui.widgets import Box
@@ -32,6 +32,7 @@ class Sidebar(Box):
         on_navigate: Callable[[str], None],
         on_help: Callable[[], None],
         on_theme: Callable[[str], None],
+        on_language: Callable[[str], None] = lambda code: None,
     ):
         """pages - список (ключ страницы, название в меню) в порядке пунктов."""
         super().__init__(master, color=theme.SIDEBAR, width=self.WIDTH)
@@ -43,7 +44,7 @@ class Sidebar(Box):
         # Тонкая линия по правому краю отделяет меню от страниц.
         Box(self, color=theme.BORDER, width=1).pack(side="right", fill="y")
 
-        self._build_logo()
+        self._build_logo(on_language)
         self._build_navigation(pages, on_navigate)
         bottom = Box(self, color=theme.SIDEBAR)
         bottom.pack(side="bottom", fill="x", padx=14, pady=20)
@@ -53,13 +54,33 @@ class Sidebar(Box):
 
     # --- построение ------------------------------------------------------------
 
-    def _build_logo(self) -> None:
-        ctk.CTkLabel(self, text="English", font=(theme.DISPLAY, 24), text_color=theme.TEXT).pack(
-            anchor="w", padx=24, pady=(28, 0)
+    def _build_logo(self, on_language: Callable[[str], None]) -> None:
+        # Название языка, который сейчас учим: English или 中文.
+        language = self._voice.language
+        ctk.CTkLabel(self, text=language.name, font=(theme.DISPLAY, 24), text_color=theme.TEXT).pack(
+            anchor="w", padx=24, pady=(20, 0)
         )
         ctk.CTkLabel(self, text="FOR PROGRAMMERS", font=theme.LABEL, text_color=theme.ACCENT).pack(
-            anchor="w", padx=25, pady=(0, 26)
+            anchor="w", padx=25, pady=(0, 8)
         )
+        # Переключатель языка. На кнопках - названия языков, в настройках - коды.
+        self._language_codes = {item.name: code for code, item in LANGUAGES.items()}
+        self.language_switch = ctk.CTkSegmentedButton(
+            self,
+            values=list(self._language_codes),
+            command=lambda name: on_language(self._language_codes[name]),
+            height=26,
+            font=theme.SMALL,
+            corner_radius=13,
+            fg_color=theme.CARD_ALT,
+            unselected_color=theme.CARD_ALT,
+            unselected_hover_color=theme.ACCENT_SOFT,
+            selected_color=theme.ACCENT_SOFT,
+            selected_hover_color=theme.ACCENT_SOFT,
+            text_color=theme.TEXT,
+        )
+        self.language_switch.set(language.name)
+        self.language_switch.pack(fill="x", padx=18, pady=(0, 10))
 
     def _build_navigation(self, pages: list[tuple[str, str]], on_navigate: Callable[[str], None]) -> None:
         for number, (key, title) in enumerate(pages, start=1):
@@ -68,7 +89,7 @@ class Sidebar(Box):
                 # Номер перед названием подсказывает горячую клавишу: Ctrl + номер.
                 text=f"{number:02d}    {title}",
                 anchor="w",
-                height=40,
+                height=32,  # 10 пунктов и переключатель языка должны поместиться в окно высотой 780
                 corner_radius=10,
                 font=theme.BODY,
                 fg_color="transparent",
@@ -76,11 +97,11 @@ class Sidebar(Box):
                 text_color=theme.TEXT,
                 command=lambda k=key: on_navigate(k),
             )
-            button.pack(fill="x", padx=14, pady=2)
+            button.pack(fill="x", padx=14, pady=1)
             self._buttons[key] = button
         ctk.CTkLabel(
-            self, text="CTRL + НОМЕР:\nОТКРЫТЬ ПУНКТ", font=theme.LABEL, text_color=theme.FAINT, justify="left"
-        ).pack(anchor="w", padx=28, pady=(8, 0))
+            self, text="CTRL + НОМЕР: ПУНКТ", font=theme.LABEL, text_color=theme.FAINT, justify="left"
+        ).pack(anchor="w", padx=28, pady=(6, 0))
 
     def _build_help(self, parent, on_help: Callable[[], None]) -> None:
         ctk.CTkButton(
@@ -111,9 +132,11 @@ class Sidebar(Box):
         self.auto_speak.pack(anchor="w", padx=4, pady=(0, 8))
 
         # В меню показываем названия голосов, в настройках храним коды.
-        self._voice_codes = {name: code for code, name in VOICES}
+        # Список голосов - у каждого языка свой (core/language.py).
+        voices = self._voice.language.voices
+        self._voice_codes = {name: code for code, name in voices}
         names = list(self._voice_codes)
-        current = next((name for code, name in VOICES if code == self._voice.voice), names[0])
+        current = next((name for code, name in voices if code == self._voice.voice), names[0])
         ctk.CTkLabel(parent, text="ГОЛОС  /  КЛАВИША P", font=theme.LABEL, text_color=theme.FAINT).pack(anchor="w", padx=4)
         self.voice_menu = ctk.CTkOptionMenu(
             parent,

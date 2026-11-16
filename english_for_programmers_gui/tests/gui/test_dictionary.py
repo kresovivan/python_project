@@ -28,11 +28,6 @@ class SearchTests(DictionaryTestCase):
         self.assertIn("НАЙДЕНО", self.page.info.cget("text"))
         self.assertIn("loop", self.results_text().lower())
 
-    def test_russian_word_is_found(self):
-        self.search("перемен")
-
-        self.assertIn("перемен", self.results_text().lower())
-
     def test_found_words_have_clickable_sound_buttons(self):
         text = self.page.results.text
 

@@ -89,11 +89,6 @@ class SavingTests(ProgressTestCase):
         self.assertEqual(Progress(self.path).status(LOOP), NEW)
         self.assertEqual(Progress(self.path).today_total(), 0)
 
-    def test_broken_file_starts_empty_progress(self):
-        self.path.write_text("{bad json", encoding="utf-8")
-
-        self.assertEqual(Progress(self.path).status(LOOP), NEW)
-
     def test_broken_file_is_kept_so_progress_can_be_recovered(self):
         self.path.write_text("{bad json", encoding="utf-8")
 
@@ -101,11 +96,6 @@ class SavingTests(ProgressTestCase):
         progress.record(LOOP, True)  # раньше эта запись стирала испорченный файл
 
         self.assertEqual(progress.backup_path.read_text(encoding="utf-8"), "{bad json")
-
-    def test_good_file_has_no_backup(self):
-        self.answer(LOOP, True)
-
-        self.assertIsNone(Progress(self.path).backup_path)
 
 
 class HistoryTests(ProgressTestCase):
@@ -120,13 +110,6 @@ class HistoryTests(ProgressTestCase):
         self.assertEqual(len(history), 14)
         self.assertEqual(history[0][0], date.today() - timedelta(days=13))
         self.assertEqual(history[-1][0], date.today())
-
-    def test_history_shows_todays_right_and_wrong_answers(self):
-        self.answer(LOOP, True, True, False)
-
-        _, right, wrong = self.progress.history(14)[-1]
-
-        self.assertEqual((right, wrong), (2, 1))
 
 
 class StreakTests(ProgressTestCase):

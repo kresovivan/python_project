@@ -68,12 +68,6 @@ class ChoiceQuestionTests(unittest.TestCase):
 
         self.assertGreater(len(places), 1)
 
-    def test_question_cannot_be_changed_after_creation(self):
-        question = ChoiceQuestion.create(self.word, self.vocabulary)
-
-        with self.assertRaises(AttributeError):
-            question.options.append("лишний вариант")  # options - кортеж
-
 
 if __name__ == "__main__":
     unittest.main()

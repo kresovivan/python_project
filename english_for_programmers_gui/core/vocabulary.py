@@ -25,7 +25,7 @@
 # варианты, страница "Словарь" - поиск.
 
 import random
-from collections.abc import Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from pathlib import Path
 
 from core.models import Word
@@ -62,7 +62,16 @@ class Vocabulary:
 
     # --- создание ------------------------------------------------------------
 
-    def __init__(self, words: Iterable[Word]):
+    def __init__(self, words: Iterable[Word], sound_key: Callable[[str], str] | None = None):
+        """sound_key - как искать по произношению (None - не искать).
+
+        У китайских слов произношение - пиньинь, и слово удобно найти по нему:
+        "diannao" находит 电脑. Тогда передают PinyinChecker.normalize - эта
+        функция приводит к одному виду и запрос, и пиньинь слова.
+        У английских слов произношение записано русскими буквами, искать по
+        нему не нужно, поэтому sound_key не передают.
+        """
+        self._sound_key = sound_key
         # Словарь: ключ - название темы, значение - список слов этой темы.
         # Подчёркивание в начале имени (_topics) - договорённость в Python:
         # "это внутренняя деталь класса, снаружи напрямую не трогать".
@@ -81,7 +90,7 @@ class Vocabulary:
             self._by_en[word.en] = word
 
     @classmethod
-    def from_folder(cls, folder: Path) -> "Vocabulary":
+    def from_folder(cls, folder: Path, sound_key: Callable[[str], str] | None = None) -> "Vocabulary":
         """Прочитать все файлы *.txt папки. Тема по умолчанию - имя файла.
 
         sorted() - файлы читаются по порядку имён: 00_..., 01_..., 02_...
@@ -90,7 +99,7 @@ class Vocabulary:
         for path in sorted(folder.glob("*.txt")):
             lines = path.read_text(encoding="utf-8").splitlines()
             words.extend(parse_words(lines, source=path.name, topic=path.stem))
-        return cls(words)
+        return cls(words, sound_key)
 
     @classmethod
     def from_text(cls, text: str, topic: str = "Слова") -> "Vocabulary":
@@ -129,9 +138,16 @@ class Vocabulary:
           1. точное совпадение ("loop" для запроса "loop");
           2. слова, которые начинаются с запроса ("loopback");
           3. остальные, где запрос внутри ("for loop"); короткие - раньше.
+        Для китайского словаря запрос ищется и в пиньине (см. sound_key).
         """
         query = text.lower()
         found = [w for w in self.all_words() if query in w.en.lower() or query in w.ru.lower()]
+        if self._sound_key:
+            sound_query = self._sound_key(text)
+            if sound_query:  # запрос из русских букв даёт пустую строку - пропускаем
+                found += [
+                    w for w in self.all_words() if w not in found and sound_query in self._sound_key(w.sound)
+                ]
         # Ключ сортировки - кортеж. Кортежи сравниваются по порядку элементов,
         # а False < True, поэтому "совпало" (False в "не совпало") идёт раньше.
         found.sort(

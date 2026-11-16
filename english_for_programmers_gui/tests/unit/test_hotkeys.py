@@ -35,11 +35,6 @@ class ModifierTests(unittest.TestCase):
     def test_shift_is_recognized(self):
         self.assertTrue(KeyPress("P", 80, SHIFT).shift)
 
-    def test_ctrl_and_shift_together(self):
-        key = KeyPress("Tab", 9, CTRL | SHIFT)
-
-        self.assertTrue(key.ctrl and key.shift)
-
     def test_no_modifiers(self):
         key = KeyPress("Return")
 

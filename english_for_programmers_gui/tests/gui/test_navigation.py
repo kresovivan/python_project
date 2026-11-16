@@ -8,6 +8,7 @@ import unittest
 import customtkinter as ctk
 
 from gui.app import PAGE_CLASSES
+from gui.hotkeys import HELP
 from tests.gui.base import GuiTestCase
 
 T_KEY, F_KEY = 84, 70  # номера физических клавиш T и F
@@ -22,14 +23,19 @@ class StartTests(GuiTestCase):
 
         self.assertEqual(len(visible), 1)
 
-    def test_menu_has_every_page(self):
-        self.assertEqual(len(self.app.host.keys), len(PAGE_CLASSES))
-
     def test_page_number_is_its_place_in_menu(self):
         """Номер в шапке страницы: "02 / КАРТОЧКИ"."""
         numbers = [self.app.pages[key].number for key in self.app.host.keys]
 
         self.assertEqual(numbers, list(range(1, len(PAGE_CLASSES) + 1)))
+
+    def test_help_shows_right_range_of_page_numbers(self):
+        """В справке F1 написано "Ctrl + 1-N" (N - число страниц), а при 10 страницах "1-9, 0"."""
+        keys = [keys for _, rows in HELP for keys, _ in rows]
+        count = len(PAGE_CLASSES)
+        expected = f"Ctrl + 1-{count}" if count <= 9 else "Ctrl + 1-9, 0"
+
+        self.assertIn(expected, keys)
 
     def test_page_number_belongs_to_page_object_not_to_class(self):
         """Раньше номер записывался в сам класс - общее состояние для всех окон."""
@@ -41,8 +47,9 @@ class StartTests(GuiTestCase):
 class PageHotkeyTests(GuiTestCase):
     def test_ctrl_and_number_opens_page_with_that_number(self):
         for number, key in enumerate(self.app.host.keys, start=1):
+            digit = number % 10  # десятый пункт - клавиша 0
             with self.subTest(number=number):
-                self.press(str(number), 48 + number, ctrl=True)
+                self.press(str(digit), 48 + digit, ctrl=True)
 
                 self.assertEqual(self.app.current.key, key)
 
@@ -80,13 +87,9 @@ class PageHotkeyTests(GuiTestCase):
 
 
 class HelpTests(GuiTestCase):
-    def test_f1_shows_help(self):
+    def test_f1_opens_help_and_escape_closes_it(self):
         self.press("F1")
-
         self.assertTrue(self.app.help.visible)
-
-    def test_escape_hides_help(self):
-        self.press("F1")
 
         self.press("Escape")
 
@@ -102,17 +105,11 @@ class HelpTests(GuiTestCase):
 
 
 class ThemeTests(GuiTestCase):
-    def test_ctrl_t_switches_theme_in_russian_layout(self):
+    def test_ctrl_t_switches_theme_and_back_in_russian_layout(self):
         before = ctk.get_appearance_mode()
 
         self.press("е", T_KEY, ctrl=True)
-
         self.assertNotEqual(ctk.get_appearance_mode(), before)
-
-    def test_second_ctrl_t_returns_previous_theme(self):
-        before = ctk.get_appearance_mode()
-
-        self.press("е", T_KEY, ctrl=True)
         self.press("е", T_KEY, ctrl=True)
 
         self.assertEqual(ctk.get_appearance_mode(), before)

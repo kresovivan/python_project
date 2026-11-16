@@ -39,13 +39,12 @@ class ChartTests(StatsTestCase):
             if canvas.type(item) == "text" and canvas.itemcget(item, "text").isdigit()
         ]
 
-    def test_chart_has_label_for_each_of_14_days(self):
-        self.assertEqual(len(self.date_labels()), 14)
-
     def test_date_labels_fit_inside_chart(self):
         """Ошибка, найденная тестом: при масштабе 200% даты обрезались снизу."""
         canvas = self.page.chart
         labels = self.date_labels()
+        # Сначала убеждаемся, что подписи нашлись: иначе проверять было бы нечего.
+        self.assertEqual(len(labels), 14)
 
         outside = [
             canvas.bbox(item)

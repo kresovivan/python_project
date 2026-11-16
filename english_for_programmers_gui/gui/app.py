@@ -19,7 +19,11 @@
 #   gui/pages/*.py              страницы; получают AppContext (gui/context.py)
 #
 # Сам App отвечает только за: переход между страницами, тему оформления,
-# общие горячие клавиши и сохранение состояния при закрытии.
+# язык обучения, общие горячие клавиши и сохранение состояния при закрытии.
+#
+# Языков два: английский и китайский (core/language.py). При переключении
+# окно разбирает меню и страницы и собирает их заново под новый язык
+# (метод _build_language). Прогресс у каждого языка свой.
 
 import tkinter as tk
 from pathlib import Path
@@ -27,18 +31,22 @@ from pathlib import Path
 import customtkinter as ctk
 
 from core.errors_data import ERRORS
+from core.language import Language, find_language
 from core.progress import Progress
 from core.settings import Settings
-from core.speech import DEFAULT_VOICE, Speaker
+from core.speech import Speaker
 from core.vocabulary import Vocabulary
 from gui import theme
 from gui.context import AppContext
 from gui.help_overlay import HelpOverlay
 from gui.hotkeys import KeyPress
 from gui.page_host import PageHost
+from gui.pages.about import AboutPage
+from gui.pages.alphabet import AlphabetPage
 from gui.pages.base import Page
 from gui.pages.dictionary import DictionaryPage
 from gui.pages.errors_page import ErrorsPage
+from gui.pages.grammar import GrammarPage, SoundsPage
 from gui.pages.home import HomePage
 from gui.pages.stats import StatsPage
 from gui.pages.study import CardsPage, ChoicePage, TypingPage
@@ -46,18 +54,36 @@ from gui.screen import Screens, plan_window
 from gui.sidebar import DARK, LIGHT, Sidebar
 from gui.toast import Toast
 from gui.voice import VoiceController
+from gui.widgets import Box
 
-# Порядок классов = порядок пунктов в меню и номера Ctrl+1...7.
-# Чтобы добавить страницу - создайте класс-наследник Page и допишите его сюда.
+# Порядок классов = порядок пунктов в меню и номера Ctrl+1...9, десятый - Ctrl+0.
+# Порядок - путь новичка: азбука, грамматика, потом упражнения со словами.
+# Чтобы добавить страницу - создайте класс-наследник Page и допишите его сюда
+# (и поправьте "Ctrl + 1-..." в HELP, gui/hotkeys.py: это проверяет тест).
+# Больше 10 страниц горячими клавишами не открыть: цифр всего десять.
 PAGE_CLASSES: list[type[Page]] = [
     HomePage,
+    AlphabetPage,
+    GrammarPage,
     CardsPage,
     ChoicePage,
     TypingPage,
     ErrorsPage,
     DictionaryPage,
     StatsPage,
+    AboutPage,
 ]
+
+
+def page_classes(language: Language) -> list[type[Page]]:
+    """Страницы для языка. У китайского вместо азбуки - "Звуки и тоны".
+
+    Ключ у обеих страниц один ("alphabet"), поэтому номер в меню и Ctrl+2
+    остаются теми же.
+    """
+    if not language.sounds:
+        return PAGE_CLASSES
+    return [SoundsPage if page is AlphabetPage else page for page in PAGE_CLASSES]
 
 
 class App(ctk.CTk):
@@ -102,42 +128,108 @@ class App(ctk.CTk):
         self.columnconfigure(1, weight=1)
         self.rowconfigure(0, weight=1)
 
-        # --- логика (core) ----------------------------------------------------
-        self.vocabulary = Vocabulary.from_folder(base_dir / "data")
-        self.progress = Progress(user_data / "progress.json")
-        self.speaker = speaker or Speaker(user_data / "audio", self.settings.get("voice", DEFAULT_VOICE))
-
-        # --- интерфейс --------------------------------------------------------
+        # --- общие части: одни на все языки ----------------------------------
+        self._base_dir = base_dir
+        self._user_data = user_data
         self.toast = Toast(self)
-        self.voice = VoiceController(self, self.speaker, self.settings, self.toast)
+        self.help = HelpOverlay(self)
+        language = find_language(self.settings.get("language"))
+        language_settings = self._settings_for(language)
+        self.speaker = speaker or Speaker(
+            user_data / "audio", language_settings.get("voice", language.default_voice)
+        )
+        self.voice = VoiceController(self, self.speaker, language_settings, self.toast, language)
+        self.sidebar: Sidebar | None = None
+        self.host: PageHost | None = None
+        self.bind("<Key>", self._on_key)  # все нажатия клавиш в окне
+        self.protocol("WM_DELETE_WINDOW", self.on_close)  # крестик окна
+
+        # --- части выбранного языка: словарь, прогресс, меню, страницы ---------
+        self._build_language(language)
+        self._warn_about_damaged_files()
+
+    # --- язык обучения ------------------------------------------------------------
+
+    def _settings_for(self, language: Language) -> Settings:
+        """Настройки языка: место остановки, выбранная тема, голос.
+
+        У английского это общий файл user_data/state.json (так было всегда,
+        поэтому прогресс старых версий не теряется). У китайского - свой файл
+        user_data/zh/state.json. Один и тот же файл не должны писать два
+        объекта Settings сразу, поэтому для английского отдаём общий.
+        """
+        folder = language.user_dir(self._user_data)
+        if folder == self._user_data:
+            return self.settings
+        return Settings(folder / "state.json")
+
+    def _build_language(self, language: Language) -> None:
+        """Собрать меню и страницы под язык (при запуске и при переключении)."""
+        self.language = language
+        self.language_settings = self._settings_for(language)
+        self.voice.use(language, self.language_settings)
+        # Китайское слово можно найти и по пиньиню: "diannao" находит 电脑.
+        sound_key = language.checker.normalize if language.searches_sound else None
+        self.vocabulary = Vocabulary.from_folder(language.data_dir(self._base_dir), sound_key)
+        self.progress = Progress(language.user_dir(self._user_data) / "progress.json")
         context = AppContext(
+            language=language,
             vocabulary=self.vocabulary,
             progress=self.progress,
-            settings=self.settings,
+            settings=self.language_settings,
             errors=ERRORS,
             voice=self.voice,
-            navigator=self,  # App выполняет "договор" Navigator: show_page и page_title
+            navigator=self,  # App выполняет "договор" Navigator: show_page, switch_language
         )
+        classes = page_classes(language)
         self.sidebar = Sidebar(
             self,
-            pages=[(page.key, page.title) for page in PAGE_CLASSES],
+            pages=[(page.key, page.title) for page in classes],
             voice=self.voice,
             on_navigate=self.show_page,
             on_help=self.toggle_help,
             on_theme=self.change_appearance,
+            on_language=self.switch_language,
         )
-        self.sidebar.grid(row=0, column=0, sticky="ns")
-        self.host = PageHost(self, PAGE_CLASSES, context)
-        self.host.grid(row=0, column=1, sticky="nsew", padx=32, pady=28)
-        self.help = HelpOverlay(self)
-
-        self.bind("<Key>", self._on_key)  # все нажатия клавиш в окне
-        self.protocol("WM_DELETE_WINDOW", self.on_close)  # крестик окна
-
+        self.host = PageHost(self, classes, context)
         # Программа всегда открывается на главной. Незаконченное занятие не теряется:
         # оно показано на главной в блоке "Вы остановились здесь" (Enter - продолжить).
         self.show_page("home")
-        self._warn_about_damaged_files()
+        # Меню и страницы ставим в окно (grid) только теперь, когда они собраны
+        # целиком. Пока виджет не размещён, его не видно, даже если окно
+        # перерисуется посреди сборки. Иначе при смене языка на экране
+        # мелькали недостроенные куски нового экрана поверх старого.
+        self.sidebar.grid(row=0, column=0, sticky="ns")
+        self.host.grid(row=0, column=1, sticky="nsew", padx=32, pady=28)
+
+    def switch_language(self, code: str) -> None:
+        """Переключить язык обучения: разобрать меню и страницы, собрать заново."""
+        language = find_language(code)
+        if language is self.language:
+            return
+        if self.current:
+            self.current.on_hide()  # например, остановить анимацию схемы
+        self.voice.stop()
+        self.settings.set("language", language.code)
+        # "Шторка": на время перестройки (около полсекунды) окно закрывает
+        # ровный фон с надписью. Под ней старый экран разбирается, а новый
+        # собирается, и пользователь не видит промежуточных половинок.
+        curtain = Box(self, color=theme.BG)
+        ctk.CTkLabel(curtain, text="Переключаю язык...", font=theme.H2, text_color=theme.MUTED).place(
+            relx=0.5, rely=0.5, anchor="center"
+        )
+        curtain.place(relx=0, rely=0, relwidth=1, relheight=1)
+        curtain.lift()
+        self.update_idletasks()  # нарисовать шторку прямо сейчас
+        self.sidebar.destroy()
+        self.host.destroy()
+        self._build_language(language)
+        curtain.destroy()
+        self.toast.show(f"Язык: {language.name_ru}. Прогресс у каждого языка свой.", kind=Toast.INFO)
+
+    def toggle_language(self) -> None:
+        """Ctrl+L: английский и китайский по очереди."""
+        self.switch_language("zh" if self.language.code == "en" else "en")
 
     def _warn_about_damaged_files(self) -> None:
         """Сказать пользователю, если файл прогресса или настроек был испорчен.
@@ -145,7 +237,8 @@ class App(ctk.CTk):
         Сам файл не потерян: JsonStore (core/storage.py) отложил его копию
         рядом под именем вида progress.broken-20261102-011500.json.
         """
-        damaged = [path.name for path in (self.progress.backup_path, self.settings.backup_path) if path]
+        files = (self.progress.backup_path, self.settings.backup_path, self.language_settings.backup_path)
+        damaged = list(dict.fromkeys(path.name for path in files if path))
         if damaged:
             self.toast.show(
                 f"Файл был повреждён, программа начала с чистого листа. Копия: {', '.join(damaged)}",
@@ -209,18 +302,25 @@ class App(ctk.CTk):
         if key.is_("Escape") and self.current.key != "home":
             self.show_page("home")
 
+    @staticmethod
+    def _page_number(digit: int) -> int:
+        """Номер пункта меню по цифре: 1-9 как есть, 0 - десятый пункт (как на клавиатуре)."""
+        return 10 if digit == 0 else digit
+
     def _on_window_key(self, key: KeyPress) -> bool:
         """Сочетания, которые работают на любой странице. True - обработано."""
         if key.is_("F1"):
             self.help.show()
-        elif key.ctrl and key.digit and key.digit <= len(self.host.keys):
-            self.show_page(self.host.keys[key.digit - 1])
+        elif key.ctrl and key.digit is not None and self._page_number(key.digit) <= len(self.host.keys):
+            self.show_page(self.host.keys[self._page_number(key.digit) - 1])
         elif key.ctrl and key.is_("Tab", "ISO_Left_Tab"):
             self.show_page(self.host.neighbour(-1 if key.shift else 1))
         elif key.ctrl and key.is_letter("F"):
             self.show_page("dictionary")
         elif key.ctrl and key.is_letter("T"):
             self.toggle_appearance()
+        elif key.ctrl and key.is_letter("L"):
+            self.toggle_language()
         elif key.ctrl and key.is_letter("Q"):
             self.on_close()
         elif not key.ctrl and key.is_letter("P") and not self._typing_in_entry():

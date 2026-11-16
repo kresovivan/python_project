@@ -15,7 +15,8 @@
 # Где какие правила:
 #   Lesson (core/lesson.py)          - какие слова, счёт, место остановки;
 #   ChoiceQuestion (core/questions.py) - варианты ответа в "Выборе перевода";
-#   AnswerChecker (core/answers.py)  - верно ли написано слово, подсказка;
+#   AnswerChecker, PinyinChecker (core/answers.py) - верно ли написано слово, подсказка
+#                                    (какой из них, решает язык: context.language.checker);
 #   Session.rating (core/session.py) - оценка за занятие на экране итогов.
 # Страница только показывает слова и передаёт ответы: lesson.answer(True).
 #
@@ -29,7 +30,6 @@ from typing import ClassVar
 
 import customtkinter as ctk
 
-from core.answers import AnswerChecker
 from core.lesson import Lesson
 from core.models import Word
 from core.questions import ChoiceQuestion
@@ -500,10 +500,20 @@ class TypingPage(StudyPage):
     key = TYPING
     title = "Написание слова"
     tagline = "По памяти."
-    description = "Напишите английское слово по переводу. Регистр и знаки препинания не важны."
+    description = "Напишите слово по переводу."
+
+    def __init__(self, master, context: AppContext, number: int = 0):
+        # Задание и проверка зависят от языка: английское слово или китайский
+        # пиньинь. Описание ставим ДО super().__init__: там строится шапка.
+        self.description = context.language.typing_task
+        self.checker = context.language.checker  # кто проверяет ответ (core/answers.py)
+        super().__init__(master, context, number)
 
     def build_body(self, parent) -> None:
-        Muted(parent, "КАК ПО-АНГЛИЙСКИ", font=theme.LABEL, text_color=theme.FAINT, anchor="center").pack(pady=(16, 0))
+        language = self.context.language
+        Muted(parent, language.typing_label, font=theme.LABEL, text_color=theme.FAINT, anchor="center").pack(
+            pady=(16, 0)
+        )
         self.ru_label = ctk.CTkLabel(parent, text="", font=theme.WORD_SMALL, text_color=theme.TEXT, wraplength=750)
         self.ru_label.pack(pady=(4, 26))
 
@@ -515,7 +525,7 @@ class TypingPage(StudyPage):
             height=50,
             corner_radius=12,
             font=theme.H3,
-            placeholder_text="введите слово...",
+            placeholder_text=self.context.language.typing_placeholder,
             border_color=theme.LINE_STRONG,
             fg_color=theme.CARD_ALT,
             text_color=theme.TEXT,
@@ -567,8 +577,9 @@ class TypingPage(StudyPage):
     def show_hint(self) -> None:
         if self.answered:
             return
-        hint = AnswerChecker.hint(self.word.answer)
-        self.feedback.configure(text=f"{hint}    [ {self.word.sound} ]", text_color=theme.MUTED)
+        # Какой будет подсказка, решает проверяющий: у китайского пиньинь
+        # в подсказке не показывается - он и есть ответ.
+        self.feedback.configure(text=self.checker.hint_text(self.word), text_color=theme.MUTED)
         self.hint_button.configure(state="disabled")
 
     def submit(self) -> None:
@@ -579,7 +590,7 @@ class TypingPage(StudyPage):
         if not typed.strip():
             return
         self.answered = True
-        is_right = AnswerChecker.is_correct(typed, self.word)
+        is_right = self.checker.is_correct(typed, self.word)
         self.answer(is_right)
         self.entry.configure(state="disabled")
         self.check_button.configure(text="Далее")

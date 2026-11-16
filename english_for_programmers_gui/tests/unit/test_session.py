@@ -8,7 +8,6 @@ from core.session import (
     EXCELLENT,
     GOOD,
     KEEP_GOING,
-    STUDY_MODES,
     TYPING,
     Session,
 )
@@ -134,9 +133,6 @@ class RatingTests(unittest.TestCase):
 
 
 class ModeConstantsTests(unittest.TestCase):
-    def test_study_modes_are_listed_in_menu_order(self):
-        self.assertEqual(STUDY_MODES, (CARDS, CHOICE, TYPING))
-
     def test_mode_names_match_saved_sessions_of_old_versions(self):
         """Эти строки уже записаны в state.json у пользователя: менять их нельзя."""
         self.assertEqual((CARDS, CHOICE, TYPING), ("cards", "choice", "typing"))

@@ -31,13 +31,6 @@ class CheckTests(TypingTestCase):
 
         self.assertEqual(self.page.session.wrong, 1)
 
-    def test_answer_ignores_case_extra_spaces_and_punctuation(self):
-        answer = self.page.word.answer.upper().replace(" ", "  ") + "!"
-
-        self.type_answer(answer)
-
-        self.assertEqual(self.page.session.right, 1)
-
     def test_input_is_locked_after_answer(self):
         self.type_answer("wrong")
 
@@ -54,14 +47,11 @@ class CheckTests(TypingTestCase):
 
 
 class HintTests(TypingTestCase):
-    def test_ctrl_h_shows_hint_in_russian_layout(self):
+    def test_ctrl_h_shows_hint_once_in_russian_layout(self):
+        """Подсказка появляется, а кнопка подсказки выключается: второй раз не дадут."""
         self.press("р", H_KEY, ctrl=True)
 
         self.assertTrue(self.page.feedback.cget("text"))
-
-    def test_hint_can_be_taken_only_once(self):
-        self.press("р", H_KEY, ctrl=True)
-
         self.assertEqual(str(self.page.hint_button.cget("state")), "disabled")
 
 

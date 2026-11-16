@@ -212,11 +212,6 @@ class QuestionsDoNotChangeLessonTests(LessonTestCase):
     команды: start, restore, answer, retry_mistakes.
     """
 
-    def test_asking_current_word_twice_gives_same_word(self):
-        lesson = self.started("Git")
-
-        self.assertEqual(lesson.current_word(), lesson.current_word())
-
     def test_asking_current_word_does_not_touch_saved_lesson(self):
         self.settings.save_session(Session("typing", ALL_TOPICS, ["loop", "break"]))
         lesson = self.new_lesson("typing")

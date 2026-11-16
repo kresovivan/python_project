@@ -13,6 +13,7 @@
 #   - показывает сообщения Speaker во всплывающей подсказке Toast.
 # Страницы пользуются только этим классом: say(), auto_say(), prefetch().
 
+from core.language import ENGLISH, Language
 from core.settings import Settings
 from core.speech import Speaker
 from gui.toast import Toast
@@ -20,14 +21,26 @@ from gui.toast import Toast
 
 class VoiceController:
     POLL_MS = 100
-    GREETING = "Hello! Let's learn English."  # звучит сразу после смены голоса
 
-    def __init__(self, root, speaker: Speaker, settings: Settings, toast: Toast):
+    def __init__(self, root, speaker: Speaker, settings: Settings, toast: Toast, language: Language = ENGLISH):
         self._root = root
         self._speaker = speaker
-        self._settings = settings
         self._toast = toast
+        self.use(language, settings)
         self._root.after(self.POLL_MS, self._poll)
+
+    def use(self, language: Language, settings: Settings) -> None:
+        """Перейти на другой язык: его голоса и его настройки.
+
+        Голос у каждого языка свой: английский текст читает Jenny, китайский -
+        Сяосяо. Если сохранённого голоса нет в списке языка (например, его
+        убрали из программы), берём голос языка по умолчанию.
+        """
+        self.language = language
+        self._settings = settings
+        codes = [code for code, _ in language.voices]
+        voice = settings.get("voice", language.default_voice)
+        self._speaker.set_voice(voice if voice in codes else language.default_voice)
 
     # --- настройки ---------------------------------------------------------------
 
@@ -39,7 +52,7 @@ class VoiceController:
     def set_voice(self, code: str) -> None:
         self._speaker.set_voice(code)
         self._settings.set("voice", code)
-        self.say(self.GREETING)  # сразу даём послушать новый голос
+        self.say(self.language.greeting)  # сразу даём послушать новый голос
 
     @property
     def auto_speak(self) -> bool:
@@ -64,6 +77,10 @@ class VoiceController:
     def prefetch(self, text: str | None) -> None:
         """Заранее скачать произношение, чтобы по P оно прозвучало мгновенно."""
         self._speaker.prefetch(text)
+
+    def stop(self) -> None:
+        """Замолчать (например, при смене языка)."""
+        self._speaker.stop()
 
     def close(self) -> None:
         self._speaker.close()

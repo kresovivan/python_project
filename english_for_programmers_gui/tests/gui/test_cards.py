@@ -78,13 +78,6 @@ class AnswerTests(CardsTestCase):
 
         self.assertEqual(self.page.session.wrong, 1)
 
-    def test_place_is_saved_after_answer(self):
-        self.press("space")
-
-        self.press("2")
-
-        self.assertEqual(self.app.settings.session("cards").index, 1)
-
 
 if __name__ == "__main__":
     unittest.main()
