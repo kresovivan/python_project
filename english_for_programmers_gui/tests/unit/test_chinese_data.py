@@ -22,16 +22,16 @@ from functools import lru_cache
 from core import grammar_zh, pinyin
 from tests.support import ROOT
 
-INITIALS = "b p m f d t n l g k h j q x zh ch sh r z c s".split()
+INITIALS = "b p m f d t n l g k h j q x zh ch sh r z c s".split()  # noqa: SIM905
 # Слоги без начального звука и особые случаи (y, w, zhi, ri ...).
 SPECIAL = """a ai an ang ao e ei en eng er o ou
 zhi chi shi ri zi ci si
 ya yan yang yao ye yi yin ying yo yong you yu yuan yue yun
-wa wai wan wang wei wen weng wo wu""".split()
+wa wai wan wang wei wen weng wo wu""".split()  # noqa: SIM905
 # Окончания, которые встречаются после начальных звуков. ü записано как v.
 FINALS = """a ai an ang ao e ei en eng o ong ou
 i ia ian iang iao ie in ing iong iu
-u ua uai uan uang ui un uo v ve van vn ue uan un""".split()
+u ua uai uan uang ui un uo v ve van vn ue uan un""".split()  # noqa: SIM905
 # Сочетания, которых в путунхуа нет, хотя по таблице они складываются.
 # Проверка не обязана их запрещать: главное - ловить опечатки вроде "xqa".
 SYLLABLES = set(SPECIAL) | {i + f for i in INITIALS for f in FINALS}
