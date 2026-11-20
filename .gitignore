@@ -23,3 +23,22 @@ user_data/
 
 # Временный файл расширения Code Runner (создаётся при запуске выделенного кода)
 tempCodeRunnerFile.py
+
+# Виртуальные окружения (создаются заново)
+.venv*/
+
+# Настройки IDE и инструментов (машинные, не переносятся)
+.idea/
+.codemap/
+.ruff_cache/
+
+# Архивы и собранные файлы (создаются заново)
+*.7z
+*.sqlite3
+*.spec
+*.egg-info/
+
+# Сгенерированные данные и выгрузки
+merged.csv
+ConfigDumpInfo.xml
+table_compare_oop/examples/*.csv
