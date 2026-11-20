@@ -44,7 +44,12 @@ def system_idle_seconds() -> float:
 class KisunchikApp:
     """Настольный питомец: анимация, трюки, прогулки, английские слова."""
 
-    def __init__(self, assets_dir: Path, scale: float = 0.5, log_path: Path | None = None):
+    def __init__(self, assets_dir: Path, scale: float = 0.5, log_path: Path | None = None,
+                 clock=None, idle_probe=None):
+        # clock и idle_probe подменяются в тестах: так проверяем поведение
+        # за "часы" виртуального времени, не ожидая их по-настоящему.
+        self._clock = clock or time.monotonic
+        self._idle_probe = idle_probe or system_idle_seconds
         self._log_path = log_path
         self.atlas = SpriteAtlas(assets_dir / "pet.json", assets_dir / "spritesheet.png", scale)
         self.tutor = EnglishTutor(assets_dir / "words.json")
@@ -63,12 +68,12 @@ class KisunchikApp:
         # Текущее состояние анимации.
         self.state = "idle"
         self.frame = 0
-        self.last_frame_at = time.monotonic()
+        self.last_frame_at = self._clock()
         self.one_shot: str | None = None
         self.walk_target: int | None = None
 
         # Расписание самодеятельности.
-        now = time.monotonic()
+        now = self._clock()
         self.next_fun_at = now + self.policy.next_fun_delay()
         self.next_walk_at = now + self.policy.next_walk_delay()
         self.next_word_at = now + self.policy.next_word_delay()
@@ -107,7 +112,7 @@ class KisunchikApp:
             lines_text=word.ru,
             tail="bottom-right",
         )
-        self._card_until = time.monotonic() + CARD_SECONDS
+        self._card_until = self._clock() + CARD_SECONDS
         # Расширяем окно под пузырь: влево на ширину пузыря, вверх на высоту.
         bw, bh = self._card_image.size
         if self.window.win_w == self.window.cat_w:
@@ -139,7 +144,7 @@ class KisunchikApp:
             if self._card_word is None:
                 self.show_word()
             self.speaker.say(self._card_word.en)
-            self._card_until = time.monotonic() + CARD_SECONDS
+            self._card_until = self._clock() + CARD_SECONDS
             self._play_once("somersault")
         elif zone == "tail":
             self.hide_word()
@@ -154,19 +159,25 @@ class KisunchikApp:
         self.one_shot = name
         self.state = name
         self.frame = 0
-        self.last_frame_at = time.monotonic()
+        self.last_frame_at = self._clock()
 
     def _amuse_self(self, now: float) -> None:
-        """Самодеятельность в простое: гуляем, балуемся, учим слова, спим."""
+        """Самодеятельность: гуляем, балуемся, учим слова, спим.
+
+        Затеи и прогулки НЕ ждут, пока пользователь отойдёт от компьютера -
+        иначе котик выглядит мёртвым как раз тогда, когда на него смотрят.
+        От бездействия зависит только сон и автопоказ слов.
+        """
         if self.one_shot or self.walk_target is not None:
             return
-        idle_for = system_idle_seconds()
+        idle_for = self._idle_probe()
         if self.sleeping:
             # Спим, пока пользователь не вернулся.
             if idle_for < 2:
                 self.sleeping = False
                 self.state = "idle"
                 self.frame = 0
+                self._log("проснулся")
             return
         if idle_for > self.policy.sleep_after_idle:
             # Сначала дремлем (doze_off), потом крепко спим (sleeping).
@@ -175,8 +186,9 @@ class KisunchikApp:
             self.frame = 0
             self.last_frame_at = now
             self.hide_word()
+            self._log("заснул")
             return
-        if idle_for > self.policy.walk_after_idle and now >= self.next_walk_at:
+        if now >= self.next_walk_at:
             # Прогулка по всем мониторам: область - весь виртуальный экран.
             delta = self.policy.walk_delta(
                 self.window.pos_x + (self.window.win_w - self.window.cat_w),
@@ -187,17 +199,21 @@ class KisunchikApp:
                 self.walk_target = self.window.pos_x + delta
                 self.state = "running_left" if delta < 0 else "running_right"
                 self.frame = 0
+                self._log(f"пошёл гулять: {self.state}, цель {self.walk_target}")
             self.next_walk_at = now + self.policy.next_walk_delay()
             return
         if now >= self.next_word_at and idle_for > 20:
             # Раз в несколько минут сам показывает карточку со словом.
             self.show_word()
             self.next_word_at = now + self.policy.next_word_delay()
+            self._log(f"показал слово {self._card_word.en}")
             return
         if now >= self.next_fun_at:
-            self._play_once(self._rng_choice(
-                ["idle_random_1", "idle_random_2", "paw_wave", "fish_snack"]))
+            name = self._rng_choice(
+                ["idle_random_1", "idle_random_2", "paw_wave", "fish_snack"])
+            self._play_once(name)
             self.next_fun_at = now + self.policy.next_fun_delay()
+            self._log(f"затеял: {name}")
 
     def _rng_choice(self, items):
         import random
@@ -250,7 +266,7 @@ class KisunchikApp:
 
     def tick(self) -> None:
         """Один шаг главного цикла."""
-        now = time.monotonic()
+        now = self._clock()
         self._amuse_self(now)
         self._advance_frame(now)
         if self._card_image is not None and now >= self._card_until:
@@ -262,12 +278,15 @@ class KisunchikApp:
             self.window.root.after(TICK_MS, self._tick_safe)
 
     def _tick_safe(self) -> None:
+        """Один шаг цикла с защитой: ошибка в кадре не должна
+        убивать всю анимацию - пишем в журнал и живём дальше."""
         try:
             self.tick()
         except Exception:
             import traceback
             self._log(traceback.format_exc())
-            raise
+            if self._running:
+                self.window.root.after(TICK_MS, self._tick_safe)
 
     def _exit(self) -> None:
         self._running = False
