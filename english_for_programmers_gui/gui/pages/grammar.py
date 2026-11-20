@@ -182,6 +182,7 @@ class GrammarPage(Page):
         self.cells = []
         self._cell_columns = []
         self.tip = None
+        self._draw_leading()
         for table in topic.tables:
             self._draw_table(table)
         if topic.tip:
@@ -261,6 +262,9 @@ class GrammarPage(Page):
         self._cell_columns.append(columns)
         return cell
 
+    def _draw_leading(self) -> None:
+        """Перед таблицами темы подкласс может нарисовать что-то своё (по умолчанию - ничего)."""
+
     # --- клавиши ---------------------------------------------------------------------
 
     def on_key(self, key: KeyPress) -> bool:
@@ -278,6 +282,76 @@ class GrammarPage(Page):
         return table.rows[0][table.speak_columns[0]] if table.speak_columns else None
 
 
+class ToneChart(tk.Canvas):
+    """График высоты голоса для четырёх тонов.
+
+    Высота голоса показана как ноты: 5 уровней, 5 - самый высокий, 1 - низкий.
+    Каждый тон - линия на этих уровнях. Контур показывает, куда идёт голос:
+      1-й тон  - ровно наверху (5-5);
+      2-й тон  - снизу вверх (3-5);
+      3-й тон  - вниз и вверх (2-1-4);
+      4-й тон  - сверху вниз (5-1).
+    """
+
+    TONES = (
+        ("1-й тон", "ā", "mā", (5, 5)),
+        ("2-й тон", "á", "má", (3, 5)),
+        ("3-й тон", "ǎ", "mǎ", (2, 1, 4)),
+        ("4-й тон", "à", "mà", (5, 1)),
+    )
+    LANE = 58  # высота полосы одного тона (логические единицы)
+    PAD_TOP = 12
+    PAD_BOTTOM = 14
+    LABEL_W = 120  # место слева под номер и значок тона
+
+    def __init__(self, master):
+        self._scale = ctk.ScalingTracker.get_widget_scaling(master)
+        self._width = round(480 * self._scale)
+        self._height = round((self.PAD_TOP + self.PAD_BOTTOM + self.LANE * len(self.TONES)) * self._scale)
+        super().__init__(
+            master,
+            width=self._width,
+            height=self._height,
+            highlightthickness=0,
+            bg=theme.pick(theme.CARD),
+        )
+        self._draw()
+
+    def _level_y(self, level: int, top: float, bottom: float) -> float:
+        """Уровень высоты (1-5) в координату y: 5 - верх полосы, 1 - низ."""
+        return top + (5 - level) / 4 * (bottom - top)
+
+    def _draw(self) -> None:
+        s = self._scale
+        font = (theme.FONT, -round(14 * s))
+        bold = (theme.FONT_SEMIBOLD, -round(14 * s))
+        grid_color = theme.pick(theme.BORDER)
+        accent = theme.pick(theme.ACCENT)
+        text_color = theme.pick(theme.TEXT)
+        faint = theme.pick(theme.FAINT)
+
+        for i, (number, mark, pinyin, contour) in enumerate(self.TONES):
+            top = (self.PAD_TOP + i * self.LANE) * s
+            bottom = top + (self.LANE - 10) * s
+            middle = (top + bottom) / 2
+            # Пять направляющих - уровни высоты.
+            for level in range(1, 6):
+                y = self._level_y(level, top, bottom)
+                self.create_line(0, y, self._width, y, fill=grid_color)
+            # Линия тона.
+            left = self.LABEL_W * s
+            right = self._width - 16 * s
+            points = []
+            for j, level in enumerate(contour):
+                x = left + j * (right - left) / (len(contour) - 1)
+                points += [x, self._level_y(level, top, bottom)]
+            self.create_line(*points, fill=accent, width=round(3 * s), smooth=True, capstyle="round")
+            # Подписи слева.
+            self.create_text(14 * s, middle, text=number, font=bold, fill=accent, anchor="w")
+            self.create_text(66 * s, middle, text=mark, font=font, fill=text_color, anchor="w")
+            self.create_text(left - 10 * s, middle, text=pinyin, font=font, fill=faint, anchor="e")
+
+
 class SoundsPage(GrammarPage):
     """Китайские "Звуки и тоны": тоны, пиньинь, первые иероглифы.
 
@@ -292,3 +366,8 @@ class SoundsPage(GrammarPage):
 
     def book(self) -> tuple[GrammarTopic, ...]:
         return self.context.language.sounds
+
+    def _draw_leading(self) -> None:
+        """Перед таблицами темы "Четыре тона" рисуем график высоты голоса."""
+        if self.topic.title == "Четыре тона":
+            ToneChart(self.scroll).pack(anchor="w", pady=(8, 14))
