@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "id": "kisunchik",
+  "name": "Кисунчик",
+  "description": "Рыже-белый chibi-котик, который живёт на рабочем столе и любит помогать",
+  "spritesheet": "spritesheet.png",
+  "atlas": {
+    "frameWidth": 256,
+    "frameHeight": 288,
+    "columns": 8,
+    "rows": 15
+  },
+  "states": {
+    "idle": {
+      "row": 0,
+      "frames": 8,
+      "fps": 6,
+      "loop": true
+    },
+    "running_left": {
+      "row": 1,
+      "frames": 8,
+      "fps": 10,
+      "loop": true
+    },
+    "running_right": {
+      "row": 2,
+      "frames": 8,
+      "fps": 10,
+      "loop": true
+    },
+    "working": {
+      "row": 3,
+      "frames": 7,
+      "fps": 8,
+      "loop": true
+    },
+    "waiting": {
+      "row": 4,
+      "frames": 8,
+      "fps": 7,
+      "loop": true
+    },
+    "failed": {
+      "row": 5,
+      "frames": 8,
+      "fps": 6,
+      "loop": true
+    },
+    "idle_random_1": {
+      "row": 6,
+      "frames": 8,
+      "fps": 6,
+      "loop": false
+    },
+    "idle_random_2": {
+      "row": 7,
+      "frames": 7,
+      "fps": 6,
+      "loop": false
+    },
+    "paw_wave": {
+      "row": 8,
+      "frames": 7,
+      "fps": 8,
+      "loop": false
+    },
+    "somersault": {
+      "row": 9,
+      "frames": 7,
+      "fps": 10,
+      "loop": false
+    },
+    "sleeping": {
+      "row": 10,
+      "frames": 7,
+      "fps": 4,
+      "loop": true
+    },
+    "doze_off": {
+      "row": 11,
+      "frames": 7,
+      "fps": 7,
+      "loop": false
+    },
+    "fish_snack": {
+      "row": 12,
+      "frames": 7,
+      "fps": 7,
+      "loop": false
+    },
+    "celebrate": {
+      "row": 13,
+      "frames": 7,
+      "fps": 9,
+      "loop": false
+    },
+    "annoyed": {
+      "row": 14,
+      "frames": 7,
+      "fps": 8,
+      "loop": false
+    }
+  },
+  "theme": {
+    "bubble": {
+      "background": "#7E6544",
+      "foreground": "#FFFFFF",
+      "border": "#9A876D"
+    }
+  },
+  "provenance": {
+    "provider": "image_generation",
+    "summary": "two-board component extraction"
+  }
+}
