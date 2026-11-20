@@ -1,0 +1,11 @@
+# Конфигурация проекта english_for_programmers_gui.
+# Зависимости для установки — в requirements.txt.
+
+[project]
+name = "english-for-programmers"
+version = "1.0.0"
+description = "Тренажёр английского и китайского для программистов"
+requires-python = ">=3.10"
+
+[tool.ruff]
+target-version = "py310"
