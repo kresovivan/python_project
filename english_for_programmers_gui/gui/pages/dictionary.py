@@ -11,6 +11,7 @@
 
 import customtkinter as ctk
 
+from core.pinyin_ru import russian_reading
 from core.progress import STATUS_NAMES
 from gui import theme
 from gui.context import AppContext
@@ -118,16 +119,19 @@ class DictionaryPage(Page):
             status = self.progress.status(word)
             speak_tag = f"speak_{index}"  # у каждой ссылки "Звук" свой тег - свой обработчик клика
             self._speak_tags.append(speak_tag)
-            chunks += [
-                (word.en, "word"),
-                (f"   [{word.sound}]   ", "sound"),
-                (STATUS_NAMES[status].upper(), f"status_{status}"),
-                ("   ", "sound"),
-                ("ЗВУК", ("link", speak_tag)),
-                ("\n", "word"),
-                (word.ru, "ru"),
-                (f"    {word.topic.upper()}\n", ("ru", "topic")),
-            ]
+            # У китайского слова к пиньиню добавляем русское чтение: "你好 [nǐ hǎo] ни хао".
+            # У английского произношение и так записано русскими буквами.
+            reading = russian_reading(word.sound) if self.context.language.searches_sound else ""
+            chunks.append((word.en, "word"))
+            chunks.append((f"   [{word.sound}]   ", "sound"))
+            if reading:
+                chunks.append((f"{reading}   ", "ru"))
+            chunks.append((STATUS_NAMES[status].upper(), f"status_{status}"))
+            chunks.append(("   ", "sound"))
+            chunks.append(("ЗВУК", ("link", speak_tag)))
+            chunks.append(("\n", "word"))
+            chunks.append((word.ru, "ru"))
+            chunks.append((f"    {word.topic.upper()}\n", ("ru", "topic")))
         self.results.write(chunks or [("Попробуйте другое слово или часть слова.", "hint")])
 
         for index, word in enumerate(shown):

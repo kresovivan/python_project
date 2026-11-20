@@ -32,6 +32,7 @@ import customtkinter as ctk
 
 from core.lesson import Lesson
 from core.models import Word
+from core.pinyin_ru import russian_reading
 from core.questions import ChoiceQuestion
 from core.session import CARDS, CHOICE, EXCELLENT, GOOD, TYPING, Session
 from gui import theme
@@ -276,6 +277,16 @@ class StudyPage(Page, ABC):
     def speak(self) -> None:
         self.voice.say(self.speak_text())
 
+    def sound_text(self, word: Word) -> str:
+        """Произношение для показа на экране.
+
+        У китайского слова к пиньиню добавляем русское чтение: "[nǐ hǎo]  ни хао".
+        У английского произношение и так русскими буквами, добавлять нечего.
+        """
+        if self.context.language.searches_sound:
+            return f"[ {word.sound} ]   {russian_reading(word.sound)}"
+        return f"[ {word.sound} ]"
+
     # === отображение ==========================================================
 
     def _update_status(self) -> None:
@@ -349,7 +360,7 @@ class CardsPage(StudyPage):
     def render(self, word: Word) -> None:
         self.revealed = False
         self.en_label.configure(text=word.en)
-        self.sound_label.configure(text=f"[ {word.sound} ]")
+        self.sound_label.configure(text=self.sound_text(word))
         self.ru_label.pack_forget()
         self.example_label.pack_forget()
         self.buttons.pack_forget()
@@ -441,7 +452,7 @@ class ChoicePage(StudyPage):
     def render(self, word: Word) -> None:
         self.answered = False
         self.en_label.configure(text=word.en)
-        self.sound_label.configure(text=f"[ {word.sound} ]")
+        self.sound_label.configure(text=self.sound_text(word))
         # Какие варианты показать - правило упражнения, его решает ChoiceQuestion (core/).
         self.question = ChoiceQuestion.create(word, self.vocabulary, self.OPTIONS)
         for number, (button, option) in enumerate(zip(self.option_buttons, self.options), start=1):
@@ -594,7 +605,7 @@ class TypingPage(StudyPage):
         self.answer(is_right)
         self.entry.configure(state="disabled")
         self.check_button.configure(text="Далее")
-        word = f"{self.word.en}   [ {self.word.sound} ]"
+        word = f"{self.word.en}   {self.sound_text(self.word)}"
         if is_right:
             self.feedback.configure(text=f"Right! {word}", text_color=theme.SUCCESS)
         else:
