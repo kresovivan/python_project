@@ -15,21 +15,26 @@ class BehaviorPolicy:
 
     def __init__(
         self,
-        walk_after_idle: float = 45.0,
-        fun_period=(40.0, 100.0),
+        walk_after_idle: float = 15.0,
+        sleep_after_idle: float = 180.0,
+        fun_period=(25.0, 55.0),
         word_period=(300.0, 600.0),
         walk_span=(150, 450),
+        walk_delay=(30.0, 80.0),
         rng: random.Random | None = None,
     ):
         # walk_after_idle - сколько секунд тишины ждать перед прогулкой
+        # sleep_after_idle - после стольких секунд тишины котик засыпает
         self.walk_after_idle = walk_after_idle
+        self.sleep_after_idle = sleep_after_idle
         self.fun_period = fun_period
         self.word_period = word_period
         self.walk_span = walk_span
+        self.walk_delay = walk_delay
         self._rng = rng or random.Random()
 
     def next_walk_delay(self) -> float:
-        return self._rng.uniform(60.0, 150.0)
+        return self._rng.uniform(*self.walk_delay)
 
     def next_fun_delay(self) -> float:
         return self._rng.uniform(*self.fun_period)

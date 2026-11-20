@@ -89,9 +89,6 @@ class BubbleImage:
         body = (0, 0, self.width, h)
         d.rounded_rectangle(body, radius=22, fill=(255, 255, 255, 245),
                             outline=(190, 200, 215, 255), width=2)
-        # Блик слева сверху - как у мыльного пузыря. Рисуем ДО текста,
-        # чтобы буквы всегда были поверх блика.
-        d.ellipse((10, 8, 52, 30), fill=(220, 235, 255, 110))
 
         # Хвостик из двух кружков к котику.
         if tail == "bottom-right":

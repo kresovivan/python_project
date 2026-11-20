@@ -78,6 +78,10 @@ class KisunchikApp:
         self._card_word = None
         self._card_image = None
 
+        # Сон: котик засыпает, когда пользователь долго ничего не делает,
+        # и просыпается от клика.
+        self.sleeping = False
+
         self._running = False
 
     # --- журнал ---
@@ -120,6 +124,11 @@ class KisunchikApp:
     # --- реакции на мышь ---
 
     def _on_zone(self, zone: str) -> None:
+        # Любой клик будит спящего котика.
+        if self.sleeping:
+            self.sleeping = False
+            self._play_once("paw_wave")
+            return
         if zone == "head":
             # Голова: новое слово с переводом.
             self.show_word()
@@ -148,10 +157,25 @@ class KisunchikApp:
         self.last_frame_at = time.monotonic()
 
     def _amuse_self(self, now: float) -> None:
-        """Самодеятельность в простое: гуляем, балуемся, учим слова."""
+        """Самодеятельность в простое: гуляем, балуемся, учим слова, спим."""
         if self.one_shot or self.walk_target is not None:
             return
         idle_for = system_idle_seconds()
+        if self.sleeping:
+            # Спим, пока пользователь не вернулся.
+            if idle_for < 2:
+                self.sleeping = False
+                self.state = "idle"
+                self.frame = 0
+            return
+        if idle_for > self.policy.sleep_after_idle:
+            # Сначала дремлем (doze_off), потом крепко спим (sleeping).
+            self.sleeping = True
+            self.state = "doze_off"
+            self.frame = 0
+            self.last_frame_at = now
+            self.hide_word()
+            return
         if idle_for > self.policy.walk_after_idle and now >= self.next_walk_at:
             # Прогулка по всем мониторам: область - весь виртуальный экран.
             delta = self.policy.walk_delta(
@@ -204,6 +228,12 @@ class KisunchikApp:
             if self.frame >= self.atlas.info(self.state).frames:
                 self.one_shot = None
                 self.state = "idle"
+                self.frame = 0
+        elif self.sleeping and self.state == "doze_off":
+            # Додремали до конца ряда - переходим в крепкий сон.
+            self.frame += steps
+            if self.frame >= self.atlas.info("doze_off").frames:
+                self.state = "sleeping"
                 self.frame = 0
         else:
             self.frame = (self.frame + steps) % self.atlas.info(self.state).frames
