@@ -119,7 +119,9 @@ def syllable_count_matches(hanzi: str, syllables: list[str], text: str) -> bool:
     total = len(re.findall(r"[一-鿿]", hanzi))
     if len(syllables) == total:
         return True
-    erhua = len(re.findall(r"[aeiouv]r\b", plain(text)))
+    # Эризация - буква r в конце слова: бывает после гласной (zhèr) и после
+    # согласной (diǎnr, bǎngr), поэтому берём любую букву перед r.
+    erhua = len(re.findall(r"[a-z]r\b", plain(text)))
     return "儿" in hanzi and len(syllables) == total - erhua
 
 
@@ -164,6 +166,10 @@ class RulesTests(unittest.TestCase):
         """В 女儿 (дочь) 儿 - отдельный слог ér, а в 这儿 (здесь) - только буква r."""
         self.assertTrue(syllable_count_matches("女儿", ["nǚ", "ér"], "nǚ'ér"))
         self.assertTrue(syllable_count_matches("这儿", ["zhè"], "zhèr"))
+
+    def test_erhua_after_consonant_is_counted(self):
+        """点儿 читается diǎnr: r после согласной n - тоже эризация, не отдельный слог."""
+        self.assertTrue(syllable_count_matches("有点儿", ["yǒu", "diǎn"], "yǒudiǎnr"))
 
     def test_tone_mark_in_right_place_is_accepted(self):
         for syllable in ("hǎo", "xué", "kǒu", "guì", "liù", "duō"):
