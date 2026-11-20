@@ -50,7 +50,7 @@ def _wrap(draw, text, font, max_width):
 class BubbleImage:
     """Строит картинку пузыря с заголовком и строками текста."""
 
-    def __init__(self, width: int = 340, padding: int = 18):
+    def __init__(self, width: int = 470, padding: int = 24):
         self.width = width
         self.padding = padding
 
@@ -67,9 +67,9 @@ class BubbleImage:
         probe = Image.new("RGBA", (10, 10))
         d = ImageDraw.Draw(probe)
 
-        f_title = _fit_font(d, title, FONT_BOLD, 30, max_text_w)
-        f_sub = _fit_font(d, subtitle, FONT_REGULAR, 18, max_text_w) if subtitle else None
-        f_text = _font(FONT_REGULAR, 17)
+        f_title = _fit_font(d, title, FONT_BOLD, 42, max_text_w)
+        f_sub = _fit_font(d, subtitle, FONT_REGULAR, 26, max_text_w) if subtitle else None
+        f_text = _font(FONT_REGULAR, 24)
         text_lines = _wrap(d, lines_text, f_text, max_text_w) if lines_text else []
 
         # Считаем высоту содержимого.

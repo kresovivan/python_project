@@ -24,8 +24,8 @@ from gui.window import PetWindow
 
 TICK_MS = 30          # перерисовка кадра
 CARD_SECONDS = 9.0    # сколько висит карточка со словом
-BUBBLE_WIDTH = 340    # ширина пузыря
-BUBBLE_GAP = 10       # отступ пузыря от края окна
+BUBBLE_WIDTH = 470    # ширина пузыря
+BUBBLE_GAP = 12       # отступ пузыря от края окна
 
 
 class LASTINPUTINFO(ctypes.Structure):

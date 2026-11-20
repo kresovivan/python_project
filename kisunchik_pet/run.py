@@ -34,7 +34,7 @@ def main() -> None:
 
     app = KisunchikApp(
         assets_dir=BASE_DIR / "assets",
-        scale=0.5,
+        scale=0.75,
         log_path=BASE_DIR / "pet.log",
     )
     app.run()
