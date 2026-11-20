@@ -20,11 +20,13 @@
 # создаются мгновенно. Их цвета и размер шрифта задаём сами (theme.pick и
 # масштаб экрана), поэтому при смене темы оформления тема перерисовывается.
 
+import re
 import tkinter as tk
 
 import customtkinter as ctk
 
 from core.grammar import GrammarTopic, Table
+from core.pinyin_ru import russian_reading
 from gui import theme
 from gui.context import AppContext
 from gui.hotkeys import KeyPress
@@ -217,6 +219,31 @@ class GrammarPage(Page):
             # Кнопку ставим примерно на треть видимой части сверху.
             canvas.yview_moveto(max(0.0, start - (bottom - top) / 3))
 
+    def _annotate(self, text: str) -> str:
+        """К пиньиню на китайских страницах добавить русское чтение: "bā (ба)".
+
+        Иероглифы, русский текст и смешанные клетки не трогаем.
+        """
+        if not self.context.language.searches_sound:
+            return text
+        if not self._looks_like_pinyin(text):
+            return text
+        reading = russian_reading(text)
+        if not reading or reading == text:
+            return text
+        return f"{text}  ({reading})"
+
+    @staticmethod
+    def _looks_like_pinyin(text: str) -> bool:
+        """Похоже ли на чистый пиньинь: латиница без кириллицы и иероглифов."""
+        if not re.search(r"[a-zA-Z]", text):
+            return False
+        if re.search(r"[а-яА-ЯёЁ]", text):
+            return False
+        if re.search(r"[\u4e00-\u9fff]", text):
+            return False
+        return True
+
     def _draw_table(self, table: Table) -> None:
         """Таблица из обычных меток tkinter.
 
@@ -238,7 +265,8 @@ class GrammarPage(Page):
             for column, text in enumerate(row):
                 speakable = column in table.speak_columns and text != "-"
                 color = theme.ACCENT if speakable else theme.TEXT
-                cell = self._cell(grid, text, row_index, column, font, theme.CARD, color, scale, len(table.headers))
+                display = self._annotate(text)
+                cell = self._cell(grid, display, row_index, column, font, theme.CARD, color, scale, len(table.headers))
                 if speakable:
                     cell.configure(cursor="hand2")
                     # t=text - каждая клетка "помнит" свой текст (ловушка с lambda в цикле).

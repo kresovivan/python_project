@@ -174,6 +174,7 @@ def russian_reading(pinyin: str) -> str:
     bare = _bare(pinyin).replace("'", "").replace("’", "")
     result: list[str] = []
     for chunk in bare.split():
+        chunk = "".join(ch for ch in chunk if ch.isalpha())
         if not chunk:
             continue
         syllables, erhua = _split_word(chunk)
