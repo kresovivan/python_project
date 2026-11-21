@@ -346,6 +346,12 @@ class KisunchikApp:
                     # пробуем поднять его заново.
                     self._log(f"озвучка не сработала: {self.speaker.error}, перезапуск")
                     self.speaker.restart()
+                else:
+                    # SAID прилетит через секунду-две: диктор подтверждает
+                    # каждую произнесённую фразу, счётчик растёт.
+                    self._log(f"сказал диктору '{self._card_word.en}', "
+                              f"подтверждено фраз: {self.speaker.said_count}, "
+                              f"ошибка синтеза: {self.speaker.speech_error}")
             self._card_until = self._clock() + CARD_SECONDS
             self._play_once("somersault")
         elif zone == "tail":
@@ -518,7 +524,8 @@ class KisunchikApp:
                   f"экраны: {self.screen.all}")
         self.tick()
         # Диктор поднимается в фоне - запишем в журнал, как он себя чувствует.
+        from core.speech import ENGINE
         self.window.root.after(2000, lambda: self._log(
             f"диктор: готов={self.speaker.ready}, голос={self.speaker.voice}, "
-            f"ошибка={self.speaker.error}"))
+            f"движок={ENGINE}, ошибка={self.speaker.error}"))
         self.window.root.mainloop()

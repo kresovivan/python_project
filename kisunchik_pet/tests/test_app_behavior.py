@@ -183,6 +183,8 @@ class TestPetSleep(unittest.TestCase):
 
         class FakeSpeaker:
             error = None
+            said_count = 0
+            speech_error = None
             def say(self, text):
                 said.append(text)
                 return True

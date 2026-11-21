@@ -7,16 +7,21 @@
 
 ## Запуск
 
-Готовая программа: `app\KisunchikPet.exe` (папка `app` собирается
-PyInstaller, все библиотеки лежат в `app\_internal`).
-
-Из исходников:
+Ярлык `Kisunchik` на рабочем столе (создаётся `make_shortcut.ps1`) или:
 
 ```text
-python run.py
+pythonw run.py
 ```
 
-или двойной клик по `Запустить Кисунчика.bat` (запуск без окна консоли).
+Запуск идёт через установленный pythonw, а не через exe. Это осознанное
+решение: на машине стоит Kaspersky, и он помещает свежесобранный exe
+в ограниченную группу - ему запрещены запись автозапуска в реестр,
+создание временной папки (onefile падал с "Could not create temporary
+directory!") и даже доступ к голосам SAPI (Speak: 0x8004503a).
+Интерпретатор python у Kaspersky доверенный, поэтому из-под него
+работает всё. Если очень нужен exe - добавьте `KisunchikPet.exe`
+в доверенные приложения Kaspersky и соберите командой из раздела
+"Сборка exe" (только onedir).
 
 Автозагрузка Windows включается и выключается галочкой в меню настроек
 ("Запускать вместе с Windows"). Запись живёт в реестре
@@ -41,25 +46,20 @@ python run.py
 озвучка голосом, самостоятельные прогулки, автозапуск с Windows.
 Хранятся в `settings.json` рядом с программой, применяются сразу.
 
-## Сборка exe
+## Сборка exe (опционально, сейчас заблокировано Kaspersky)
 
 ```text
 pyinstaller --onedir --windowed --name KisunchikPet --paths . --icon assets/icon.ico --add-data "assets;assets" run.py
 ```
 
-Иконка собирается из мордочки котика скриптом `tools/make_icon.py`.
+Сборка только `--onedir`, не `--onefile`: onefile распаковывает себя
+во временную папку при каждом запуске, Kaspersky это блокирует
+("Could not create temporary directory!"). Иконка собирается из
+мордочки котика скриптом `tools/make_icon.py`.
 
-Сборка именно `--onedir`, не `--onefile`: onefile при каждом запуске
-распаковывает себя во временную папку, и антивирус это блокировал
-(ошибка "Could not create temporary directory!", плюс откатывал записи
-автозапуска). В onedir распаковки нет: exe и все библиотеки лежат
-в папке `app` (`app\KisunchikPet.exe` + `app\_internal`), запускается
-одним процессом и мгновенно. Папка `app` в .gitignore - бинарникам
-не место в git.
-
-На рабочем столе - только ярлык `Kisunchik.lnk`, создаётся скриптом
-`make_shortcut.ps1`. Настройки `settings.json` и журнал `pet.log`
-exe хранит рядом с собой, то есть в папке `app`.
+Настройки `settings.json` и журнал `pet.log` программа хранит рядом
+с собой: у exe - в его папке, при запуске из исходников - в корне
+проекта.
 
 ## Структура
 
@@ -68,7 +68,7 @@ exe хранит рядом с собой, то есть в папке `app`.
 | `run.py` | точка входа: включает честные пиксели (DPI) и запускает приложение |
 | `core/atlas.py` | `SpriteAtlas` - режет ленту спрайтов на кадры |
 | `core/tutor.py` | `EnglishTutor`, `Word` - взвешенный выбор слов |
-| `core/speech.py` | `Speaker` - озвучка через PowerShell System.Speech |
+| `core/speech.py` | `Speaker` - озвучка через SAPI SpVoice прямо в процессе (ctypes COM) |
 | `core/bubble.py` | `BubbleImage` - рисует пузырь с текстом в PIL |
 | `core/behavior.py` | `BehaviorPolicy` - когда гулять и баловаться |
 | `core/autostart.py` | автозапуск: реестр, reg.exe или ярлык в автозагрузке |
