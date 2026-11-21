@@ -97,6 +97,20 @@ class TestPetBehavior(unittest.TestCase):
         self.assertIsNone(self.app._card_image,
                           "карточка зависла и не скрылась")
 
+    def test_no_redraw_when_nothing_changes(self):
+        """Кадр перерисовывается, только если что-то изменилось.
+
+        Это главная защита от "котик ест процессор": раньше окно
+        обновлялось 33 раза в секунду даже в полном покое.
+        """
+        pushes = []
+        self.app.renderer.push = lambda *a, **k: pushes.append(1) or True
+        # Одна секунда обычного idle: 10 тиков, кадров idle ~6 fps,
+        # значит перерисовок должно быть заметно меньше, чем тиков.
+        self._live(1.0)
+        self.assertLess(len(pushes), 10,
+                        f"за 10 тиков было {len(pushes)} перерисовок")
+
 
 class TestPetSleep(unittest.TestCase):
     def test_cat_sleeps_when_user_away_long(self):

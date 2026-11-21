@@ -95,6 +95,10 @@ class KisunchikApp:
         # и просыпается от клика.
         self.sleeping = False
 
+        # Подпись последнего нарисованного кадра - чтобы не рисовать
+        # одно и то же по кругу (экономия процессора).
+        self._last_push_signature = None
+
         self._running = False
 
     # --- журнал ---
@@ -395,9 +399,19 @@ class KisunchikApp:
         self._advance_frame(now)
         if self._card_image is not None and now >= self._card_until:
             self.hide_word()
-        cat_frame = self.atlas.frames(self.state)[self.frame]
-        self.renderer.push(self.window.hwnd, self._compose(cat_frame),
-                           self.window.pos_x, self.window.pos_y)
+        # Перерисовываем окно, только если что-то реально изменилось:
+        # кадр, позиция или пузырь. Без этого котик 33 раза в секунду
+        # гонял один и тот же кадр через numpy в Windows - лишние
+        # 8-9% процессора за невидимую работу.
+        signature = (self.state, self.frame,
+                     self.window.pos_x, self.window.pos_y,
+                     self.window.win_w, self.window.win_h,
+                     id(self._card_image))
+        if signature != self._last_push_signature:
+            self._last_push_signature = signature
+            cat_frame = self.atlas.frames(self.state)[self.frame]
+            self.renderer.push(self.window.hwnd, self._compose(cat_frame),
+                               self.window.pos_x, self.window.pos_y)
         if self._running:
             self.window.root.after(TICK_MS, self._tick_safe)
 
