@@ -126,25 +126,37 @@ class KisunchikApp:
 
     # --- настройки ---
 
-    def apply_settings(self) -> None:
-        """Применить текущие настройки к поведению котика."""
+    def apply_settings(self, notify: bool = False) -> None:
+        """Применить текущие настройки к поведению котика.
+
+        notify=True - если что-то не получилось (антивирус запретил
+        автозапуск), показать пузырь с пояснением. При старте программы
+        пузырь не показываем, только журнал: человек ещё ничего не нажимал.
+        """
         s = self.settings
         self.policy.sleep_after_idle = s.sleep_after_idle
         self.policy.fun_period = (s.fun_every * 0.6, s.fun_every * 1.4)
         self.policy.walk_delay = (s.walk_every * 0.6, s.walk_every * 1.4)
         self.policy.word_period = (s.word_every * 0.7, s.word_every * 1.3)
-        # Автозапуск: приводим реестр в соответствие с настройкой.
-        # Ошибки реестра не должны ронять котика - просто пишем в журнал.
-        try:
-            self._autostart_sync(s.autostart)
-        except OSError as exc:
-            self._log(f"автозапуск не настроился: {exc}")
-        # Проверяем факт: антивирус может молча запретить запись.
-        # Галочка в меню не должна врать - откатываем настройку.
+        # Автозапуск: сначала читаем факт, и только если он расходится
+        # с настройкой - пишем. Лишних записей быть не должно: антивирус
+        # реагирует на саму попытку записи и откатывает даже чужие
+        # (рабочие) записи автозапуска.
         try:
             actual = self._autostart_check()
         except OSError:
-            actual = s.autostart
+            actual = s.autostart  # не прочитали - не трогаем
+        if actual != s.autostart:
+            try:
+                self._autostart_sync(s.autostart)
+            except OSError as exc:
+                self._log(f"автозапуск не настроился: {exc}")
+            # Проверяем факт: антивирус может молча запретить запись.
+            # Галочка в меню не должна врать - откатываем настройку.
+            try:
+                actual = self._autostart_check()
+            except OSError:
+                actual = s.autostart
         if actual != s.autostart:
             self._log(f"автозапуск: просили {s.autostart}, по факту {actual} "
                       f"(вероятно, антивирус запретил)")
@@ -154,6 +166,13 @@ class KisunchikApp:
                 save(self._settings_path, s)
             if hasattr(self.window, "autostart_var"):
                 self.window.autostart_var.set(actual)
+            if notify and hasattr(self, "bubble_maker"):
+                wanted = "включить" if not actual else "выключить"
+                self.show_message(
+                    "Кисунчик",
+                    f"Антивирус не дал мне {wanted} автозапуск, галочку "
+                    f"вернул как было. Разрешите KisunchikPet.exe "
+                    f"в антивирусе или поменяйте запись вручную.")
         # Размер котика: пересобираем кадры в новом масштабе.
         if abs(self.atlas.out_width - int(self.atlas.frame_width * s.scale)) > 1:
             self.atlas = SpriteAtlas(self._assets_dir / "pet.json",
@@ -170,7 +189,7 @@ class KisunchikApp:
         if self._settings_path:
             from core.settings import save
             save(self._settings_path, self.settings)
-        self.apply_settings()
+        self.apply_settings(notify=True)
         self._log(f"настройки: {kwargs}")
 
     def _build_menu(self) -> None:
@@ -275,6 +294,20 @@ class KisunchikApp:
         )
         self._card_until = self._clock() + CARD_SECONDS
         # Расширяем окно под пузырь: влево на ширину пузыря, вверх на высоту.
+        bw, bh = self._card_image.size
+        if self.window.win_w == self.window.cat_w:
+            self.window.resize_for_bubble(bw + BUBBLE_GAP, max(0, bh - self.window.cat_h + BUBBLE_GAP))
+
+    def show_message(self, title: str, text: str) -> None:
+        """Показать пузырь со свободным текстом: предупреждения, подсказки.
+
+        Словарной карточки при этом нет - клик по животику покажет
+        обычное слово, как будто пузыря и не было.
+        """
+        self._card_word = None
+        self._card_image = self.bubble_maker.render(
+            title=title, subtitle="", lines_text=text, tail="bottom-right")
+        self._card_until = self._clock() + CARD_SECONDS
         bw, bh = self._card_image.size
         if self.window.win_w == self.window.cat_w:
             self.window.resize_for_bubble(bw + BUBBLE_GAP, max(0, bh - self.window.cat_h + BUBBLE_GAP))

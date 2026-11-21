@@ -170,7 +170,11 @@ class TestAutostartSetting(unittest.TestCase):
             self.assertFalse(load(path).autostart)
 
     def test_change_settings_calls_sync(self):
-        """Выключение галочки в меню вызывает синхронизацию реестра."""
+        """Выключение галочки в меню вызывает синхронизацию реестра.
+
+        Запись происходит, только когда факт расходится с настройкой:
+        если система и так в нужном состоянии - реестр не трогаем.
+        """
         from gui.app import KisunchikApp
         ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
@@ -180,11 +184,21 @@ class TestAutostartSetting(unittest.TestCase):
                 return self.now
 
         calls = []
+        reality = [True]  # "реестр": в начале автозапуск включён
+
+        def fake_sync(on):
+            calls.append(on)
+            reality[0] = on
+
         app = KisunchikApp(ASSETS, clock=FakeClock(), idle_probe=lambda: 0.0,
                            settings=Settings(),
-                           autostart_sync=lambda on: calls.append(on))
+                           autostart_sync=fake_sync,
+                           autostart_check=lambda: reality[0])
         try:
             calls.clear()
+            # Факт совпадает с настройкой - записей быть не должно.
+            app.apply_settings()
+            self.assertEqual(calls, [])
             app.change_settings(autostart=False)
             self.assertEqual(calls, [False])
             app.change_settings(autostart=True)
@@ -215,6 +229,11 @@ class TestAutostartSetting(unittest.TestCase):
             app.change_settings(autostart=False)
             self.assertTrue(app.settings.autostart,
                             "галочка соврала: выключено в меню, включено в системе")
+            # И котик честно рассказал об этом пузырём.
+            self.assertIsNotNone(app._card_image,
+                                 "котик промолчал о запрете антивируса")
+            self.assertIsNone(app._card_word,
+                              "предупреждение не должно выглядеть словарной карточкой")
         finally:
             app.speaker.close()
             app.window.root.destroy()
