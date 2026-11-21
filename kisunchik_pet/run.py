@@ -29,7 +29,11 @@ def make_dpi_aware() -> None:
     размеры мониторов, и котик уезжает не туда.
     """
     try:
-        ctypes.windll.shcore.SetProcessDpiAwareness(2)  # per-monitor aware
+        # SetProcessDpiAwareness возвращает HRESULT, а не бросает
+        # OSError при неудаче. Проверяем код возврата: S_OK = 0.
+        hr = ctypes.windll.shcore.SetProcessDpiAwareness(2)
+        if hr != 0:
+            raise OSError(f"SetProcessDpiAwareness: {hr:#x}")
     except (AttributeError, OSError):
         try:
             ctypes.windll.user32.SetProcessDPIAware()

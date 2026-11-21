@@ -35,6 +35,8 @@ def load(path: Path) -> Settings:
         data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return Settings()
+    if not isinstance(data, dict):
+        return Settings()
     known = {f.name for f in fields(Settings)}
     clean = {k: v for k, v in data.items() if k in known}
     try:

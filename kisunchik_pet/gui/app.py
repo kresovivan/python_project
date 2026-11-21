@@ -49,7 +49,11 @@ def system_idle_seconds() -> float:
     info.cbSize = ctypes.sizeof(LASTINPUTINFO)
     if not ctypes.windll.user32.GetLastInputInfo(ctypes.byref(info)):
         return 0.0
-    return (ctypes.windll.kernel32.GetTickCount() - info.dwTime) / 1000.0
+    # GetTickCount без restype обрезается до знакового c_int: после
+    # ~25 дней аптайма число стало бы отрицательным, и idle ломается.
+    k32 = ctypes.windll.kernel32
+    k32.GetTickCount.restype = wintypes.DWORD
+    return (k32.GetTickCount() - info.dwTime) / 1000.0
 
 
 class KisunchikApp:
@@ -229,95 +233,95 @@ class KisunchikApp:
             """Подменю в общем стиле: сливки и карамель."""
             return tk.Menu(parent, tearoff=0, **MENU_STYLE)
 
-        m.add_command(label="Кисунчик", state="disabled")
+        m.add_command(label="Кисунчик - о программе",
+                      command=self.show_about)
         m.add_separator()
 
-        size_menu = sub(m)
+        # Настроек много - раскладываем их по трём группам, чтобы
+        # меню не превращалось в простыню.
+        look_menu = sub(m)    # как котик выглядит и двигается
+        learn_menu = sub(m)   # чему и как учит
+        sound_menu = sub(m)   # голос и звук
+
+        size_menu = sub(look_menu)
         for label, val in [("Мелкий", 0.5), ("Средний", 0.75), ("Крупный", 1.0)]:
             size_menu.add_radiobutton(
                 label=label, value=val,
                 variable=self.window.size_var,
                 command=lambda v=val: self.change_settings(scale=v))
-        m.add_cascade(label="Размер котика", menu=size_menu)
+        look_menu.add_cascade(label="Размер котика", menu=size_menu)
         self.window.size_var.set(s.scale)
 
-        sleep_menu = sub(m)
+        sleep_menu = sub(look_menu)
         for label, val in [("1 минуту", 60), ("3 минуты", 180),
                            ("5 минут", 300), ("10 минут", 600)]:
             sleep_menu.add_radiobutton(
                 label=label, value=val,
                 variable=self.window.sleep_var,
                 command=lambda v=val: self.change_settings(sleep_after_idle=v))
-        m.add_cascade(label="Засыпает после тишины", menu=sleep_menu)
+        look_menu.add_cascade(label="Засыпает после тишины", menu=sleep_menu)
         self.window.sleep_var.set(s.sleep_after_idle)
 
-        fun_menu = sub(m)
+        fun_menu = sub(look_menu)
         for label, val in [("Редко", 90), ("Обычно", 40), ("Часто", 20)]:
             fun_menu.add_radiobutton(
                 label=label, value=val,
                 variable=self.window.fun_var,
                 command=lambda v=val: self.change_settings(fun_every=v))
-        m.add_cascade(label="Затеи (рыбка, лапка...)", menu=fun_menu)
+        look_menu.add_cascade(label="Затеи (рыбка, лапка...)", menu=fun_menu)
         self.window.fun_var.set(s.fun_every)
 
-        walk_menu = sub(m)
+        walk_menu = sub(look_menu)
         for label, val in [("Редко", 120), ("Обычно", 55), ("Часто", 30)]:
             walk_menu.add_radiobutton(
                 label=label, value=val,
                 variable=self.window.walk_var,
                 command=lambda v=val: self.change_settings(walk_every=v))
-        m.add_cascade(label="Прогулки по экрану", menu=walk_menu)
+        look_menu.add_cascade(label="Прогулки по экрану", menu=walk_menu)
         self.window.walk_var.set(s.walk_every)
 
-        word_menu = sub(m)
+        look_menu.add_checkbutton(
+            label="Гуляет по экрану сам",
+            variable=self.window.walking_var,
+            command=lambda: self.change_settings(
+                walking=bool(self.window.walking_var.get())))
+        self.window.walking_var.set(s.walking)
+
+        word_menu = sub(learn_menu)
         for label, val in [("Каждые 3 мин", 180), ("Каждые 7 мин", 420),
                            ("Каждые 15 мин", 900)]:
             word_menu.add_radiobutton(
                 label=label, value=val,
                 variable=self.window.word_var,
                 command=lambda v=val: self.change_settings(word_every=v))
-        m.add_cascade(label="Автопоказ слов", menu=word_menu)
+        learn_menu.add_cascade(label="Автопоказ слов", menu=word_menu)
         self.window.word_var.set(s.word_every)
 
-        m.add_checkbutton(
+        learn_menu.add_checkbutton(
             label="Сам показывает слова",
             variable=self.window.auto_words_var,
             command=lambda: self.change_settings(
                 auto_words=bool(self.window.auto_words_var.get())))
         self.window.auto_words_var.set(s.auto_words)
 
-        m.add_checkbutton(
-            label="Озвучка слов голосом",
-            variable=self.window.sound_var,
-            command=lambda: self.change_settings(
-                sound=bool(self.window.sound_var.get())))
-        self.window.sound_var.set(s.sound)
-
-        # Голос озвучки: офлайн-персонажи Windows и онлайн-голоса Google.
-        from core.speech import voice_choices
-        voice_menu = sub(m)
-        for spec, label in voice_choices():
-            voice_menu.add_radiobutton(
-                label=label, value=spec,
-                variable=self.window.voice_var,
-                command=lambda v=spec: self.change_settings(voice=v))
-        m.add_cascade(label="Голос озвучки", menu=voice_menu)
-        self.window.voice_var.set(s.voice)
-
         # Блоки слов: пользователь выбирает, из каких тем учить.
         # Галочек много - кладём их в каскад по группам (темы, части речи...).
         groups = self.tutor.category_groups()
         if groups:
-            words_menu = sub(m)
+            words_menu = sub(learn_menu)
             group_titles = {"basics": "Азбука и основы", "topics": "Темы",
                             "speech": "Части речи", "style": "Фразы и стиль"}
             enabled = set(s.categories) if s.categories is not None else None
             for group_key, cats in groups.items():
                 sub_menu = sub(words_menu)
                 for cat in cats:
-                    var = tk.IntVar(
-                        value=1 if enabled is None or cat["id"] in enabled else 0)
-                    self.window.cat_vars[cat["id"]] = var
+                    # Переменные галочек: не создаём новые, а переиспользуем
+                    # (иначе старые Tcl-переменные остаются висеть — утечка).
+                    var = self.window.cat_vars.get(cat["id"])
+                    if var is None:
+                        var = tk.IntVar()
+                        self.window.cat_vars[cat["id"]] = var
+                    var.set(1 if enabled is None or cat["id"] in enabled else 0)
                     # Подпись с прогрессом: видно, где продолжить,
                     # а где начать с нуля. "не начата" - для нуля.
                     done, total = self.tutor.category_status(cat["id"])
@@ -327,20 +331,36 @@ class KisunchikApp:
                         command=self._apply_category_choice)
                 words_menu.add_cascade(
                     label=group_titles.get(group_key, group_key), menu=sub_menu)
-            m.add_cascade(label="Что учить", menu=words_menu)
+            learn_menu.add_cascade(label="Что учить", menu=words_menu)
 
         # Табло прогресса: графики по блокам и дням недели.
         if self.progress is not None:
-            m.add_command(label="Прогресс обучения...",
-                          command=self.show_progress)
+            learn_menu.add_command(label="Прогресс обучения...",
+                                   command=self.show_progress)
 
-        m.add_checkbutton(
-            label="Гуляет по экрану сам",
-            variable=self.window.walking_var,
+        sound_menu.add_checkbutton(
+            label="Озвучка слов голосом",
+            variable=self.window.sound_var,
             command=lambda: self.change_settings(
-                walking=bool(self.window.walking_var.get())))
-        self.window.walking_var.set(s.walking)
+                sound=bool(self.window.sound_var.get())))
+        self.window.sound_var.set(s.sound)
 
+        # Голос озвучки: офлайн-персонажи Windows и онлайн-голоса Google.
+        from core.speech import voice_choices
+        voice_menu = sub(sound_menu)
+        for spec, label in voice_choices():
+            voice_menu.add_radiobutton(
+                label=label, value=spec,
+                variable=self.window.voice_var,
+                command=lambda v=spec: self.change_settings(voice=v))
+        sound_menu.add_cascade(label="Голос озвучки", menu=voice_menu)
+        self.window.voice_var.set(s.voice)
+
+        m.add_cascade(label="Вид и поведение", menu=look_menu)
+        m.add_cascade(label="Обучение", menu=learn_menu)
+        m.add_cascade(label="Озвучка", menu=sound_menu)
+
+        m.add_separator()
         m.add_checkbutton(
             label="Запускать вместе с Windows",
             variable=self.window.autostart_var,
@@ -369,6 +389,8 @@ class KisunchikApp:
         """Показать пузырь со словом рядом с котиком."""
         if word is None:
             word = self.tutor.next_word()  # само отметится в дневнике
+            if word is None:               # словарь пуст или все блоки выключены
+                return
         elif self.progress is not None:
             # Слово задано извне (например, последнее из прошлого сеанса).
             self.progress.mark_shown(word.en)
@@ -405,6 +427,15 @@ class KisunchikApp:
         bw, bh = self._card_image.size
         if self.window.win_w == self.window.cat_w:
             self.window.resize_for_bubble(bw + BUBBLE_GAP, max(0, bh - self.window.cat_h + BUBBLE_GAP))
+
+    def show_about(self) -> None:
+        """Открыть визитку программы (одно окно на приложение)."""
+        from gui.about_window import AboutWindow
+        win = getattr(self, "_about_window", None)
+        if win is not None and win.is_alive():
+            win.win.lift()
+            return
+        self._about_window = AboutWindow(self.window.root)
 
     def show_progress(self) -> None:
         """Открыть табло прогресса обучения (одно окно на приложение)."""

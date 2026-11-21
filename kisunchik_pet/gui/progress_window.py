@@ -95,7 +95,9 @@ class ProgressWindow:
             (0, 0), window=self.rows, anchor="nw")
         self.rows.bind("<Configure>", self._on_rows_configure)
         self.list_canvas.bind("<Configure>", self._on_list_resize)
-        self.list_canvas.bind_all("<MouseWheel>", self._on_wheel)
+        # Колесо мыши на canvas (не на bind_all — иначе бинд не снимается
+        # после закрытия окна и срабатывает везде).
+        self.list_canvas.bind("<MouseWheel>", self._on_wheel)
 
         # Кнопки внизу.
         bar = tk.Frame(self.win, bg=BG)

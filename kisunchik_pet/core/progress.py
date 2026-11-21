@@ -15,6 +15,7 @@
 """
 
 import json
+import os
 import random
 import time
 from datetime import date
@@ -144,8 +145,13 @@ class ProgressStore:
         if not self._dirty and not force:
             return
         try:
-            self._path.write_text(
+            # Атомарная запись: сначала во временный файл, потом os.replace.
+            # Иначе сбой посреди write_text оставит битый progress.json,
+            # и весь дневник потеряется.
+            tmp = self._path.with_name(self._path.name + ".tmp")
+            tmp.write_text(
                 json.dumps(self._data, ensure_ascii=False), encoding="utf-8")
+            os.replace(tmp, self._path)
             self._dirty = False
         except OSError:
             pass  # диск занят или антивирус - попробуем в следующий раз

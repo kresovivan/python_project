@@ -30,6 +30,16 @@ def find_own_window(title: str):
     found = []
     WNDENUMPROC = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
     pid = ctypes.windll.kernel32.GetCurrentProcessId()
+    # Прототипы: без них ctypes режет 64-битный HWND до c_int, и окно
+    # не находится.
+    user32.GetWindowThreadProcessId.argtypes = [wintypes.HWND, ctypes.POINTER(wintypes.DWORD)]
+    user32.GetWindowThreadProcessId.restype = wintypes.DWORD
+    user32.IsWindowVisible.argtypes = [wintypes.HWND]
+    user32.IsWindowVisible.restype = wintypes.BOOL
+    user32.GetWindowTextLengthW.argtypes = [wintypes.HWND]
+    user32.GetWindowTextLengthW.restype = ctypes.c_int
+    user32.GetWindowTextW.argtypes = [wintypes.HWND, wintypes.LPWSTR, ctypes.c_int]
+    user32.GetWindowTextW.restype = ctypes.c_int
 
     def _cb(hwnd, lp):
         proc = wintypes.DWORD()
@@ -75,7 +85,12 @@ class PetWindow:
         self.win_h = self.cat_h
 
         self.root.update()
-        self.hwnd = find_own_window(WINDOW_TITLE) or self.root.winfo_id()
+        self.hwnd = find_own_window(WINDOW_TITLE)
+        if self.hwnd is None:
+            # winfo_id() вернул бы внутреннее (служебное) окно Tk, и
+            # рисунок ушёл бы в него - котик молча невидим. Лучше упасть
+            # с понятной ошибкой.
+            raise RuntimeError("не найдено видимое окно KisunchikPet")
         self.renderer.make_layered(self.hwnd)
         self.renderer.move(self.hwnd, self.pos_x, self.pos_y)
 
@@ -86,6 +101,8 @@ class PetWindow:
 
         self._drag_start = None
         self._dragging = False
+        self._pending = None        # отложенный одиночный клик (id after)
+        self._skip_next_release = False
 
         self.root.bind("<ButtonPress-1>", self._press)
         self.root.bind("<B1-Motion>", self._drag)
@@ -166,14 +183,27 @@ class PetWindow:
             self.renderer.move(self.hwnd, self.pos_x, self.pos_y)
 
     def _release(self, event):
-        if not self._dragging and self.on_zone:
+        # Одиночный клик откладываем: если следом придёт двойной,
+        # он отменится (иначе дабл-клик давал бы два слова).
+        if not self._dragging and self.on_zone and not self._skip_next_release:
             zone = self._zone_at(event.x, event.y)
             if zone:
-                self.on_zone(zone)
+                self._pending = self.root.after(220, self._fire_zone, zone)
+        self._skip_next_release = False
         self._drag_start = None
         self._dragging = False
 
+    def _fire_zone(self, zone) -> None:
+        self._pending = None
+        if self.on_zone:
+            self.on_zone(zone)
+
     def _double(self, event):
+        # Двойной клик отменяет отложенный одиночный.
+        if self._pending is not None:
+            self.root.after_cancel(self._pending)
+            self._pending = None
+        self._skip_next_release = True
         if self.on_double:
             self.on_double()
 

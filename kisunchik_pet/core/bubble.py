@@ -10,6 +10,8 @@
 в высоту за счёт переноса строк. Читать мелкий текст никто не будет.
 """
 
+import math
+
 from PIL import Image, ImageDraw, ImageFont
 
 # Системные шрифты Windows - они есть всегда.
@@ -100,7 +102,10 @@ class BubbleImage:
         widest = 0
         for text, font in parts:
             if text:
-                widest = max(widest, int(d.textlength(text, font=font)))
+                # ceil, а не int(): int отбрасывает дробь, и слово
+                # шириной 123.7 посчиталось бы как 123 - потом _wrap_hard
+                # разрезал бы его посимвольно.
+                widest = max(widest, math.ceil(d.textlength(text, font=font)))
         return widest
 
     def render(self, title: str, subtitle: str, lines_text: str,

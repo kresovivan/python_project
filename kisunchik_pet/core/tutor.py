@@ -43,7 +43,8 @@ class EnglishTutor:
                  rng: random.Random | None = None, progress=None):
         with open(words_path, encoding="utf-8") as f:
             raw = json.load(f)
-        self._words = [Word(en=w[0], ru=w[1], transcription=w[2], weight=float(w[3]))
+        self._words = [Word(en=w[0], ru=w[1], transcription=w[2],
+                             weight=max(0.0, float(w[3])))
                        for w in raw]
         if not self._words:
             raise ValueError("словарь пуст")
@@ -115,6 +116,8 @@ class EnglishTutor:
 
     def _pick(self, pool: list[Word], weights: list[float]) -> Word:
         """Взвешенный случайный выбор без мгновенного повтора."""
+        if sum(weights) <= 0:  # все веса нулевые - даём равные шансы
+            weights = [1.0] * len(pool)
         word = self._rng.choices(pool, weights=weights, k=1)[0]
         if len(pool) > 1:
             guard = 0

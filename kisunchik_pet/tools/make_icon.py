@@ -35,7 +35,10 @@ def crop_to_content(img: Image.Image) -> Image.Image:
 def load_head() -> Image.Image:
     """Голова котика из первого кадра idle, в полном размере."""
     atlas = SpriteAtlas(ASSETS / "pet.json", ASSETS / "spritesheet.png", 1.0)
-    frame = crop_to_content(atlas.frames("idle")[0])
+    frames = atlas.frames("idle")
+    if not frames:
+        raise RuntimeError("нет кадров idle в pet.json — битый спрайт-лист")
+    frame = crop_to_content(frames[0])
     head = frame.crop((0, 0, frame.width, int(frame.height * HEAD_PART)))
     return crop_to_content(head)
 

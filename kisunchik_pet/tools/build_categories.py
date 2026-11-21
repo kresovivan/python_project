@@ -29,7 +29,13 @@ GROUPS = {
 
 
 def group_of(stem: str) -> str:
-    number = int(stem.split("_")[0])
+    parts = stem.split("_")
+    try:
+        number = int(parts[0])
+    except (IndexError, ValueError):
+        # Файлы без числового префикса (README, заметки) - просто
+        # кидаем в последнюю группу вместо падения.
+        return "style"
     if number <= 9:
         return "topics"
     if number <= 14:
@@ -38,6 +44,9 @@ def group_of(stem: str) -> str:
 
 
 def main() -> None:
+    if not DATA.is_dir() or not list(DATA.glob("*.txt")):
+        print(f"нет файлов словаря в {DATA} — прерываю, чтобы не затeреть categories.json")
+        return
     categories = []
     words = {}
     for path in sorted(DATA.glob("*.txt")):
@@ -61,6 +70,18 @@ def main() -> None:
 
     out = {"categories": categories, "words": words}
     target = ROOT / "assets" / "categories.json"
+    # Сохранить блоки азбуки (abc_). build_basics.py добавляет их
+    # после нас, и повторный запуск build_categories.py не должен
+    # затирать их — склеиваем.
+    if target.exists():
+        try:
+            old = json.loads(target.read_text(encoding="utf-8"))
+            abc_cats = [c for c in old["categories"] if c["id"].startswith("abc_")]
+            abc_words = {k: v for k, v in old["words"].items() if v.startswith("abc_")}
+            categories = abc_cats + categories
+            words.update(abc_words)
+        except (OSError, json.JSONDecodeError, KeyError):
+            pass
     target.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"блоков: {len(categories)}, слов размечено: {len(words)}")
     print(f"записано: {target}")

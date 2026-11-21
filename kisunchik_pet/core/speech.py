@@ -171,6 +171,7 @@ class Speaker:
         self._voice_spec = voice_spec
         self._words: queue.Queue = queue.Queue()
         self._thread: threading.Thread | None = None
+        self._generation = 0  # номер поколения диктора (для борьбы с зомби)
         self._start()
 
     # --- выбор голоса ---
@@ -182,10 +183,17 @@ class Speaker:
     # --- поток диктора ---
 
     def _start(self) -> None:
-        self._thread = threading.Thread(target=self._worker, daemon=True)
+        self._generation += 1
+        gen = self._generation
+        # Новая очередь на каждое поколение: старый поток-зомби не
+        # украдёт слова у нового.
+        words = queue.Queue()
+        self._words = words
+        self._thread = threading.Thread(target=self._worker,
+                                        args=(gen, words), daemon=True)
         self._thread.start()
 
-    def _worker(self) -> None:
+    def _worker(self, gen: int, words: queue.Queue) -> None:
         ole32 = ctypes.windll.ole32
         ole32.CoInitialize(None)
         sapi = None
@@ -194,7 +202,7 @@ class Speaker:
             self.voice = "SAPI + онлайн"
             self.ready = True
             while True:
-                text = self._words.get()
+                text = words.get()
                 if text is None:  # команда на завершение
                     break
                 try:
@@ -207,7 +215,8 @@ class Speaker:
             if sapi is not None:
                 sapi.release()
             ole32.CoUninitialize()
-            self.ready = False
+            if gen == self._generation:  # старый поток не трогает ready нового
+                self.ready = False
 
     def _say_one(self, sapi: _SapiVoice, text: str) -> None:
         """Произнести одну фразу текущим голосом."""
@@ -218,7 +227,7 @@ class Speaker:
             try:
                 self._say_online(text, lang)
                 return
-            except OSError as exc:
+            except Exception as exc:
                 # Нет сети или Google ответил ошибкой - честно говорим
                 # офлайн-голосом и пишем, почему.
                 self.speech_error = f"онлайн недоступен ({exc}), говорю офлайн"
@@ -235,12 +244,12 @@ class Speaker:
         hr = sapi.speak(_ssml(text, name, rate, pitch))
         if hr == 0:
             self.said_count += 1
-            if self.speech_error and "онлайн" not in self.speech_error:
-                self.speech_error = None
+            self.speech_error = None
         else:
             hr = sapi.speak(text, flags=0)
             if hr == 0:
                 self.said_count += 1
+                self.speech_error = None
             else:
                 self.speech_error = f"Speak: {hr & 0xFFFFFFFF:#x}"
 
@@ -286,8 +295,7 @@ class Speaker:
 
     def close(self) -> None:
         """Закрыть диктора. После этого объект использовать нельзя."""
-        if self.ready:
-            self._words.put(None)
+        self._words.put(None)  # всегда сигнал завершения
         if self._thread is not None:
             self._thread.join(timeout=2)
 
