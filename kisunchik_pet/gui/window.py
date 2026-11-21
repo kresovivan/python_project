@@ -103,6 +103,9 @@ class PetWindow:
         self.sound_var = tk.IntVar(value=1)
         self.walking_var = tk.IntVar(value=1)
         self.autostart_var = tk.IntVar(value=1)
+        self.voice_var = tk.StringVar(value="sapi:auto")
+        # Галочки блоков слов: id блока -> переменная. Заполняет KisunchikApp.
+        self.cat_vars: dict = {}
 
     # --- координаты ---
 

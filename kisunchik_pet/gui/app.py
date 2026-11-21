@@ -70,7 +70,8 @@ class KisunchikApp:
         self._assets_dir = assets_dir
         scale = self.settings.scale  # настройка важнее параметра
         self.atlas = SpriteAtlas(assets_dir / "pet.json", assets_dir / "spritesheet.png", scale)
-        self.tutor = EnglishTutor(assets_dir / "words.json")
+        self.tutor = EnglishTutor(assets_dir / "words.json",
+                                  assets_dir / "categories.json")
         self.speaker = Speaker()
         self.policy = BehaviorPolicy()
         self.screen = VirtualScreen()
@@ -134,6 +135,9 @@ class KisunchikApp:
         пузырь не показываем, только журнал: человек ещё ничего не нажимал.
         """
         s = self.settings
+        # Голос и блоки слов применяются к диктору и репетитору.
+        self.speaker.set_voice(s.voice)
+        self.tutor.set_categories(set(s.categories) if s.categories is not None else None)
         self.policy.sleep_after_idle = s.sleep_after_idle
         self.policy.fun_period = (s.fun_every * 0.6, s.fun_every * 1.4)
         self.policy.walk_delay = (s.walk_every * 0.6, s.walk_every * 1.4)
@@ -263,6 +267,38 @@ class KisunchikApp:
                 sound=bool(self.window.sound_var.get())))
         self.window.sound_var.set(s.sound)
 
+        # Голос озвучки: офлайн-персонажи Windows и онлайн-голоса Google.
+        from core.speech import voice_choices
+        voice_menu = tk.Menu(m, tearoff=0)
+        for spec, label in voice_choices():
+            voice_menu.add_radiobutton(
+                label=label, value=spec,
+                variable=self.window.voice_var,
+                command=lambda v=spec: self.change_settings(voice=v))
+        m.add_cascade(label="Голос озвучки", menu=voice_menu)
+        self.window.voice_var.set(s.voice)
+
+        # Блоки слов: пользователь выбирает, из каких тем учить.
+        # Галочек много - кладём их в каскад по группам (темы, части речи...).
+        groups = self.tutor.category_groups()
+        if groups:
+            words_menu = tk.Menu(m, tearoff=0)
+            group_titles = {"topics": "Темы", "speech": "Части речи",
+                            "style": "Фразы и стиль"}
+            enabled = set(s.categories) if s.categories is not None else None
+            for group_key, cats in groups.items():
+                sub = tk.Menu(words_menu, tearoff=0)
+                for cat in cats:
+                    var = tk.IntVar(
+                        value=1 if enabled is None or cat["id"] in enabled else 0)
+                    self.window.cat_vars[cat["id"]] = var
+                    sub.add_checkbutton(
+                        label=cat["title"], variable=var,
+                        command=self._apply_category_choice)
+                words_menu.add_cascade(
+                    label=group_titles.get(group_key, group_key), menu=sub)
+            m.add_cascade(label="Что учить", menu=words_menu)
+
         m.add_checkbutton(
             label="Гуляет по экрану сам",
             variable=self.window.walking_var,
@@ -280,15 +316,32 @@ class KisunchikApp:
         m.add_separator()
         m.add_command(label="Выход", command=self._exit)
 
+    def _apply_category_choice(self) -> None:
+        """Собрать отмеченные блоки и сохранить в настройки.
+
+        Если отмечены все блоки - храним None ("все"), так настройка
+        переживёт появление новых блоков в словаре.
+        """
+        all_ids = list(self.window.cat_vars)
+        enabled = sorted(cat_id for cat_id in all_ids
+                         if self.window.cat_vars[cat_id].get())
+        self.change_settings(
+            categories=None if len(enabled) == len(all_ids) else enabled)
+
     # --- карточка со словом ---
 
     def show_word(self, word=None) -> None:
         """Показать пузырь со словом рядом с котиком."""
         word = word or self.tutor.next_word()
         self._card_word = word
+        # В подзаголовке - транскрипция и название блока: видно,
+        # из какой темы слово.
+        cat_title = self.tutor.category_title(word.category)
+        subtitle = f"{word.transcription} · {cat_title}" if cat_title \
+            else word.transcription
         self._card_image = self.bubble_maker.render(
             title=word.en,
-            subtitle=word.transcription,
+            subtitle=subtitle,
             lines_text=word.ru,
             tail="bottom-right",
         )

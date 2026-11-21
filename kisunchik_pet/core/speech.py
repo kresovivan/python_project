@@ -1,33 +1,59 @@
 # -*- coding: utf-8 -*-
-"""Озвучка слов голосом Windows (SAPI прямо из процесса).
+"""Озвучка слов: офлайн-голоса Windows и онлайн-голоса из интернета.
 
-Что это в жизни: "диктор в соседней комнате". Раньше котик звонил
-диктору по телефону (порождал PowerShell), но антивирус не пускал
-звонок - слова доходили, а голос рождался мёртвым. Теперь диктор
-сидит прямо внутри программы: говорим через Windows SAPI (SpVoice)
-по COM, без дочерних процессов вообще.
+Что это в жизни: два диктора на подхвате.
+1. Офлайн: Windows SAPI (SpVoice) прямо в процессе, без дочерних
+   программ - антивирусу нечего перехватывать. Один установленный голос
+   разнообразим темпом и высотой: медленно, быстро, низко, высоко.
+2. Онлайн: Google Translate TTS - бесплатно и без ключа, зато с
+   акцентами: американский, британский, австралийский, индийский.
+   Мелодия скачивается в mp3 и играется через winmm (есть в любой
+   Windows). Нет интернета - сами переключаемся на офлайн.
 
-Речь идёт в отдельном потоке, чтобы котик не замирал на время фразы.
-Слова складываются в очередь и произносятся по одному.
-
-Английский голос выбираем через SSML-тег <voice required="Language=409">:
-не привязываемся к имени (Zira и т.п.), подойдёт любой en-US голос.
+Речь идёт в отдельном потоке, котик не замирает. Слова складываются
+в очередь и произносятся по одному. Счётчик said_count растёт после
+каждой реально произнесённой фразы - по нему видно, что звук был.
 """
 
 import ctypes
 import queue
+import tempfile
 import threading
+import urllib.parse
+import urllib.request
+import winreg
 from ctypes import wintypes
+from pathlib import Path
 from xml.sax.saxutils import escape
 
 # Маркер версии движка: по нему в журнале видно, какой код зашит в exe.
-ENGINE = "sapi-inproc-1"
+ENGINE = "hybrid-2"
 
 _CLSID_SPVOICE = "{96749377-3391-11D2-9EE3-00C04F797396}"
 _IID_ISPVOICE = "{6C44DF74-72B9-4992-A1EC-EF996E0422D4}"
 _CLSCTX_ALL = 0x17
 _SVSF_IS_XML = 8
 _SPEAK_VTABLE_INDEX = 20  # IUnknown 3 + ISpNotifySource 7 + ISpEventSource 3 + 7
+
+# Персонажи офлайн-голоса: id, название в меню, темп, высота.
+PERSONAS = [
+    ("sapi:auto", "Зира - как есть", 0, 0),
+    ("sapi:slow", "Зира - медленно и чётко", -2, 0),
+    ("sapi:fast", "Зира - быстрая речь", 2, 0),
+    ("sapi:low", "Зира - низкий голос", 0, -3),
+    ("sapi:high", "Зира - высокий голос", 0, 3),
+]
+
+# Онлайн-голоса: id - это домен Google, от него зависит акцент.
+ONLINE_VOICES = [
+    ("gtts:com", "Онлайн - американский акцент", "com"),
+    ("gtts:co.uk", "Онлайн - британский акцент", "co.uk"),
+    ("gtts:com.au", "Онлайн - австралийский акцент", "com.au"),
+    ("gtts:co.in", "Онлайн - индийский акцент", "co.in"),
+]
+
+_TTS_URL = "https://translate.google.{tld}/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q="
+_USER_AGENT = {"User-Agent": "Mozilla/5.0"}
 
 
 def _guid(text: str) -> ctypes.Array:
@@ -39,7 +65,45 @@ def _guid(text: str) -> ctypes.Array:
     return buf
 
 
-class _Voice:
+def installed_voices() -> list[dict]:
+    """Голоса SAPI из реестра: имя для SSML и красивая подпись.
+
+    Читаем реестр напрямую - это работает даже там, где COM не поднять.
+    """
+    found = []
+    root = r"SOFTWARE\Microsoft\Speech\Voices\Tokens"
+    try:
+        key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, root)
+    except OSError:
+        return found
+    i = 0
+    while True:
+        try:
+            token = winreg.EnumKey(key, i)
+        except OSError:
+            break
+        i += 1
+        try:
+            sub = winreg.OpenKey(key, token)
+            display = winreg.QueryValueEx(sub, "")[0]
+        except OSError:
+            continue
+        short = display.split(" - ")[0].strip()
+        found.append({"id": token, "name": short, "label": display})
+    return found
+
+
+def voice_choices() -> list[tuple[str, str]]:
+    """Все варианты голоса для меню: (id для настроек, подпись)."""
+    choices = [(spec, label) for spec, label, _rate, _pitch in PERSONAS]
+    for token in installed_voices():
+        if token["name"] != "Microsoft Zira Desktop":  # Зира уже есть в персонажах
+            choices.append((f"sapi:{token['name']}", token["label"]))
+    choices += [(spec, label) for spec, label, _tld in ONLINE_VOICES]
+    return choices
+
+
+class _SapiVoice:
     """COM-объект SpVoice и его метод Speak. Живёт в одном потоке."""
 
     def __init__(self):
@@ -58,7 +122,6 @@ class _Voice:
             ctypes.c_ulong, ctypes.c_void_p)(vtable[2])
 
     def speak(self, text: str, flags: int = _SVSF_IS_XML) -> int:
-        """Произнести синхронно. Вернёт HRESULT (0 - успех)."""
         return self._speak(self._ptr, text, flags, None)
 
     def release(self) -> None:
@@ -67,18 +130,50 @@ class _Voice:
             self._ptr = None
 
 
+def _ssml(text: str, name: str | None, rate: int, pitch: int) -> str:
+    """Собрать SSML: голос по имени или языку, темп и высота."""
+    inner = escape(text)
+    if pitch:
+        inner = f'<pitch absmiddle="{pitch:+d}">{inner}</pitch>'
+    if rate:
+        inner = f'<rate absspeed="{rate:+d}">{inner}</rate>'
+    required = f"Name={name}" if name else "Language=409"
+    return f'<voice required="{required}">{inner}</voice>'
+
+
+def _play_mp3(path: str) -> None:
+    """Проиграть mp3 через winmm MCI и подождать конца."""
+    mci = ctypes.windll.winmm.mciSendStringW
+    buf = ctypes.create_unicode_buffer(256)
+    alias = f"tts{id(path) & 0xFFFF}"
+    if mci(f'open "{path}" type mpegvideo alias {alias}', buf, 256, 0) != 0:
+        raise OSError(f"mci open: {buf.value}")
+    try:
+        if mci(f"play {alias} wait", buf, 256, 0) != 0:
+            raise OSError(f"mci play: {buf.value}")
+    finally:
+        mci(f"close {alias}", buf, 256, 0)
+
+
 class Speaker:
     """Произносит английские слова. Безопасно вызывать из любого потока."""
 
-    def __init__(self):
+    def __init__(self, voice_spec: str = "sapi:auto"):
         self.voice: str | None = None
         self.ready = False
         self.error: str | None = None
-        self.said_count = 0                 # сколько фраз реально произнесено
+        self.said_count = 0                   # сколько фраз реально произнесено
         self.speech_error: str | None = None  # последняя ошибка синтеза
+        self._voice_spec = voice_spec
         self._words: queue.Queue = queue.Queue()
         self._thread: threading.Thread | None = None
         self._start()
+
+    # --- выбор голоса ---
+
+    def set_voice(self, spec: str) -> None:
+        """Поменять голос: sapi:auto, sapi:slow, gtts:co.uk и т.п."""
+        self._voice_spec = spec
 
     # --- поток диктора ---
 
@@ -87,39 +182,82 @@ class Speaker:
         self._thread.start()
 
     def _worker(self) -> None:
-        """Цикл диктора: создать голос и произносить слова из очереди."""
         ole32 = ctypes.windll.ole32
         ole32.CoInitialize(None)
-        voice = None
+        sapi = None
         try:
-            voice = _Voice()
-            self.voice = "SAPI SpVoice"
+            sapi = _SapiVoice()
+            self.voice = "SAPI + онлайн"
             self.ready = True
             while True:
                 text = self._words.get()
                 if text is None:  # команда на завершение
                     break
-                xml = f'<voice required="Language=409">{escape(text)}</voice>'
-                hr = voice.speak(xml)
-                if hr == 0:
-                    self.said_count += 1
-                    self.speech_error = None
-                else:
-                    # Нет английского голоса или SSML не понравился -
-                    # произносим как есть, голосом по умолчанию.
-                    hr = voice.speak(text, flags=0)
-                    if hr == 0:
-                        self.said_count += 1
-                        self.speech_error = "нет en-US голоса, читаю голосом по умолчанию"
-                    else:
-                        self.speech_error = f"Speak: {hr & 0xFFFFFFFF:#x}"
+                try:
+                    self._say_one(sapi, text)
+                except Exception as exc:  # одна фраза не должна убивать поток
+                    self.speech_error = str(exc)
         except OSError as exc:
             self.error = str(exc)
         finally:
-            if voice is not None:
-                voice.release()
+            if sapi is not None:
+                sapi.release()
             ole32.CoUninitialize()
             self.ready = False
+
+    def _say_one(self, sapi: _SapiVoice, text: str) -> None:
+        """Произнести одну фразу текущим голосом."""
+        spec = self._voice_spec
+        if spec.startswith("gtts:"):
+            tld = spec[5:]
+            try:
+                self._say_online(text, tld)
+                return
+            except OSError as exc:
+                # Нет сети или Google ответил ошибкой - честно говорим
+                # офлайн-голосом и пишем, почему.
+                self.speech_error = f"онлайн недоступен ({exc}), говорю офлайн"
+        # Офлайн: персонаж или конкретный установленный голос.
+        rate = pitch = 0
+        name = None
+        for persona, _label, r, p in PERSONAS:
+            if persona == spec:
+                rate, pitch = r, p
+                break
+        else:
+            if spec.startswith("sapi:") and spec != "sapi:auto":
+                name = spec[5:]
+        hr = sapi.speak(_ssml(text, name, rate, pitch))
+        if hr == 0:
+            self.said_count += 1
+            if self.speech_error and "онлайн" not in self.speech_error:
+                self.speech_error = None
+        else:
+            hr = sapi.speak(text, flags=0)
+            if hr == 0:
+                self.said_count += 1
+            else:
+                self.speech_error = f"Speak: {hr & 0xFFFFFFFF:#x}"
+
+    def _say_online(self, text: str, tld: str) -> None:
+        """Скачать озвучку у Google и проиграть через winmm."""
+        url = _TTS_URL.format(tld=tld) + urllib.parse.quote(text)
+        req = urllib.request.Request(url, headers=_USER_AGENT)
+        with urllib.request.urlopen(req, timeout=10) as response:
+            data = response.read()
+        if len(data) < 100:
+            raise OSError("пустой ответ Google TTS")
+        path = Path(tempfile.gettempdir()) / f"kisunchik_tts_{self.said_count}.mp3"
+        try:
+            path.write_bytes(data)
+            _play_mp3(str(path))
+        finally:
+            try:
+                path.unlink()
+            except OSError:
+                pass
+        self.said_count += 1
+        self.speech_error = None
 
     # --- наружу ---
 

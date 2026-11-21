@@ -24,6 +24,9 @@ class Settings:
     sound: bool = True             # озвучивать слова голосом
     walking: bool = True           # гулять по экрану самому
     autostart: bool = True         # запускаться вместе с Windows
+    voice: str = "sapi:auto"       # голос озвучки (sapi:* или gtts:*)
+    # Блоки слов, которые учить. None - все блоки (умолчание).
+    categories: list | None = None
 
 
 def load(path: Path) -> Settings:
