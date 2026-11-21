@@ -37,8 +37,11 @@ python run.py
 pyinstaller --onefile --windowed --name KisunchikPet --paths . --add-data "assets;assets" run.py
 ```
 
-Готовый exe появится в `dist\KisunchikPet.exe`. Рядом с exe будут лежать
-`settings.json` и `pet.log`.
+Собранный exe кладём в корень проекта: `kisunchik_pet\KisunchikPet.exe`
+(он в .gitignore - 39 МБ бинарника не место в git). На рабочем столе -
+только ярлык `Kisunchik.lnk`, создаётся скриптом `make_shortcut.ps1`.
+Настройки `settings.json` и журнал `pet.log` exe хранит рядом с собой,
+то есть в папке проекта.
 
 ## Структура
 
