@@ -189,17 +189,23 @@ class KisunchikApp:
             self._log("заснул")
             return
         if now >= self.next_walk_at:
-            # Прогулка по всем мониторам: область - весь виртуальный экран.
-            delta = self.policy.walk_delta(
-                self.window.pos_x + (self.window.win_w - self.window.cat_w),
-                self.screen.all.left,
-                self.screen.all.right - self.window.cat_w,
-            )
+            # Гуляем только по тому монитору, где котик сейчас сидит.
+            # Иначе он убегает в "пустоту": у соседнего монитора может
+            # быть другая высота, и там, где ходит котик, экрана нет.
+            cat_offset = self.window.win_w - self.window.cat_w
+            cat_x = self.window.pos_x + cat_offset
+            cat_y = self.window.pos_y + (self.window.win_h - self.window.cat_h)
+            area = self.screen.area_at(cat_x + self.window.cat_w // 2,
+                                       cat_y + self.window.cat_h // 2)
+            target = self.policy.walk_target(
+                cat_x, area.left, area.right - self.window.cat_w)
+            delta = target - cat_x
             if delta:
-                self.walk_target = self.window.pos_x + delta
+                self.walk_target = target - cat_offset
                 self.state = "running_left" if delta < 0 else "running_right"
                 self.frame = 0
-                self._log(f"пошёл гулять: {self.state}, цель {self.walk_target}")
+                self._log(f"пошёл гулять: {self.state}, цель {self.walk_target}, "
+                          f"монитор {area}")
             self.next_walk_at = now + self.policy.next_walk_delay()
             return
         if now >= self.next_word_at and idle_for > 20:

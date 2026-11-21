@@ -42,12 +42,12 @@ class BehaviorPolicy:
     def next_word_delay(self) -> float:
         return self._rng.uniform(*self.word_period)
 
-    def walk_delta(self, pos_x: int, area_left: int, area_right: int) -> int:
-        """На сколько пикселей прогуляться, не выходя за края области.
-
-        area_left, area_right - допустимый диапазон левой координаты окна
-        (обычно весь виртуальный экран, чтобы котик ходил на все мониторы).
-        """
+    def walk_target(self, cat_x: int, area_left: int, area_right: int) -> int:
+        """Куда прогуляться: абсолютная координата левого края котика,
+        не выходящая за пределы монитора [area_left, area_right]."""
         span = self._rng.choice([-1, 1]) * self._rng.randint(*self.walk_span)
-        target = max(area_left, min(area_right, pos_x + span))
-        return target - pos_x
+        return max(area_left, min(area_right, cat_x + span))
+
+    def walk_delta(self, pos_x: int, area_left: int, area_right: int) -> int:
+        """На сколько пикселей прогуляться (старый интерфейс)."""
+        return self.walk_target(pos_x, area_left, area_right) - pos_x

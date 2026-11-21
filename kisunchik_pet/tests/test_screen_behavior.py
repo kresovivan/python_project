@@ -42,6 +42,50 @@ class TestVirtualScreenReal(unittest.TestCase):
         self.assertGreater(vs.all.width, 0)
 
 
+class TestMonitorChoice(unittest.TestCase):
+    """Раскладка как у пользователя: главный монитор 3840x2160 внизу,
+    второй 3072x1920 справа и ВЫШЕ (низ у него на y=1436)."""
+
+    def _screen(self):
+        return VirtualScreen(monitors=[
+            ScreenArea(3840, -484, 6912, 1436),   # правый, поднят выше
+            ScreenArea(0, 0, 3840, 2160),          # главный
+        ])
+
+    def test_area_at_bottom_of_primary(self):
+        """Точка у нижнего края главного монитора - это главный монитор."""
+        vs = self._screen()
+        area = vs.area_at(3600, 1900)
+        self.assertEqual(area, ScreenArea(0, 0, 3840, 2160))
+
+    def test_area_at_second_monitor(self):
+        vs = self._screen()
+        area = vs.area_at(5000, 500)
+        self.assertEqual(area, ScreenArea(3840, -484, 6912, 1436))
+
+    def test_dead_space_below_second_monitor(self):
+        """Под вторым монитором (x>3840, y>1436) экрана нет - точка
+        должна относиться к ближайшему монитору, а не к "всем сразу"."""
+        vs = self._screen()
+        area = vs.area_at(5000, 1900)
+        # Ближайший - правый монитор (его низ 1436 ближе, чем правый край
+        # главного 3840).
+        self.assertEqual(area, ScreenArea(3840, -484, 6912, 1436))
+
+    def test_walk_never_leaves_current_monitor(self):
+        """Котик внизу главного монитора гуляет только по главному:
+        цель прогулки не уходит за его правый край."""
+        vs = self._screen()
+        policy = BehaviorPolicy(rng=random.Random(11))
+        cat_w = 192
+        for _ in range(200):
+            cat_x = 3608  # котик у правого края главного монитора
+            area = vs.area_at(cat_x + cat_w // 2, 1884 + 100)
+            target = policy.walk_target(cat_x, area.left, area.right - cat_w)
+            self.assertLessEqual(target, area.right - cat_w,
+                                 "котик убежал за край своего монитора")
+
+
 class TestBehaviorPolicy(unittest.TestCase):
     def test_walk_delta_stays_inside(self):
         """Прогулка никогда не выводит котика за пределы всех мониторов."""
