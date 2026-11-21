@@ -13,6 +13,7 @@ from pathlib import Path
 
 from PIL import Image
 
+from core import autostart
 from core.atlas import SpriteAtlas
 from core.behavior import BehaviorPolicy
 from core.bubble import BubbleImage
@@ -47,11 +48,22 @@ class KisunchikApp:
 
     def __init__(self, assets_dir: Path, scale: float = 0.5, log_path: Path | None = None,
                  clock=None, idle_probe=None, settings: Settings | None = None,
-                 settings_path: Path | None = None):
+                 settings_path: Path | None = None, autostart_sync=None,
+                 autostart_check=None):
         # clock и idle_probe подменяются в тестах: так проверяем поведение
         # за "часы" виртуального времени, не ожидая их по-настоящему.
+        # autostart_sync в тестах подменяется заглушкой, чтобы тесты
+        # не трогали настоящий реестр.
         self._clock = clock or time.monotonic
         self._idle_probe = idle_probe or system_idle_seconds
+        self._autostart_sync = autostart_sync or autostart.apply
+        if autostart_check is not None:
+            self._autostart_check = autostart_check
+        elif autostart_sync is not None:
+            # В тестах реестр не читаем: считаем, что всё получилось.
+            self._autostart_check = lambda: self.settings.autostart
+        else:
+            self._autostart_check = autostart.is_enabled
         self._log_path = log_path
         self.settings = settings or Settings()
         self._settings_path = settings_path
@@ -121,6 +133,27 @@ class KisunchikApp:
         self.policy.fun_period = (s.fun_every * 0.6, s.fun_every * 1.4)
         self.policy.walk_delay = (s.walk_every * 0.6, s.walk_every * 1.4)
         self.policy.word_period = (s.word_every * 0.7, s.word_every * 1.3)
+        # Автозапуск: приводим реестр в соответствие с настройкой.
+        # Ошибки реестра не должны ронять котика - просто пишем в журнал.
+        try:
+            self._autostart_sync(s.autostart)
+        except OSError as exc:
+            self._log(f"автозапуск не настроился: {exc}")
+        # Проверяем факт: антивирус может молча запретить запись.
+        # Галочка в меню не должна врать - откатываем настройку.
+        try:
+            actual = self._autostart_check()
+        except OSError:
+            actual = s.autostart
+        if actual != s.autostart:
+            self._log(f"автозапуск: просили {s.autostart}, по факту {actual} "
+                      f"(вероятно, антивирус запретил)")
+            s.autostart = actual
+            if self._settings_path:
+                from core.settings import save
+                save(self._settings_path, s)
+            if hasattr(self.window, "autostart_var"):
+                self.window.autostart_var.set(actual)
         # Размер котика: пересобираем кадры в новом масштабе.
         if abs(self.atlas.out_width - int(self.atlas.frame_width * s.scale)) > 1:
             self.atlas = SpriteAtlas(self._assets_dir / "pet.json",
@@ -218,6 +251,13 @@ class KisunchikApp:
                 walking=bool(self.window.walking_var.get())))
         self.window.walking_var.set(s.walking)
 
+        m.add_checkbutton(
+            label="Запускать вместе с Windows",
+            variable=self.window.autostart_var,
+            command=lambda: self.change_settings(
+                autostart=bool(self.window.autostart_var.get())))
+        self.window.autostart_var.set(s.autostart)
+
         m.add_separator()
         m.add_command(label="Выход", command=self._exit)
 
@@ -250,11 +290,13 @@ class KisunchikApp:
     # --- реакции на мышь ---
 
     def _on_zone(self, zone: str) -> None:
-        # Любой клик будит спящего котика.
+        # Любой клик будит спящего котика - и сразу выполняет действие
+        # зоны: человек кликнул с намерением, обижать его не надо.
+        self._log(f"клик: {zone}, спал={self.sleeping}")
         if self.sleeping:
             self.sleeping = False
-            self._play_once("paw_wave")
-            return
+            self.state = "idle"
+            self.frame = 0
         if zone == "head":
             # Голова: новое слово с переводом.
             self.show_word()
@@ -265,7 +307,12 @@ class KisunchikApp:
             if self._card_word is None:
                 self.show_word()
             if self.settings.sound:
-                self.speaker.say(self._card_word.en)
+                said = self.speaker.say(self._card_word.en)
+                if not said:
+                    # Диктор мог не успеть запуститься или умереть -
+                    # пробуем поднять его заново.
+                    self._log(f"озвучка не сработала: {self.speaker.error}, перезапуск")
+                    self.speaker.restart()
             self._card_until = self._clock() + CARD_SECONDS
             self._play_once("somersault")
         elif zone == "tail":
@@ -437,4 +484,8 @@ class KisunchikApp:
                   f"позиция={self.window.pos_x},{self.window.pos_y}, "
                   f"экраны: {self.screen.all}")
         self.tick()
+        # Диктор поднимается в фоне - запишем в журнал, как он себя чувствует.
+        self.window.root.after(2000, lambda: self._log(
+            f"диктор: готов={self.speaker.ready}, голос={self.speaker.voice}, "
+            f"ошибка={self.speaker.error}"))
         self.window.root.mainloop()

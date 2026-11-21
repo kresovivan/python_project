@@ -13,8 +13,12 @@ python run.py
 
 или двойной клик по `Запустить Кисунчика.bat` (запуск без окна консоли).
 
-Автозагрузка Windows уже прописана в реестре
+Автозагрузка Windows включается и выключается галочкой в меню настроек
+("Запускать вместе с Windows"). Запись живёт в реестре
 (`HKCU\Software\Microsoft\Windows\CurrentVersion\Run`, значение `KisunchikPet`).
+Если антивирус запрещает программе менять автозапуск - котик честно
+возвращает галочку обратно и пишет об этом в `pet.log`; тогда запись
+можно поправить вручную или разрешить программе в антивирусе.
 
 ## Управление
 
@@ -28,14 +32,16 @@ python run.py
 ## Настройки (правый клик по котику)
 
 Размер котика, время засыпания, частота затей и прогулок, автопоказ слов,
-озвучка голосом, самостоятельные прогулки. Хранятся в `settings.json`
-рядом с программой, применяются сразу.
+озвучка голосом, самостоятельные прогулки, автозапуск с Windows.
+Хранятся в `settings.json` рядом с программой, применяются сразу.
 
 ## Сборка exe
 
 ```text
-pyinstaller --onefile --windowed --name KisunchikPet --paths . --add-data "assets;assets" run.py
+pyinstaller --onefile --windowed --name KisunchikPet --paths . --icon assets/icon.ico --add-data "assets;assets" run.py
 ```
+
+Иконка собирается из мордочки котика скриптом `tools/make_icon.py`.
 
 Собранный exe кладём в корень проекта: `kisunchik_pet\KisunchikPet.exe`
 (он в .gitignore - 39 МБ бинарника не место в git). На рабочем столе -
@@ -53,6 +59,7 @@ pyinstaller --onefile --windowed --name KisunchikPet --paths . --add-data "asset
 | `core/speech.py` | `Speaker` - озвучка через PowerShell System.Speech |
 | `core/bubble.py` | `BubbleImage` - рисует пузырь с текстом в PIL |
 | `core/behavior.py` | `BehaviorPolicy` - когда гулять и баловаться |
+| `core/autostart.py` | автозапуск: реестр, reg.exe или ярлык в автозагрузке |
 | `gui/screen.py` | `VirtualScreen`, `ScreenArea` - все мониторы одним прямоугольником |
 | `gui/renderer.py` | `LayeredRenderer` - прозрачное окно через UpdateLayeredWindow |
 | `gui/window.py` | `PetWindow` - окно tkinter: мышь, меню, зоны клика |
@@ -66,6 +73,7 @@ pyinstaller --onefile --windowed --name KisunchikPet --paths . --add-data "asset
 python -m unittest discover -s tests -t .
 ```
 
-23 теста: атлас, репетитор, пузырь, границы мониторов, а также живые
-проверки на реальном экране (окно рисует красный квадрат - снимок экрана
-обязан его увидеть) и готовность английского голоса.
+54 теста: атлас, репетитор, пузырь, настройки, автозапуск (с поддельным
+реестром), поведение на виртуальном времени, а также живые проверки на
+реальном экране (окно рисует красный квадрат - снимок экрана обязан его
+увидеть) и готовность английского голоса.

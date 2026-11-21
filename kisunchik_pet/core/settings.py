@@ -23,6 +23,7 @@ class Settings:
     word_every: float = 420        # автопоказ слов: раз в столько секунд
     sound: bool = True             # озвучивать слова голосом
     walking: bool = True           # гулять по экрану самому
+    autostart: bool = True         # запускаться вместе с Windows
 
 
 def load(path: Path) -> Settings:

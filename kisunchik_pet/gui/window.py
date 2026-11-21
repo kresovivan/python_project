@@ -102,6 +102,7 @@ class PetWindow:
         self.auto_words_var = tk.IntVar(value=1)
         self.sound_var = tk.IntVar(value=1)
         self.walking_var = tk.IntVar(value=1)
+        self.autostart_var = tk.IntVar(value=1)
 
     # --- координаты ---
 

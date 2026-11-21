@@ -101,3 +101,17 @@ class Speaker:
             except (OSError, subprocess.TimeoutExpired):
                 self._process.kill()
                 self._process.wait()
+
+    def restart(self) -> None:
+        """Перезапустить диктора, если он умер или не поднялся."""
+        with self._lock:
+            self.ready = False
+            self.error = None
+            old = self._process
+            self._process = None
+        if old and old.poll() is None:
+            try:
+                old.kill()
+            except OSError:
+                pass
+        threading.Thread(target=self._start, daemon=True).start()

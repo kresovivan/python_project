@@ -54,7 +54,7 @@ class TestApplySettings(unittest.TestCase):
 
         s = Settings(sleep_after_idle=60, fun_every=20, walk_every=30)
         app = KisunchikApp(ASSETS, clock=FakeClock(), idle_probe=lambda: 0.0,
-                           settings=s)
+                           settings=s, autostart_sync=lambda on: None)
         try:
             self.assertEqual(app.policy.sleep_after_idle, 60)
             self.assertEqual(app.policy.fun_period, (12.0, 28.0))
@@ -76,7 +76,8 @@ class TestApplySettings(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "settings.json"
             app = KisunchikApp(ASSETS, clock=FakeClock(), idle_probe=lambda: 0.0,
-                               settings=Settings(), settings_path=path)
+                               settings=Settings(), settings_path=path,
+                               autostart_sync=lambda on: None)
             try:
                 app.change_settings(sound=False, scale=0.5)
                 on_disk = load(path)

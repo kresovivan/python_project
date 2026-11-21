@@ -37,7 +37,8 @@ class TestPetBehavior(unittest.TestCase):
         # Пользователь "активен" (idle=0) - раньше котик в таком режиме
         # ничего не делал вообще, это и был баг.
         cls.app = KisunchikApp(ASSETS, scale=0.5, clock=cls.clock,
-                               idle_probe=lambda: 0.0)
+                               idle_probe=lambda: 0.0,
+                               autostart_sync=lambda on: None)
         # Не рисуем по-настоящему: подменяем отрисовку заглушкой.
         cls.app.renderer.push = lambda *a, **k: True
 
@@ -58,8 +59,11 @@ class TestPetBehavior(unittest.TestCase):
 
     def test_cat_walks_while_user_active(self):
         """Котик гуляет, даже когда пользователь сидит за компьютером."""
+        # Отводим котика от края экрана: у края случайная цель прогулки
+        # может совпасть с текущей позицией, и прогулка не начнётся.
+        self.app.window.pos_x = 1000
         start_x = self.app.window.pos_x
-        seen = self._live(180)
+        seen = self._live(240)
         self.assertTrue(
             any(s in ("running_left", "running_right") for s in seen),
             "за 3 минуты котик ни разу не пошёл гулять")
@@ -105,6 +109,18 @@ class TestPetBehavior(unittest.TestCase):
         """
         pushes = []
         self.app.renderer.push = lambda *a, **k: pushes.append(1) or True
+        # Спокойный idle без сюрпризов: отменяем все запланированные
+        # затеи, иначе случайная лапка в середине замера даст лишние
+        # (законные) перерисовки и тест будет мерцать.
+        self.app.one_shot = None
+        self.app.walk_target = None
+        self.app.sleeping = False
+        self.app.state = "idle"
+        self.app.frame = 0
+        far = self.clock.now + 10000
+        self.app.next_fun_at = far
+        self.app.next_walk_at = far
+        self.app.next_word_at = far
         # Одна секунда обычного idle: 10 тиков, кадров idle ~6 fps,
         # значит перерисовок должно быть заметно меньше, чем тиков.
         self._live(1.0)
@@ -117,7 +133,8 @@ class TestPetSleep(unittest.TestCase):
         """Если пользователя долго нет - котик дремлет и засыпает."""
         clock = FakeClock()
         app = KisunchikApp(ASSETS, scale=0.5, clock=clock,
-                           idle_probe=lambda: 10000.0)  # давно никого
+                           idle_probe=lambda: 10000.0,  # давно никого
+                           autostart_sync=lambda on: None)
         app.renderer.push = lambda *a, **k: True
         try:
             for _ in range(200):
@@ -137,7 +154,8 @@ class TestPetSleep(unittest.TestCase):
         """Спящий котик просыпается от клика."""
         clock = FakeClock()
         app = KisunchikApp(ASSETS, scale=0.5, clock=clock,
-                           idle_probe=lambda: 10000.0)
+                           idle_probe=lambda: 10000.0,
+                           autostart_sync=lambda on: None)
         app.renderer.push = lambda *a, **k: True
         try:
             for _ in range(300):
@@ -148,6 +166,41 @@ class TestPetSleep(unittest.TestCase):
             self.assertFalse(app.sleeping, "котик не проснулся от клика")
         finally:
             app.speaker.close()
+            app.window.root.destroy()
+
+    def test_sleeping_belly_click_still_speaks(self):
+        """Клик по животику спящего котика будит его И произносит слово.
+
+        Раньше первый клик только будил котика, а слово не звучало -
+        выглядело как "озвучка сломалась".
+        """
+        clock = FakeClock()
+        app = KisunchikApp(ASSETS, scale=0.5, clock=clock,
+                           idle_probe=lambda: 10000.0,
+                           autostart_sync=lambda on: None)
+        app.renderer.push = lambda *a, **k: True
+        said = []
+
+        class FakeSpeaker:
+            error = None
+            def say(self, text):
+                said.append(text)
+                return True
+            def close(self):
+                pass
+
+        try:
+            for _ in range(300):
+                clock.advance(0.2)
+                app.tick()
+            self.assertTrue(app.sleeping)
+            app.speaker.close()
+            app.speaker = FakeSpeaker()
+            app._on_zone("belly")
+            self.assertFalse(app.sleeping)
+            self.assertTrue(said, "котик промолчал после клика по животику")
+            self.assertIsNotNone(app._card_word, "карточка со словом не появилась")
+        finally:
             app.window.root.destroy()
 
 
