@@ -15,6 +15,11 @@ import subprocess
 import threading
 
 # Скрипт PowerShell: выбирает английский голос и читает строки из stdin.
+# Речь идёт синхронным Speak: проверено на машине пользователя, что
+# асинхронный SpeakAsync в фоновом процессе без окна молчит - слова
+# "произносятся" без единой ошибки, но звука нет. Синхронный вариант
+# блокирует цикл на время фразы (секунда-две) - для нас это плюс:
+# следующие слова терпеливо ждут в канале и не сбивают друг друга.
 _SPEAK_SCRIPT = r"""
 Add-Type -AssemblyName System.Speech
 $s = New-Object System.Speech.Synthesis.SpeechSynthesizer
@@ -25,8 +30,7 @@ else { [Console]::Out.WriteLine('NOVOICE') }
 while ($true) {
     $line = [Console]::In.ReadLine()
     if ($line -eq $null) { break }
-    $s.SpeakAsyncCancelAll()
-    if ($line -ne 'STOP') { [void]$s.SpeakAsync($line) }
+    if ($line -ne 'STOP') { $s.Speak($line) }
 }
 """
 
