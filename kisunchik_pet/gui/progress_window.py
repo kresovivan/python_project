@@ -67,6 +67,19 @@ class ProgressWindow:
         tk.Label(self.win, text="Блоки слов", bg=BG, fg=TEXT,
                  font=self.f_bold).pack(anchor="w", padx=16)
 
+        # Активный словарь: слова, которые уже крутятся в обучении.
+        tk.Label(self.win, text="Активный словарь (сказано / показано)",
+                 bg=BG, fg=TEXT, font=self.f_bold).pack(anchor="w",
+                                                       padx=16, pady=(8, 0))
+        self.vocab_text = tk.Text(
+            self.win, height=4, wrap="word", bg="#FFF3E4", fg=TEXT,
+            font=self.f_text, relief="flat", padx=8, pady=6,
+            cursor="arrow", highlightthickness=0)
+        self.vocab_text.pack(padx=16, fill="x", pady=(2, 8))
+        self.vocab_text.tag_configure("said", foreground=FILL_DARK)
+        self.vocab_text.tag_configure("new", foreground=SUBTLE)
+        self.vocab_text.configure(state="disabled")
+
         # Прокручиваемый список блоков из обычных виджетов.
         frame = tk.Frame(self.win, bg=BG)
         frame.pack(fill="both", expand=True, padx=16, pady=(0, 6))
@@ -116,7 +129,32 @@ class ProgressWindow:
     def refresh(self) -> None:
         """Перерисовать оба графика свежими данными."""
         self._draw_week()
+        self._draw_vocab()
         self._draw_categories()
+
+    def _draw_vocab(self) -> None:
+        """Активный словарь: топ слов по произношениям и показам."""
+        stats = self._progress.word_stats()
+        top = sorted(stats.items(),
+                     key=lambda kv: (-kv[1].get("said", 0),
+                                     -kv[1].get("shown", 0), kv[0]))[:40]
+        t = self.vocab_text
+        t.configure(state="normal")
+        t.delete("1.0", "end")
+        if not top:
+            t.insert("end", "Пока пусто. Кликните котику по голове "
+                            "(новое слово) и по животику (он скажет его "
+                            "вслух) - словарь начнёт копиться.", ("new",))
+        else:
+            for en, st in top:
+                said = int(st.get("said", 0))
+                shown = int(st.get("shown", 0))
+                tag = "said" if said else "new"
+                word = self._tutor.word_by_en(en)
+                ru = word.ru if word else ""
+                line = f"{en} ({ru}) {said}/{shown}    " if ru else f"{en} {said}/{shown}    "
+                t.insert("end", line, (tag,))
+        t.configure(state="disabled")
 
     def _draw_week(self) -> None:
         """Столбики активности по дням недели."""
