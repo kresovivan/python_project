@@ -17,6 +17,7 @@ from core import autostart
 from core.atlas import SpriteAtlas
 from core.behavior import BehaviorPolicy
 from core.bubble import BubbleImage
+from core.progress import ProgressStore
 from core.settings import Settings
 from core.speech import Speaker
 from core.tutor import EnglishTutor
@@ -26,8 +27,16 @@ from gui.window import PetWindow
 
 TICK_MS = 30          # перерисовка кадра
 CARD_SECONDS = 9.0    # сколько висит карточка со словом
-BUBBLE_WIDTH = 470    # ширина пузыря
+BUBBLE_WIDTH = 470    # минимальная ширина пузыря (дальше он растёт под текст)
 BUBBLE_GAP = 12       # отступ пузыря от края окна
+
+# Цвета меню: сливки и карамель под рыжего котика.
+MENU_STYLE = dict(
+    bg="#FFF9F1", fg="#4A3226",
+    activebackground="#F0913C", activeforeground="#FFFFFF",
+    disabledforeground="#B8A99B", selectcolor="#E87E2B",
+    font=("Segoe UI", 10),
+)
 
 
 class LASTINPUTINFO(ctypes.Structure):
@@ -49,7 +58,7 @@ class KisunchikApp:
     def __init__(self, assets_dir: Path, scale: float = 0.5, log_path: Path | None = None,
                  clock=None, idle_probe=None, settings: Settings | None = None,
                  settings_path: Path | None = None, autostart_sync=None,
-                 autostart_check=None):
+                 autostart_check=None, progress_path: Path | None = None):
         # clock и idle_probe подменяются в тестах: так проверяем поведение
         # за "часы" виртуального времени, не ожидая их по-настоящему.
         # autostart_sync в тестах подменяется заглушкой, чтобы тесты
@@ -70,8 +79,12 @@ class KisunchikApp:
         self._assets_dir = assets_dir
         scale = self.settings.scale  # настройка важнее параметра
         self.atlas = SpriteAtlas(assets_dir / "pet.json", assets_dir / "spritesheet.png", scale)
+        # Дневник обучения: помнит, на каком слове остановились,
+        # даже если выключили котика или компьютер.
+        self.progress = ProgressStore(progress_path) if progress_path else None
         self.tutor = EnglishTutor(assets_dir / "words.json",
-                                  assets_dir / "categories.json")
+                                  assets_dir / "categories.json",
+                                  progress=self.progress)
         self.speaker = Speaker()
         self.policy = BehaviorPolicy()
         self.screen = VirtualScreen()
@@ -81,10 +94,13 @@ class KisunchikApp:
         self.window.on_zone = self._on_zone
         self.window.on_double = lambda: self._play_once("celebrate")
         self.window.on_exit = self._exit
+        # Перед показом меню перестраиваем его: подписи блоков несут
+        # свежие цифры прогресса.
+        self.window.on_menu = self._build_menu
         self._build_menu()
         self.apply_settings()
 
-        self.bubble_maker = BubbleImage(width=BUBBLE_WIDTH)
+        self.bubble_maker = BubbleImage(min_width=BUBBLE_WIDTH, max_width=780)
 
         # Текущее состояние анимации.
         self.state = "idle"
@@ -198,15 +214,25 @@ class KisunchikApp:
 
     def _build_menu(self) -> None:
         """Меню по правому клику: все настройки, которые имеет смысл
-        менять пользователю."""
+        менять пользователю.
+
+        Перестраивается при каждом открытии (см. on_menu в PetWindow):
+        подписи блоков слов показывают свежий прогресс "пройдено/всего".
+        """
         import tkinter as tk
         m = self.window.menu
         s = self.settings
         m.delete(0, "end")
+        m.config(**MENU_STYLE)
+
+        def sub(parent) -> tk.Menu:
+            """Подменю в общем стиле: сливки и карамель."""
+            return tk.Menu(parent, tearoff=0, **MENU_STYLE)
+
         m.add_command(label="Кисунчик", state="disabled")
         m.add_separator()
 
-        size_menu = tk.Menu(m, tearoff=0)
+        size_menu = sub(m)
         for label, val in [("Мелкий", 0.5), ("Средний", 0.75), ("Крупный", 1.0)]:
             size_menu.add_radiobutton(
                 label=label, value=val,
@@ -215,7 +241,7 @@ class KisunchikApp:
         m.add_cascade(label="Размер котика", menu=size_menu)
         self.window.size_var.set(s.scale)
 
-        sleep_menu = tk.Menu(m, tearoff=0)
+        sleep_menu = sub(m)
         for label, val in [("1 минуту", 60), ("3 минуты", 180),
                            ("5 минут", 300), ("10 минут", 600)]:
             sleep_menu.add_radiobutton(
@@ -225,7 +251,7 @@ class KisunchikApp:
         m.add_cascade(label="Засыпает после тишины", menu=sleep_menu)
         self.window.sleep_var.set(s.sleep_after_idle)
 
-        fun_menu = tk.Menu(m, tearoff=0)
+        fun_menu = sub(m)
         for label, val in [("Редко", 90), ("Обычно", 40), ("Часто", 20)]:
             fun_menu.add_radiobutton(
                 label=label, value=val,
@@ -234,7 +260,7 @@ class KisunchikApp:
         m.add_cascade(label="Затеи (рыбка, лапка...)", menu=fun_menu)
         self.window.fun_var.set(s.fun_every)
 
-        walk_menu = tk.Menu(m, tearoff=0)
+        walk_menu = sub(m)
         for label, val in [("Редко", 120), ("Обычно", 55), ("Часто", 30)]:
             walk_menu.add_radiobutton(
                 label=label, value=val,
@@ -243,7 +269,7 @@ class KisunchikApp:
         m.add_cascade(label="Прогулки по экрану", menu=walk_menu)
         self.window.walk_var.set(s.walk_every)
 
-        word_menu = tk.Menu(m, tearoff=0)
+        word_menu = sub(m)
         for label, val in [("Каждые 3 мин", 180), ("Каждые 7 мин", 420),
                            ("Каждые 15 мин", 900)]:
             word_menu.add_radiobutton(
@@ -269,7 +295,7 @@ class KisunchikApp:
 
         # Голос озвучки: офлайн-персонажи Windows и онлайн-голоса Google.
         from core.speech import voice_choices
-        voice_menu = tk.Menu(m, tearoff=0)
+        voice_menu = sub(m)
         for spec, label in voice_choices():
             voice_menu.add_radiobutton(
                 label=label, value=spec,
@@ -282,22 +308,31 @@ class KisunchikApp:
         # Галочек много - кладём их в каскад по группам (темы, части речи...).
         groups = self.tutor.category_groups()
         if groups:
-            words_menu = tk.Menu(m, tearoff=0)
-            group_titles = {"topics": "Темы", "speech": "Части речи",
-                            "style": "Фразы и стиль"}
+            words_menu = sub(m)
+            group_titles = {"basics": "Азбука и основы", "topics": "Темы",
+                            "speech": "Части речи", "style": "Фразы и стиль"}
             enabled = set(s.categories) if s.categories is not None else None
             for group_key, cats in groups.items():
-                sub = tk.Menu(words_menu, tearoff=0)
+                sub_menu = sub(words_menu)
                 for cat in cats:
                     var = tk.IntVar(
                         value=1 if enabled is None or cat["id"] in enabled else 0)
                     self.window.cat_vars[cat["id"]] = var
-                    sub.add_checkbutton(
-                        label=cat["title"], variable=var,
+                    # Подпись с прогрессом: видно, где продолжить,
+                    # а где начать с нуля. "не начата" - для нуля.
+                    done, total = self.tutor.category_status(cat["id"])
+                    note = f"{done}/{total}" if done else f"не начата, {total}"
+                    sub_menu.add_checkbutton(
+                        label=f'{cat["title"]}  ({note})', variable=var,
                         command=self._apply_category_choice)
                 words_menu.add_cascade(
-                    label=group_titles.get(group_key, group_key), menu=sub)
+                    label=group_titles.get(group_key, group_key), menu=sub_menu)
             m.add_cascade(label="Что учить", menu=words_menu)
+
+        # Табло прогресса: графики по блокам и дням недели.
+        if self.progress is not None:
+            m.add_command(label="Прогресс обучения...",
+                          command=self.show_progress)
 
         m.add_checkbutton(
             label="Гуляет по экрану сам",
@@ -332,8 +367,14 @@ class KisunchikApp:
 
     def show_word(self, word=None) -> None:
         """Показать пузырь со словом рядом с котиком."""
-        word = word or self.tutor.next_word()
+        if word is None:
+            word = self.tutor.next_word()  # само отметится в дневнике
+        elif self.progress is not None:
+            # Слово задано извне (например, последнее из прошлого сеанса).
+            self.progress.mark_shown(word.en)
         self._card_word = word
+        if self.progress is not None:
+            self.progress.save()  # пишет только при изменениях
         # В подзаголовке - транскрипция и название блока: видно,
         # из какой темы слово.
         cat_title = self.tutor.category_title(word.category)
@@ -365,6 +406,17 @@ class KisunchikApp:
         if self.window.win_w == self.window.cat_w:
             self.window.resize_for_bubble(bw + BUBBLE_GAP, max(0, bh - self.window.cat_h + BUBBLE_GAP))
 
+    def show_progress(self) -> None:
+        """Открыть табло прогресса обучения (одно окно на приложение)."""
+        from gui.progress_window import ProgressWindow
+        win = getattr(self, "_progress_window", None)
+        if win is not None and win.is_alive():
+            win.refresh()
+            win.win.lift()
+            return
+        self._progress_window = ProgressWindow(self.window.root, self.tutor,
+                                               self.progress)
+
     def hide_word(self) -> None:
         """Убрать пузырь и вернуть окно к размеру котика."""
         self._card_word = None
@@ -394,6 +446,9 @@ class KisunchikApp:
                 self.show_word()
             if self.settings.sound:
                 said = self.speaker.say(self._card_word.en)
+                if said and self.progress is not None:
+                    self.progress.mark_said(self._card_word.en)
+                    self.progress.save()
                 if not said:
                     # Диктор мог не успеть запуститься или умереть -
                     # пробуем поднять его заново.
@@ -462,7 +517,10 @@ class KisunchikApp:
                 cat_x, area.left, area.right - self.window.cat_w)
             delta = target - cat_x
             if delta:
-                self.walk_target = target - cat_offset
+                # Цель храним в координатах КОТИКА, а не окна: иначе
+                # появление пузыря (окно шире, сдвиг влево) уводило
+                # котика за правый край экрана.
+                self.walk_target = target
                 self.state = "running_left" if delta < 0 else "running_right"
                 self.frame = 0
                 self._log(f"пошёл гулять: {self.state}, цель {self.walk_target}, "
@@ -496,16 +554,20 @@ class KisunchikApp:
         self.last_frame_at += steps * interval
 
         if self.walk_target is not None:
-            # Идём к цели: 3 пикселя на кадр.
-            direction = 1 if self.walk_target > self.window.pos_x else -1
-            self.window.pos_x += direction * 3 * steps
-            done = (direction > 0 and self.window.pos_x >= self.walk_target) or \
-                   (direction < 0 and self.window.pos_x <= self.walk_target)
+            # Идём к цели: 3 пикселя на кадр. Цель - в координатах
+            # котика; окно может быть шире котика (пузырь слева).
+            cat_offset = self.window.win_w - self.window.cat_w
+            cat_x = self.window.pos_x + cat_offset
+            direction = 1 if self.walk_target > cat_x else -1
+            cat_x += direction * 3 * steps
+            done = (direction > 0 and cat_x >= self.walk_target) or \
+                   (direction < 0 and cat_x <= self.walk_target)
             if done:
-                self.window.pos_x = self.walk_target
+                cat_x = self.walk_target
                 self.walk_target = None
                 self.state = "idle"
                 self.frame = 0
+            self.window.pos_x = cat_x - cat_offset
         if self.one_shot:
             self.frame += steps
             if self.frame >= self.atlas.info(self.state).frames:
@@ -520,6 +582,37 @@ class KisunchikApp:
                 self.frame = 0
         else:
             self.frame = (self.frame + steps) % self.atlas.info(self.state).frames
+
+    def _keep_on_screen(self) -> None:
+        """Страховка: котик всегда целиком на каком-то мониторе.
+
+        Срабатывает в каждом кадре и ловит все пути, которыми котик
+        мог уползти за край: гонка прогулки и пузыря, перетаскивание
+        на стык мониторов разной высоты, смена масштаба. Сначала окно
+        поджимается к виртуальному экрану целиком, потом сам котик -
+        к своему монитору; котик важнее пузыря.
+        """
+        w = self.window
+        # Окно целиком - внутри виртуального экрана.
+        nx, ny = self.screen.all.clamp(w.pos_x, w.pos_y, w.win_w, w.win_h)
+        if (nx, ny) != (w.pos_x, w.pos_y):
+            w.pos_x, w.pos_y = nx, ny
+        # Котик целиком - внутри своего монитора.
+        cat_off_x = w.win_w - w.cat_w
+        cat_off_y = w.win_h - w.cat_h
+        cat_x = w.pos_x + cat_off_x
+        cat_y = w.pos_y + cat_off_y
+        area = self.screen.area_at(cat_x + w.cat_w // 2, cat_y + w.cat_h // 2)
+        nx, ny = area.clamp(cat_x, cat_y, w.cat_w, w.cat_h)
+        if (nx, ny) != (cat_x, cat_y):
+            w.pos_x = nx - cat_off_x
+            w.pos_y = ny - cat_off_y
+            if self.walk_target is not None:
+                # Цель стала недостижимой - прекращаем прогулку.
+                self.walk_target = None
+                if self.state in ("running_left", "running_right"):
+                    self.state = "idle"
+                    self.frame = 0
 
     def _compose(self, cat_frame) -> Image.Image:
         """Собрать картинку окна: пузырь слева сверху, котик в углу."""
@@ -536,6 +629,7 @@ class KisunchikApp:
         now = self._clock()
         self._amuse_self(now)
         self._advance_frame(now)
+        self._keep_on_screen()
         if self._card_image is not None and now >= self._card_until:
             self.hide_word()
         # Перерисовываем окно, только если что-то реально изменилось:
@@ -567,6 +661,8 @@ class KisunchikApp:
 
     def _exit(self) -> None:
         self._running = False
+        if self.progress is not None:
+            self.progress.save(force=True)  # дневник - на диск перед сном
         self.speaker.close()
         self.window.root.destroy()
 

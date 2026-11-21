@@ -50,6 +50,7 @@ def main() -> None:
         log_path=BASE_DIR / "pet.log",
         settings=load(settings_path),
         settings_path=settings_path,
+        progress_path=BASE_DIR / "progress.json",
     )
     app.run()
 

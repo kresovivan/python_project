@@ -13,67 +13,19 @@
 #
 # Классы-помощники здесь же: это правила проверки данных, а не программы,
 # поэтому им место в тестах, а не в core/.
+#
+# Списки слогов, разбиение на слоги и убирание тонов — в core/pinyin_utils.py
+# (единый источник правды, чтобы не копировать между core/pinyin_ru.py и тестом).
 
 import re
-import unicodedata
 import unittest
-from functools import lru_cache
 
 from core import grammar_zh, pinyin
+from core.pinyin_utils import bare as plain, split_syllables
 from tests.support import ROOT
-
-INITIALS = "b p m f d t n l g k h j q x zh ch sh r z c s".split()  # noqa: SIM905
-# Слоги без начального звука и особые случаи (y, w, zhi, ri ...).
-SPECIAL = """a ai an ang ao e ei en eng er o ou
-zhi chi shi ri zi ci si
-ya yan yang yao ye yi yin ying yo yong you yu yuan yue yun
-wa wai wan wang wei wen weng wo wu""".split()  # noqa: SIM905
-# Окончания, которые встречаются после начальных звуков. ü записано как v.
-FINALS = """a ai an ang ao e ei en eng o ong ou
-i ia ian iang iao ie in ing iong iu
-u ua uai uan uang ui un uo v ve van vn ue uan un""".split()  # noqa: SIM905
-# Сочетания, которых в путунхуа нет, хотя по таблице они складываются.
-# Проверка не обязана их запрещать: главное - ловить опечатки вроде "xqa".
-SYLLABLES = set(SPECIAL) | {i + f for i in INITIALS for f in FINALS}
 
 TONE_MARKS = "āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ"
 LATIN_WORDS = {"python", "java", "windows", "linux", "c", "go"}  # не пиньинь
-
-
-def plain(text: str) -> str:
-    """Без тонов, ü как v, строчными: "Nǚ" превращается в "nv"."""
-    text = unicodedata.normalize("NFC", text).lower().replace("ü", "v")
-    text = "".join(c for c in unicodedata.normalize("NFD", text) if unicodedata.category(c) != "Mn")
-    return unicodedata.normalize("NFC", text).replace("ü", "v")
-
-
-def split_syllables(word: str) -> list[str] | None:
-    """Разбить слово пиньиня без пробелов на слоги с тонами (None - не разбивается).
-
-    Берём разбиение на наименьшее число слогов: "xian" - один слог, а не xi + an.
-    Буква r в конце после гласной - это "эризация" (zhèr), отдельным слогом не считаем.
-    """
-    toned = unicodedata.normalize("NFC", word).lower().replace("ü", "v")
-    bare = plain(word)
-    if len(toned) != len(bare):  # редкий случай необычной записи - сверяем по bare
-        toned = bare
-
-    @lru_cache(None)
-    def best(start: int) -> tuple | None:
-        if start == len(bare):
-            return ()
-        options = []
-        for end in range(start + 1, min(start + 6, len(bare)) + 1):
-            rest = best(end)
-            if bare[start:end] in SYLLABLES and rest is not None:
-                options.append(((start, end), *rest))
-        return min(options, key=len) if options else None
-
-    if bare.endswith("r") and best(0) is None and len(bare) > 1:
-        cut = split_syllables(word[:-1])
-        return cut
-    parts = best(0)
-    return None if parts is None else [toned[a:b] for a, b in parts]
 
 
 def tone_error(syllable: str) -> str | None:
@@ -99,7 +51,7 @@ def syllables_of(text: str) -> list[str] | None:
     """Все слоги записи пиньиня (фразы). Латинские слова вроде Python пропускаются."""
     result = []
     for word in re.split(r"[\s,.!?;:/\-]+", text):
-        for part in re.split(r"['’]", word):
+        for part in re.split(r"['']", word):
             if not part or part.lower() in LATIN_WORDS:
                 continue
             parts = split_syllables(part)

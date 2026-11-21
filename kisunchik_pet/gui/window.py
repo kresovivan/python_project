@@ -82,6 +82,7 @@ class PetWindow:
         self.on_zone = None
         self.on_double = None
         self.on_exit = None
+        self.on_menu = None  # вызовется прямо перед показом меню
 
         self._drag_start = None
         self._dragging = False
@@ -177,6 +178,10 @@ class PetWindow:
             self.on_double()
 
     def _menu(self, event):
+        # Даём приложению обновить подписи (прогресс обучения меняется
+        # с каждым показанным словом), и только потом показываем меню.
+        if self.on_menu:
+            self.on_menu()
         self.menu.post(event.x_root, event.y_root)
 
     def _exit(self):

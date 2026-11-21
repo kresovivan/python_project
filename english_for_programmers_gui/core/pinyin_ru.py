@@ -15,82 +15,33 @@
 #   3. каждый слог переводится в русские буквы по таблицам начальных
 #      звуков (инициалей) и конечных частей (финалей).
 #
-# Списки инициалей/финалей - те же, что в проверке данных (tests/unit/
-# test_chinese_data.py): они описывают настоящие слоги путунхуа.
+# Списки слогов, разбиение на слоги и убирание тонов — в core/pinyin_utils.py
+# (единый источник правды).
 #
 # Кто пользуется: страницы словаря и упражнений показывают русское чтение
 # рядом с пиньинем. Тесты: tests/unit/test_pinyin_ru.py.
 
-import unicodedata
-
-# Значки тонов (macron, acute, caron, grave) - их убираем. Диерезис (две точки
-# над ü) НЕ трогаем: ü читается как "юй" и не должно путаться с u ("у").
-_TONE_MARKS = {"\u0304", "\u0301", "\u030c", "\u0300"}
-
-
-def _bare(text: str) -> str:
-    """Убрать тоны, но сохранить ü (превратив в v). "nǚ" -> "nv", "mā" -> "ma"."""
-    parts = unicodedata.normalize("NFD", text)
-    kept = "".join(ch for ch in parts if ch not in _TONE_MARKS)
-    return unicodedata.normalize("NFC", kept).lower().replace("ü", "v")
+from core.pinyin_utils import bare, best_split
 
 
 # --- разбиение на слоги -----------------------------------------------------
-# Списки настоящих слогов путунхуа: начальные звуки, особые слоги без начала
-# и конечные части. ü записано как v (та же договорённость, что в пиньине).
+# Списки слогов и алгоритм — в core/pinyin_utils.py. Здесь только частный
+# случай: _split_word добавляет к разбиению признак эризации (r на конце).
 
-_INITIALS = "b p m f d t n l g k h j q x zh ch sh r z c s".split()
-
-_SPECIAL = """a ai an ang ao e ei en eng er o ou
-zhi chi shi ri zi ci si
-ya yan yang yao ye yi yin ying yo yong you yu yuan yue yun
-wa wai wan wang wei wen weng wo wu""".split()
-
-_FINALS = """a ai an ang ao e ei en eng o ong ou
-i ia ian iang iao ie in ing iong iu
-u ua uai uan uang ui un uo v ve van vn ue uan un""".split()
-
-_SYLLABLES = set(_SPECIAL) | {i + f for i in _INITIALS for f in _FINALS}
-
-
-def _best_split(bare: str) -> list[str] | None:
-    """Разбить слитный пиньинь (без тонов) на слоги, или None если не выходит.
-
-    Ищем разбиение на наименьшее число слогов: "xian" - один слог, а не xi+an.
-    Рекурсия с запоминанием (lru_cache) перебирает позиции и оставляет
-    самый короткий набор.
-    """
-    from functools import lru_cache
-
-    @lru_cache(None)
-    def best(start: int) -> tuple | None:
-        if start == len(bare):
-            return ()
-        options = []
-        for end in range(start + 1, min(start + 6, len(bare)) + 1):
-            rest = best(end)
-            if bare[start:end] in _SYLLABLES and rest is not None:
-                options.append(((start, end), *rest))
-        return min(options, key=len) if options else None
-
-    parts = best(0)
-    return None if parts is None else [bare[a:b] for a, b in parts]
-
-
-def _split_word(bare: str) -> tuple[list[str], bool]:
+def _split_word(b: str) -> tuple[list[str], bool]:
     """Разбить одно слово (без пробелов) на слоги.
 
     Возвращает (слоги, эризация). Эризация - буква r на конце после слога:
     "diǎnr" (点儿) читается "дяньр", r - не отдельный слог, а "р" в конце.
     """
-    parts = _best_split(bare)
+    parts = best_split(b)
     if parts is not None:
         return parts, False
-    if bare.endswith("r") and len(bare) > 1:
-        inner = _best_split(bare[:-1])
+    if b.endswith("r") and len(b) > 1:
+        inner = best_split(b[:-1])
         if inner is not None:
             return inner, True
-    return [bare], False  # не разобрали - оставляем как есть
+    return [b], False  # не разобрали - оставляем как есть
 
 
 # --- перевод слога в русские буквы ------------------------------------------
@@ -171,9 +122,9 @@ def russian_reading(pinyin: str) -> str:
     Слова могут быть слитными ("diànnǎo") или через пробел ("nǐ hǎo").
     Результат - слоги через пробел.
     """
-    bare = _bare(pinyin).replace("'", "").replace("’", "")
+    b = bare(pinyin).replace("'", "").replace("’", "")
     result: list[str] = []
-    for chunk in bare.split():
+    for chunk in b.split():
         chunk = "".join(ch for ch in chunk if ch.isalpha())
         if not chunk:
             continue

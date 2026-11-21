@@ -16,8 +16,8 @@ class TestEnglishTutor(unittest.TestCase):
         cls.tutor = EnglishTutor(WORDS, rng=random.Random(42))
 
     def test_dictionary_loaded(self):
-        """Словарь загрузился целиком."""
-        self.assertEqual(len(self.tutor), 4070)
+        """Словарь загрузился целиком: 4070 слов тренажёра + азбука."""
+        self.assertEqual(len(self.tutor), 4110)
 
     def test_word_shape(self):
         """У слова есть все поля карточки."""

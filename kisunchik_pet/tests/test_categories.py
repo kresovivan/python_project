@@ -99,9 +99,19 @@ class TestRealCategories(unittest.TestCase):
         known = set()
         for cats in tutor.category_groups().values():
             known.update(c["id"] for c in cats)
-        self.assertEqual(len(known), 18)
+        self.assertEqual(len(known), 21)  # 18 тем тренажёра + 3 блока азбуки
         word = tutor.next_word()
         self.assertIn(word.category, known)
+
+    def test_basics_blocks_present(self):
+        """Азбука на месте: алфавит полный, цифры и первые слова."""
+        tutor = EnglishTutor(ASSETS / "words.json", ASSETS / "categories.json")
+        groups = tutor.category_groups()
+        basics = {c["id"]: c for c in groups.get("basics", [])}
+        self.assertEqual(set(basics), {"abc_alphabet", "abc_digits",
+                                       "abc_basic_words"})
+        letters = [w for w in tutor._words if w.category == "abc_alphabet"]
+        self.assertEqual(len(letters), 26, "алфавит должен быть полным")
 
 
 class TestVoiceChoices(unittest.TestCase):

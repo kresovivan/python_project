@@ -7,6 +7,8 @@
    разнообразим темпом и высотой: медленно, быстро, низко, высоко.
 2. Онлайн: Google Translate TTS - бесплатно и без ключа, зато с
    акцентами: американский, британский, австралийский, индийский.
+   Акцент задаётся кодом языка (en-us, en-gb, en-au, en-in) - домены
+   google.com / google.co.uk / ... сейчас отдают одинаковый звук.
    Мелодия скачивается в mp3 и играется через winmm (есть в любой
    Windows). Нет интернета - сами переключаемся на офлайн.
 
@@ -44,15 +46,17 @@ PERSONAS = [
     ("sapi:high", "Зира - высокий голос", 0, 3),
 ]
 
-# Онлайн-голоса: id - это домен Google, от него зависит акцент.
+# Онлайн-голоса: третий элемент - код языка Google, от него зависит
+# акцент. id вида "gtts:com" оставлены старыми, чтобы не ломать
+# сохранённые настройки пользователей.
 ONLINE_VOICES = [
-    ("gtts:com", "Онлайн - американский акцент", "com"),
-    ("gtts:co.uk", "Онлайн - британский акцент", "co.uk"),
-    ("gtts:com.au", "Онлайн - австралийский акцент", "com.au"),
-    ("gtts:co.in", "Онлайн - индийский акцент", "co.in"),
+    ("gtts:com", "Онлайн - американский акцент", "en-us"),
+    ("gtts:co.uk", "Онлайн - британский акцент", "en-gb"),
+    ("gtts:com.au", "Онлайн - австралийский акцент", "en-au"),
+    ("gtts:co.in", "Онлайн - индийский акцент", "en-in"),
 ]
 
-_TTS_URL = "https://translate.google.{tld}/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q="
+_TTS_URL = "https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl={lang}&q="
 _USER_AGENT = {"User-Agent": "Mozilla/5.0"}
 
 
@@ -209,9 +213,10 @@ class Speaker:
         """Произнести одну фразу текущим голосом."""
         spec = self._voice_spec
         if spec.startswith("gtts:"):
-            tld = spec[5:]
+            lang = next((code for s, _l, code in ONLINE_VOICES if s == spec),
+                        "en-gb")
             try:
-                self._say_online(text, tld)
+                self._say_online(text, lang)
                 return
             except OSError as exc:
                 # Нет сети или Google ответил ошибкой - честно говорим
@@ -239,9 +244,9 @@ class Speaker:
             else:
                 self.speech_error = f"Speak: {hr & 0xFFFFFFFF:#x}"
 
-    def _say_online(self, text: str, tld: str) -> None:
+    def _say_online(self, text: str, lang: str) -> None:
         """Скачать озвучку у Google и проиграть через winmm."""
-        url = _TTS_URL.format(tld=tld) + urllib.parse.quote(text)
+        url = _TTS_URL.format(lang=lang) + urllib.parse.quote(text)
         req = urllib.request.Request(url, headers=_USER_AGENT)
         with urllib.request.urlopen(req, timeout=10) as response:
             data = response.read()

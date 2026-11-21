@@ -11,6 +11,12 @@
 Формат categories.json (необязателен): блоки слов по темам
 ("Программирование", "Глаголы"...) и карта слово -> блок. Репетитор
 умеет выбирать слова только из разрешённых пользователем блоков.
+
+Если передан дневник (ProgressStore), репетитор работает как учебник
+с закладкой: новые слова идут по закладке из самого отстающего
+включённого блока, примерно треть показов - повторение уже виденных
+(редко виденные выпадают чаще). Без дневника - старый режим:
+взвешенный случайный выбор по всему пулу.
 """
 
 import json
@@ -34,7 +40,7 @@ class EnglishTutor:
     """Выбирает слова для показа с учётом весов и разрешённых блоков."""
 
     def __init__(self, words_path: Path, categories_path: Path | None = None,
-                 rng: random.Random | None = None):
+                 rng: random.Random | None = None, progress=None):
         with open(words_path, encoding="utf-8") as f:
             raw = json.load(f)
         self._words = [Word(en=w[0], ru=w[1], transcription=w[2], weight=float(w[3]))
@@ -63,6 +69,9 @@ class EnglishTutor:
                     for w in self._words
                 ]
         self._enabled: set[str] | None = None  # None - все блоки разрешены
+        self._progress = progress              # дневник обучения или None
+        self._by_en = {w.en: w for w in self._words}
+        self._cat_cache: dict[str, list[Word]] = {}
 
     def __len__(self) -> int:
         return len(self._words)
@@ -94,10 +103,88 @@ class EnglishTutor:
 
     def next_word(self) -> Word:
         """Следующее слово. Подряд одно и то же не даём."""
-        pool, weights = self._pool()
+        if self._progress is not None and self._groups:
+            word = self._next_with_progress()
+        else:
+            pool, weights = self._pool()
+            word = self._pick(pool, weights)
+        self._last = word
+        if self._progress is not None:
+            self._progress.mark_shown(word.en)
+        return word
+
+    def _pick(self, pool: list[Word], weights: list[float]) -> Word:
+        """Взвешенный случайный выбор без мгновенного повтора."""
         word = self._rng.choices(pool, weights=weights, k=1)[0]
         if len(pool) > 1:
-            while word is self._last:
+            guard = 0
+            while word is self._last and guard < 20:
                 word = self._rng.choices(pool, weights=weights, k=1)[0]
-        self._last = word
+                guard += 1
         return word
+
+    # --- режим учебника с закладкой (нужен дневник) ---
+
+    def _cat_words(self, category_id: str) -> list[Word]:
+        """Слова блока (с кэшем)."""
+        if category_id not in self._cat_cache:
+            self._cat_cache[category_id] = [
+                w for w in self._words if w.category == category_id]
+        return self._cat_cache[category_id]
+
+    def _enabled_category_ids(self) -> list[str]:
+        """Включённые блоки в стабильном порядке меню."""
+        ids = [c["id"] for cats in self._groups.values() for c in cats]
+        if self._enabled is not None:
+            ids = [i for i in ids if i in self._enabled]
+        return ids
+
+    def _next_with_progress(self) -> Word:
+        """Новое слово по закладке или повторение виденного."""
+        cat_ids = self._enabled_category_ids()
+        stats = self._progress.word_stats()
+
+        # Кандидаты на повторение: виденные слова включённых блоков.
+        review_pool, review_weights = [], []
+        # Блоки, где закладка ещё не дошла до конца.
+        fresh = []
+        for cid in cat_ids:
+            words = self._cat_words(cid)
+            deck = self._progress.deck(cid, [w.en for w in words])
+            pos = self._progress.position(cid)
+            if pos < len(deck):
+                fresh.append((cid, pos / max(1, len(deck))))
+            for w in words:
+                shown = stats.get(w.en, {}).get("shown", 0)
+                if shown:
+                    review_pool.append(w)
+                    review_weights.append(1.0 / shown)
+
+        # Примерно треть показов - повторение; если новых не осталось -
+        # только повторение.
+        if review_pool and (not fresh or self._rng.random() < 0.35):
+            return self._pick(review_pool, review_weights)
+        if not fresh:
+            # Включённые блоки пусты или всё выучено - страховка.
+            pool, weights = self._pool()
+            return self._pick(pool, weights)
+        # Новое слово - из самого отстающего блока: темы идут вровень.
+        best = min(ratio for _cid, ratio in fresh)
+        cid = self._rng.choice([c for c, r in fresh if r == best])
+        deck = self._progress.deck(cid, [w.en for w in self._cat_words(cid)])
+        word = self._by_en[deck[self._progress.position(cid)]]
+        self._progress.advance(cid)
+        return word
+
+    # --- сведения для меню и восстановления после перезапуска ---
+
+    def category_status(self, category_id: str) -> tuple[int, int]:
+        """(пройдено, всего) слов в блоке - для подписи в меню."""
+        total = len(self._cat_words(category_id))
+        if self._progress is None:
+            return 0, total
+        return self._progress.status(category_id, total)
+
+    def word_by_en(self, en: str) -> Word | None:
+        """Карточка по английскому слову (для показа последнего слова)."""
+        return self._by_en.get(en)
