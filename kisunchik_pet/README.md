@@ -7,6 +7,11 @@
 
 ## Запуск
 
+Готовая программа: `app\KisunchikPet.exe` (папка `app` собирается
+PyInstaller, все библиотеки лежат в `app\_internal`).
+
+Из исходников:
+
 ```text
 python run.py
 ```
@@ -39,16 +44,22 @@ python run.py
 ## Сборка exe
 
 ```text
-pyinstaller --onefile --windowed --name KisunchikPet --paths . --icon assets/icon.ico --add-data "assets;assets" run.py
+pyinstaller --onedir --windowed --name KisunchikPet --paths . --icon assets/icon.ico --add-data "assets;assets" run.py
 ```
 
 Иконка собирается из мордочки котика скриптом `tools/make_icon.py`.
 
-Собранный exe кладём в корень проекта: `kisunchik_pet\KisunchikPet.exe`
-(он в .gitignore - 39 МБ бинарника не место в git). На рабочем столе -
-только ярлык `Kisunchik.lnk`, создаётся скриптом `make_shortcut.ps1`.
-Настройки `settings.json` и журнал `pet.log` exe хранит рядом с собой,
-то есть в папке проекта.
+Сборка именно `--onedir`, не `--onefile`: onefile при каждом запуске
+распаковывает себя во временную папку, и антивирус это блокировал
+(ошибка "Could not create temporary directory!", плюс откатывал записи
+автозапуска). В onedir распаковки нет: exe и все библиотеки лежат
+в папке `app` (`app\KisunchikPet.exe` + `app\_internal`), запускается
+одним процессом и мгновенно. Папка `app` в .gitignore - бинарникам
+не место в git.
+
+На рабочем столе - только ярлык `Kisunchik.lnk`, создаётся скриптом
+`make_shortcut.ps1`. Настройки `settings.json` и журнал `pet.log`
+exe хранит рядом с собой, то есть в папке `app`.
 
 ## Структура
 
