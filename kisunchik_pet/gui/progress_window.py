@@ -59,6 +59,10 @@ class ProgressWindow:
         # График по дням недели (канва, но отступы - от метрик шрифта).
         self.week_canvas = tk.Canvas(self.win, bg=BG, highlightthickness=0)
         self.week_canvas.pack(padx=16, pady=(0, 6), fill="x")
+        # Адаптивность: потянули окно вширь - график перерисовался
+        # под новую ширину.
+        self.week_canvas.bind("<Configure>",
+                              lambda _e: self._draw_week())
 
         tk.Label(self.win, text="Блоки слов", bg=BG, fg=TEXT,
                  font=self.f_bold).pack(anchor="w", padx=16)
@@ -160,6 +164,14 @@ class ProgressWindow:
         for child in self.rows.winfo_children():
             child.destroy()
         groups = self._tutor.category_groups()
+        # Ширина колонки названий - по самому длинному, но с потолком:
+        # на 200% масштабе длинные названия переносятся на две строки,
+        # а не выталкивают полоски за край окна.
+        longest = max(
+            (self.f_text.measure(c["title"])
+             for cats in groups.values() for c in cats),
+            default=300)
+        title_w = min(longest + 12, 440)
         row = 0
         for group_key in GROUP_ORDER:
             cats = groups.get(group_key)
@@ -174,7 +186,8 @@ class ProgressWindow:
                 done, total = self._tutor.category_status(cat["id"])
                 ratio = done / total if total else 0
                 tk.Label(self.rows, text=cat["title"], bg=BG, fg=TEXT,
-                         font=self.f_text, anchor="w"
+                         font=self.f_text, anchor="w", justify="left",
+                         wraplength=title_w
                          ).grid(row=row, column=0, sticky="w", padx=(12, 8))
                 bar = tk.Canvas(self.rows, width=170, height=14, bg=BG,
                                 highlightthickness=0)
@@ -185,16 +198,26 @@ class ProgressWindow:
                 bar.grid(row=row, column=1, sticky="w", pady=3)
                 tk.Label(self.rows, text=f"{done}/{total} ({ratio:.0%})",
                          bg=BG, fg=TEXT, font=self.f_text, anchor="w",
-                         width=16).grid(row=row, column=2, sticky="w",
-                                        padx=(8, 4))
+                         ).grid(row=row, column=2, sticky="w",
+                                padx=(8, 4))
                 again = tk.Label(self.rows, text="заново", bg=BG, fg=ACCENT,
                                  font=self.f_text, cursor="hand2")
                 again.grid(row=row, column=3, sticky="e", padx=(4, 0))
                 again.bind("<Button-1>",
                            lambda _e, cid=cat["id"]: self._reset_category(cid))
                 row += 1
-        self.rows.columnconfigure(0, minsize=self.f_text.measure("М" * 34))
+        self.rows.columnconfigure(0, minsize=title_w + 12)
         self.rows.columnconfigure(3, weight=1)
+        # Если окно уже, чем нужно списку - расширяем, иначе полоски
+        # и цифры уедут за край (на масштабе 200% это и было причиной).
+        self.rows.update_idletasks()
+        need = self.rows.winfo_reqwidth() + 72
+        # Не даём окну быть уже списка ни при каком масштабе:
+        # иначе полоски и кнопка "заново" уезжают за край.
+        self.win.minsize(need, 480)
+        if self.win.winfo_width() < need:
+            h = max(self.win.winfo_height(), 640)
+            self.win.geometry(f"{need}x{h}")
 
     # --- управление ---
 
