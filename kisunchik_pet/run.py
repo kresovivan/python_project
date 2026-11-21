@@ -3,12 +3,23 @@
 
 Запуск из папки проекта:
     python run.py
+
+При запуске из собранного exe ресурсы (спрайты, словарь) лежат внутри
+временной папки PyInstaller (sys._MEIPASS), а настройки и журнал - рядом
+с exe-файлом, чтобы пользователь мог их менять и читать.
 """
 
 import ctypes
+import sys
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent
+if getattr(sys, "frozen", False):
+    # Запущены из exe: ресурсы во временной папке, настройки - рядом с exe.
+    ASSETS_DIR = Path(sys._MEIPASS) / "assets"
+    BASE_DIR = Path(sys.executable).resolve().parent
+else:
+    ASSETS_DIR = Path(__file__).resolve().parent / "assets"
+    BASE_DIR = Path(__file__).resolve().parent
 
 
 def make_dpi_aware() -> None:
@@ -30,12 +41,15 @@ def main() -> None:
     make_dpi_aware()
     # Импорт после make_dpi_aware: окно должно создаваться уже в режиме
     # честных пикселей.
+    from core.settings import load
     from gui.app import KisunchikApp
 
+    settings_path = BASE_DIR / "settings.json"
     app = KisunchikApp(
-        assets_dir=BASE_DIR / "assets",
-        scale=0.75,
+        assets_dir=ASSETS_DIR,
         log_path=BASE_DIR / "pet.log",
+        settings=load(settings_path),
+        settings_path=settings_path,
     )
     app.run()
 

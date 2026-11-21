@@ -93,9 +93,15 @@ class PetWindow:
         self.root.bind("<Button-3>", self._menu)
 
         self.menu = tk.Menu(self.root, tearoff=0)
-        self.menu = self.menu
-        self.menu.add_command(label="Кисунчик", state="disabled")
-        self.menu.add_command(label="Выход", command=self._exit)
+        # Переменные для пунктов настроек (заполняет KisunchikApp).
+        self.size_var = tk.DoubleVar(value=0.75)
+        self.sleep_var = tk.DoubleVar(value=180)
+        self.fun_var = tk.DoubleVar(value=40)
+        self.walk_var = tk.DoubleVar(value=55)
+        self.word_var = tk.DoubleVar(value=420)
+        self.auto_words_var = tk.IntVar(value=1)
+        self.sound_var = tk.IntVar(value=1)
+        self.walking_var = tk.IntVar(value=1)
 
     # --- координаты ---
 

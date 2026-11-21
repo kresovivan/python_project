@@ -1,4 +1,8 @@
 __pycache__/
 *.pyc
 pet.log
+settings.json
 .vs/
+build/
+dist/
+*.spec

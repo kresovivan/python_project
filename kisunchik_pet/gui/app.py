@@ -16,6 +16,7 @@ from PIL import Image
 from core.atlas import SpriteAtlas
 from core.behavior import BehaviorPolicy
 from core.bubble import BubbleImage
+from core.settings import Settings
 from core.speech import Speaker
 from core.tutor import EnglishTutor
 from gui.renderer import LayeredRenderer
@@ -45,12 +46,17 @@ class KisunchikApp:
     """Настольный питомец: анимация, трюки, прогулки, английские слова."""
 
     def __init__(self, assets_dir: Path, scale: float = 0.5, log_path: Path | None = None,
-                 clock=None, idle_probe=None):
+                 clock=None, idle_probe=None, settings: Settings | None = None,
+                 settings_path: Path | None = None):
         # clock и idle_probe подменяются в тестах: так проверяем поведение
         # за "часы" виртуального времени, не ожидая их по-настоящему.
         self._clock = clock or time.monotonic
         self._idle_probe = idle_probe or system_idle_seconds
         self._log_path = log_path
+        self.settings = settings or Settings()
+        self._settings_path = settings_path
+        self._assets_dir = assets_dir
+        scale = self.settings.scale  # настройка важнее параметра
         self.atlas = SpriteAtlas(assets_dir / "pet.json", assets_dir / "spritesheet.png", scale)
         self.tutor = EnglishTutor(assets_dir / "words.json")
         self.speaker = Speaker()
@@ -62,6 +68,8 @@ class KisunchikApp:
         self.window.on_zone = self._on_zone
         self.window.on_double = lambda: self._play_once("celebrate")
         self.window.on_exit = self._exit
+        self._build_menu()
+        self.apply_settings()
 
         self.bubble_maker = BubbleImage(width=BUBBLE_WIDTH)
 
@@ -99,6 +107,115 @@ class KisunchikApp:
                 f.write(time.strftime("%H:%M:%S ") + message + "\n")
         except OSError:
             pass
+
+    # --- настройки ---
+
+    def apply_settings(self) -> None:
+        """Применить текущие настройки к поведению котика."""
+        s = self.settings
+        self.policy.sleep_after_idle = s.sleep_after_idle
+        self.policy.fun_period = (s.fun_every * 0.6, s.fun_every * 1.4)
+        self.policy.walk_delay = (s.walk_every * 0.6, s.walk_every * 1.4)
+        self.policy.word_period = (s.word_every * 0.7, s.word_every * 1.3)
+        # Размер котика: пересобираем кадры в новом масштабе.
+        if abs(self.atlas.out_width - int(self.atlas.frame_width * s.scale)) > 1:
+            self.atlas = SpriteAtlas(self._assets_dir / "pet.json",
+                                     self._assets_dir / "spritesheet.png", s.scale)
+            self.window.cat_w = self.atlas.out_width
+            self.window.cat_h = self.atlas.out_height
+            self.window.win_w = self.atlas.out_width
+            self.window.win_h = self.atlas.out_height
+
+    def change_settings(self, **kwargs) -> None:
+        """Поменять настройки из меню, сохранить и применить."""
+        for key, value in kwargs.items():
+            setattr(self.settings, key, value)
+        if self._settings_path:
+            from core.settings import save
+            save(self._settings_path, self.settings)
+        self.apply_settings()
+        self._log(f"настройки: {kwargs}")
+
+    def _build_menu(self) -> None:
+        """Меню по правому клику: все настройки, которые имеет смысл
+        менять пользователю."""
+        import tkinter as tk
+        m = self.window.menu
+        s = self.settings
+        m.delete(0, "end")
+        m.add_command(label="Кисунчик", state="disabled")
+        m.add_separator()
+
+        size_menu = tk.Menu(m, tearoff=0)
+        for label, val in [("Мелкий", 0.5), ("Средний", 0.75), ("Крупный", 1.0)]:
+            size_menu.add_radiobutton(
+                label=label, value=val,
+                variable=self.window.size_var,
+                command=lambda v=val: self.change_settings(scale=v))
+        m.add_cascade(label="Размер котика", menu=size_menu)
+        self.window.size_var.set(s.scale)
+
+        sleep_menu = tk.Menu(m, tearoff=0)
+        for label, val in [("1 минуту", 60), ("3 минуты", 180),
+                           ("5 минут", 300), ("10 минут", 600)]:
+            sleep_menu.add_radiobutton(
+                label=label, value=val,
+                variable=self.window.sleep_var,
+                command=lambda v=val: self.change_settings(sleep_after_idle=v))
+        m.add_cascade(label="Засыпает после тишины", menu=sleep_menu)
+        self.window.sleep_var.set(s.sleep_after_idle)
+
+        fun_menu = tk.Menu(m, tearoff=0)
+        for label, val in [("Редко", 90), ("Обычно", 40), ("Часто", 20)]:
+            fun_menu.add_radiobutton(
+                label=label, value=val,
+                variable=self.window.fun_var,
+                command=lambda v=val: self.change_settings(fun_every=v))
+        m.add_cascade(label="Затеи (рыбка, лапка...)", menu=fun_menu)
+        self.window.fun_var.set(s.fun_every)
+
+        walk_menu = tk.Menu(m, tearoff=0)
+        for label, val in [("Редко", 120), ("Обычно", 55), ("Часто", 30)]:
+            walk_menu.add_radiobutton(
+                label=label, value=val,
+                variable=self.window.walk_var,
+                command=lambda v=val: self.change_settings(walk_every=v))
+        m.add_cascade(label="Прогулки по экрану", menu=walk_menu)
+        self.window.walk_var.set(s.walk_every)
+
+        word_menu = tk.Menu(m, tearoff=0)
+        for label, val in [("Каждые 3 мин", 180), ("Каждые 7 мин", 420),
+                           ("Каждые 15 мин", 900)]:
+            word_menu.add_radiobutton(
+                label=label, value=val,
+                variable=self.window.word_var,
+                command=lambda v=val: self.change_settings(word_every=v))
+        m.add_cascade(label="Автопоказ слов", menu=word_menu)
+        self.window.word_var.set(s.word_every)
+
+        m.add_checkbutton(
+            label="Сам показывает слова",
+            variable=self.window.auto_words_var,
+            command=lambda: self.change_settings(
+                auto_words=bool(self.window.auto_words_var.get())))
+        self.window.auto_words_var.set(s.auto_words)
+
+        m.add_checkbutton(
+            label="Озвучка слов голосом",
+            variable=self.window.sound_var,
+            command=lambda: self.change_settings(
+                sound=bool(self.window.sound_var.get())))
+        self.window.sound_var.set(s.sound)
+
+        m.add_checkbutton(
+            label="Гуляет по экрану сам",
+            variable=self.window.walking_var,
+            command=lambda: self.change_settings(
+                walking=bool(self.window.walking_var.get())))
+        self.window.walking_var.set(s.walking)
+
+        m.add_separator()
+        m.add_command(label="Выход", command=self._exit)
 
     # --- карточка со словом ---
 
@@ -143,7 +260,8 @@ class KisunchikApp:
             # сначала показать её, чтобы было видно, что звучит.
             if self._card_word is None:
                 self.show_word()
-            self.speaker.say(self._card_word.en)
+            if self.settings.sound:
+                self.speaker.say(self._card_word.en)
             self._card_until = self._clock() + CARD_SECONDS
             self._play_once("somersault")
         elif zone == "tail":
@@ -188,7 +306,7 @@ class KisunchikApp:
             self.hide_word()
             self._log("заснул")
             return
-        if now >= self.next_walk_at:
+        if now >= self.next_walk_at and self.settings.walking:
             # Гуляем только по тому монитору, где котик сейчас сидит.
             # Иначе он убегает в "пустоту": у соседнего монитора может
             # быть другая высота, и там, где ходит котик, экрана нет.
@@ -208,7 +326,7 @@ class KisunchikApp:
                           f"монитор {area}")
             self.next_walk_at = now + self.policy.next_walk_delay()
             return
-        if now >= self.next_word_at and idle_for > 20:
+        if now >= self.next_word_at and idle_for > 20 and self.settings.auto_words:
             # Раз в несколько минут сам показывает карточку со словом.
             self.show_word()
             self.next_word_at = now + self.policy.next_word_delay()
