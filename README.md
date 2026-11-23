@@ -19,12 +19,43 @@ python main.py
 pip install -r english_for_programmers_gui/requirements.txt
 ```
 
+## Сравнение таблиц CSV / Excel (`table_compare_oop`)
+
+Настольное приложение на Tkinter для сверки двух и более выгрузок (CSV, XLSX, XLS)
+по общему ключу. Код написан в объектно-ориентированном стиле, сопоставление — векторное.
+
+Возможности:
+
+- автоопределение кодировки и разделителя CSV;
+- загрузка нескольких листов Excel;
+- одиночный или составной ключ, корректная обработка дублей ключа и пробелов по краям;
+- цветная таблица результатов, плитки-итоги, фильтр «Только расхождения», поиск и сортировка;
+- копирование в буфер обмена (TSV);
+- экспорт в XLSX / CSV / HTML, включая «только расхождения»; разбиение больших XLSX на листы.
+
+Запуск:
+
+```text
+cd table_compare_oop
+py -m pip install -r requirements.txt
+py run.py
+```
+
+Тесты:
+
+```text
+cd table_compare_oop
+py -m unittest discover -s tests -v
+```
+
+Подробнее — [table_compare_oop/README.md](table_compare_oop/README.md) и [инструкция пользователя](table_compare_oop/MANUAL.md).
+
 ## Остальные проекты
 
 | Папка | Что это |
 |---|---|
 | english_for_programmers/ | консольная версия тренажёра |
-| table_compare_oop/ | сравнение таблиц CSV/Excel по общему ключу (GUI на Tkinter, ООП, векторное сопоставление) — см. [table_compare_oop/README.md](table_compare_oop/README.md) |
+| table_compare_oop/ | сравнение таблиц CSV/Excel — см. раздел «Сравнение таблиц» |
 | python_mike_mcgrath/ | упражнения из книги (функции, циклы, исключения) |
 | python_task_automation/ | упражнения «Автоматизация рутинных задач» |
 | config_dump_parser/ | парсер конфигураций 1С |
