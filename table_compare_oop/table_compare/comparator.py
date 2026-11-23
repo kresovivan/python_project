@@ -10,6 +10,7 @@ from .config import (
     KEY_SEP, STATUS_SUFFIX, STATUS_MATCH, STATUS_DIFF, STATUS_MISSING,
     FLAG_COLUMN, FLAG_YES, FLAG_NO,
 )
+from .naming import unique_short_names
 
 
 class TableComparator:
@@ -35,7 +36,7 @@ class TableComparator:
             raise ValueError("Не задан ключ")
 
         names = list(frames.keys())
-        short = {n: os.path.splitext(os.path.basename(n))[0] for n in names}
+        short = self._short_names(names)
         needed = list(dict.fromkeys(key_fields + compare_fields + extra_fields))
         index_cols = list(key_fields) + ['__occ__']
 
@@ -65,7 +66,7 @@ class TableComparator:
                 d[field] = src[available[field]] if field in available else None
 
             for k in key_fields:
-                d[k] = d[k].astype(str).str.strip()
+                d[k] = d[k].fillna('').astype(str).str.strip()
 
             d['__occ__'] = d.groupby(
                 key_fields, sort=False, dropna=False).cumcount()
@@ -100,7 +101,9 @@ class TableComparator:
         selected_index = pd.MultiIndex.from_frame(selected[index_cols])
         key_index = pd.MultiIndex.from_frame(selected[key_fields])
 
-        key_labels = selected[key_fields].astype(str).agg(KEY_SEP.join, axis=1)
+        key_labels = selected[key_fields[0]].astype(str)
+        for k in key_fields[1:]:
+            key_labels = key_labels.str.cat(selected[k].astype(str), sep=KEY_SEP)
         result = pd.DataFrame({
             'Ключ': key_labels.to_numpy(),
             FLAG_COLUMN: np.full(len(selected), '', dtype=object),
@@ -138,29 +141,27 @@ class TableComparator:
                 last_values[f] = last.reindex(key_index).to_numpy(dtype=object)
 
             for f in extra_fields:
-                arr = sa[f].to_numpy(dtype=object)
+                arr = sa[f].to_numpy(dtype=object, copy=True)
                 arr[pd.isna(arr)] = ''
                 missing_occ = ~occurrence_present
                 if last_values[f] is not None:
                     arr[missing_occ & key_present] = last_values[f][missing_occ & key_present]
                 arr[~key_present] = None
-                arr = np.array([
-                    None if v is None else '' if pd.isna(v) else str(v)
-                    for v in arr
-                ], dtype=object)
+                arr = np.where(
+                    np.equal(arr, None), None,
+                    np.where(pd.isna(arr), '', arr.astype(str).astype(object)))
                 result[f'{short[n]}::{f}'] = arr
 
             for f in compare_fields:
-                arr = sa[f].to_numpy(dtype=object)
+                arr = sa[f].to_numpy(dtype=object, copy=True)
                 arr[pd.isna(arr)] = ''
                 missing_occ = ~occurrence_present
                 if last_values[f] is not None:
                     arr[missing_occ & key_present] = last_values[f][missing_occ & key_present]
                 arr[~key_present] = None
-                arr = np.array([
-                    None if v is None else '' if pd.isna(v) else str(v)
-                    for v in arr
-                ], dtype=object)
+                arr = np.where(
+                    np.equal(arr, None), None,
+                    np.where(pd.isna(arr), '', arr.astype(str).astype(object)))
                 compare_arrays[f].append(arr)
                 result[f'{short[n]}::{f}'] = arr
 
@@ -195,11 +196,31 @@ class TableComparator:
         ordered += [f'{short[n]}::{f}' for f in extra_fields for n in names]
         ordered += [f'{short[n]}::{f}' for f in compare_fields for n in names]
         ordered += [f'{f}{STATUS_SUFFIX}' for f in compare_fields]
-        result = result[ordered]
+        result = self._finalize(result, ordered)
 
         if progress_cb:
             progress_cb(len(result), len(result))
         return result, stat
+
+    @staticmethod
+    def _short_names(names):
+        """Короткие имена файлов, уникальные даже при совпадении имён."""
+        return unique_short_names(names)
+
+    @staticmethod
+    def _finalize(result, ordered):
+        """Вернуть колонки в заданном порядке, сохранив None для пропусков.
+
+        pandas 3.x превращает None в NaN при присвоении numpy-массива
+        объектного типа в столбец DataFrame. Возвращаем явный None, чтобы
+        «нет данных» не превращалось в «nan» и корректно отображалось.
+        """
+        result = result[ordered]
+        for column in list(result.columns):
+            series = result[column]
+            if series.isna().any():
+                result[column] = series.astype(object).mask(series.isna(), None)
+        return result
 
     def _compare_unique_keys(self, names, key_fields, compare_fields,
                              extra_fields, progress_cb):
@@ -215,7 +236,7 @@ class TableComparator:
                 raise ValueError(
                     "Поле-ключ '{}' отсутствует в файле {}".format(
                         missing_keys[0], os.path.basename(name)))
-            parts = {field: source[available[field]].astype(str)
+            parts = {field: source[available[field]].fillna('').astype(str)
                      .str.strip().to_numpy(dtype=object)
                      for field in key_fields}
             if len(key_fields) == 1:
@@ -241,8 +262,8 @@ class TableComparator:
         positions = [key.get_indexer(all_keys) for key in keys]
         present = [indexer >= 0 for indexer in positions]
         missing = ~(present[0] & present[1])
-        shorts = [os.path.splitext(os.path.basename(name))[0]
-                  for name in names]
+        _short = self._short_names(names)
+        shorts = [_short[name] for name in names]
 
         result = pd.DataFrame({
             'Ключ': labels,
@@ -291,4 +312,4 @@ class TableComparator:
         ordered += [f'{field}{STATUS_SUFFIX}' for field in compare_fields]
         if progress_cb:
             progress_cb(len(result), len(result))
-        return result[ordered], stat
+        return self._finalize(result, ordered), stat

@@ -6,6 +6,7 @@ from typing import List
 import pandas as pd
 
 from .config import STATUS_MATCH, STATUS_DIFF, STATUS_SUFFIX
+from .naming import unique_short_names
 
 
 class StatisticsAnalyzer:
@@ -39,9 +40,9 @@ class StatisticsAnalyzer:
         per_field.sort(key=lambda row: row['diff'], reverse=True)
 
         per_file = []
+        shorts = unique_short_names(file_names)
         for path in file_names:
-            short = os.path.splitext(os.path.basename(path))[0]
-            column = short + '::ключ'
+            column = shorts[path] + '::ключ'
             per_file.append({
                 'file': os.path.basename(path),
                 'missing': int(result[column].isna().sum())

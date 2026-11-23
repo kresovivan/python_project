@@ -52,6 +52,15 @@ class MainWindow(tk.Tk):
         self.progress_var = tk.StringVar(value='')
         self.count_files_var = tk.StringVar(value='Файлов: 0')
         self.speed_var = tk.StringVar(value='')
+        self.summary_var = tk.StringVar(value='')
+        self._last_cmp_fields: List[str] = []
+        self._only_diff_var = tk.BooleanVar(value=False)
+        self._search_var = tk.StringVar(value='')
+        self._export_only_diff_var = tk.BooleanVar(value=False)
+        self._sort_col = None
+        self._sort_desc = False
+        self._load_metrics_lock = threading.Lock()
+        self._tiles = {}
 
         self.loader = TableLoader()
         Theme.apply(self)
@@ -661,7 +670,8 @@ class MainWindow(tk.Tk):
         self.load_metrics = {}
 
         def cb(done, tot, path, elapsed, rows):
-            self.load_metrics[path] = {'seconds': elapsed, 'rows': rows}
+            with self._load_metrics_lock:
+                self.load_metrics[path] = {'seconds': elapsed, 'rows': rows}
             pct = int(done * 100 / tot)
             name = os.path.basename(path)
             speed = rows / elapsed if elapsed else 0
@@ -811,14 +821,23 @@ class MainWindow(tk.Tk):
         self.result_df = None
         self.last_stat = {}
         self.last_key_fields = []
+        self._last_cmp_fields = []
         self.detail_stats = {'fields': [], 'files': []}
+        self.summary_var.set('')
         self.speed_var.set('')
+        self._only_diff_var.set(False)
+        self._export_only_diff_var.set(False)
+        self._search_var.set('')
+        self._sort_col = None
+        self._sort_desc = False
         self._fields_initialized = False
         for b in self.export_buttons:
             b.state(['disabled'])
         if hasattr(self, 'tree'):
             self.tree.delete(*self.tree.get_children())
             self.tree['columns'] = []
+        for tile in self._tiles.values():
+            tile.config(text='—')
 
     # ----------------------------------------------------------
     #  Сравнение

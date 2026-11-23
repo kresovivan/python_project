@@ -29,7 +29,7 @@ class TableLoader:
         sample = raw.decode(enc, errors='replace')
         sep = None
         try:
-            dialect = csv.Sniffer().sniff(sample, delimiters=';,	|,')
+            dialect = csv.Sniffer().sniff(sample, delimiters=';	|,')
             sep = dialect.delimiter
         except Exception:
             # Для типичных русскоязычных выгрузок чаще всего используется ';'.
@@ -80,7 +80,7 @@ class TableLoader:
             if len(tables) == 1:
                 return tables[0]
             return pd.concat([table[first] for table in tables],
-                             ignore_index=True, copy=False)
+                             ignore_index=True)
         return self._read_csv(path)
 
 
