@@ -50,12 +50,37 @@ py -m unittest discover -s tests -v
 
 Подробнее — [table_compare_oop/README.md](table_compare_oop/README.md) и [инструкция пользователя](table_compare_oop/MANUAL.md).
 
+## Настольный питомец Кисунчик (`kisunchik_pet`)
+
+Рыже-белый котик на рабочем столе Windows: машет лапкой, кувыркается, ест рыбку
+и сам гуляет по всем мониторам. Помогает учить английский — показывает слова
+с переводом и произносит их голосом: офлайн SAPI Windows (Zira, en-US) в пяти
+характерах или онлайн Google TTS с выбором акцента. Словарь 4110 слов из
+`english_for_programmers_gui` разбит на 21 блок, ведётся дневник прогресса (`progress.json`).
+
+Запуск:
+
+```text
+cd kisunchik_pet
+pythonw run.py
+```
+
+Тесты (88 штук):
+
+```text
+cd kisunchik_pet
+python -m unittest discover -s tests -t .
+```
+
+Подробнее — [kisunchik_pet/README.md](kisunchik_pet/README.md).
+
 ## Остальные проекты
 
 | Папка | Что это |
 |---|---|
 | english_for_programmers/ | консольная версия тренажёра |
 | table_compare_oop/ | сравнение таблиц CSV/Excel — см. раздел «Сравнение таблиц» |
+| kisunchik_pet/ | настольный питомец и тренажёр английского — см. раздел «Настольный питомец» |
 | python_mike_mcgrath/ | упражнения из книги (функции, циклы, исключения) |
 | python_task_automation/ | упражнения «Автоматизация рутинных задач» |
 | config_dump_parser/ | парсер конфигураций 1С |
@@ -80,4 +105,11 @@ python -m unittest discover -s tests/unit -t .
 ```text
 cd table_compare_oop
 python -m unittest discover -s tests -v
+```
+
+В `kisunchik_pet`:
+
+```text
+cd kisunchik_pet
+python -m unittest discover -s tests -t .
 ```
