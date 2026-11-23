@@ -456,10 +456,28 @@ class MainWindow(tk.Tk):
         inner = tk.Frame(card, bg=COLORS['panel'])
         inner.pack(fill=tk.BOTH, expand=True, padx=10, pady=8)
 
-        tk.Label(inner, textvariable=self.speed_var,
+        summary = tk.Frame(inner, bg=COLORS['panel'])
+        summary.pack(fill=tk.X, pady=(0, 6))
+        tk.Label(summary, textvariable=self.summary_var,
+                 font=FONTS['section'], fg=COLORS['accent_dark'],
+                 bg=COLORS['panel'], anchor='w').pack(fill=tk.X)
+        tiles = tk.Frame(summary, bg=COLORS['panel'])
+        tiles.pack(fill=tk.X, pady=(4, 0))
+        for key, color, caption in (
+                ('match', COLOR_MATCH, STATUS_MATCH),
+                ('diff', COLOR_DIFF, STATUS_DIFF),
+                ('missing', COLOR_MISSING, STATUS_MISSING)):
+            box = tk.Frame(tiles, bg=color, padx=8, pady=3)
+            box.pack(side=tk.LEFT, padx=(0, 6))
+            value = tk.Label(box, text='—', font=FONTS['big_num'],
+                             bg=color, fg=COLORS['text'])
+            value.pack(side=tk.LEFT, padx=(0, 6))
+            self._tiles[key] = value
+            tk.Label(box, text=caption, font=FONTS['body_sm'],
+                     bg=color, fg=COLORS['text']).pack(side=tk.LEFT)
+        tk.Label(summary, textvariable=self.speed_var,
                  font=FONTS['body_sm'], fg=COLORS['text_muted'],
-                 bg=COLORS['panel'], anchor='w'
-                 ).pack(fill=tk.X, pady=(0, 6))
+                 bg=COLORS['panel'], anchor='w').pack(fill=tk.X, pady=(4, 0))
 
         legend = tk.Frame(inner, bg=COLORS['panel'])
         legend.pack(side=tk.TOP, fill=tk.X, pady=(0, 4))
@@ -493,6 +511,24 @@ class MainWindow(tk.Tk):
         tk.Label(legend, text='Результат сравнения',
                  font=FONTS['h2'], fg=COLORS['text'],
                  bg=COLORS['panel']).pack(side=tk.RIGHT)
+
+        toolbar = tk.Frame(inner, bg=COLORS['panel'])
+        toolbar.pack(fill=tk.X, pady=(0, 4))
+        ttk.Checkbutton(toolbar, text='Только расхождения',
+                        variable=self._only_diff_var,
+                        command=self._render_tree).pack(side=tk.LEFT)
+        ttk.Checkbutton(toolbar, text='Экспорт только расхождений',
+                        variable=self._export_only_diff_var).pack(
+            side=tk.LEFT, padx=(12, 0))
+        ttk.Button(toolbar, text='Копировать (TSV)', style='Small.TButton',
+                   command=self._copy_tsv).pack(side=tk.LEFT, padx=(12, 0))
+        tk.Label(toolbar, text='Поиск:', font=FONTS['body_sm'],
+                 bg=COLORS['panel'], fg=COLORS['text_muted']).pack(
+            side=tk.LEFT, padx=(12, 4))
+        self._search_entry = ttk.Entry(toolbar, textvariable=self._search_var)
+        self._search_entry.pack(side=tk.LEFT, fill=tk.X, expand=True,
+                                padx=(0, 4))
+        self._search_entry.bind('<KeyRelease>', lambda e: self._render_tree())
 
         tree_wrap = tk.Frame(inner, bg=COLORS['panel'])
         tree_wrap.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
@@ -896,6 +932,7 @@ class MainWindow(tk.Tk):
             df, cmp_fields, list(self.frames)).summarize()
         self.last_stat = stat
         self.last_key_fields = list(key_fields)
+        self._last_cmp_fields = list(cmp_fields)
         self.tabs.select(self._result_content)
 
         try:
@@ -904,6 +941,14 @@ class MainWindow(tk.Tk):
             pass
 
         total_rows = sum(len(frame) for frame in self.frames.values())
+        self.summary_var.set(
+            'Проверено {:,} записей  •  Совпало {:,}  •  Отличается {:,}  •  '
+            'Без пары {:,}'.format(
+                len(df), stat.get(STATUS_MATCH, 0),
+                stat.get(STATUS_DIFF, 0), stat.get(STATUS_MISSING, 0)))
+        self._tiles['match'].config(text='{:,}'.format(stat.get(STATUS_MATCH, 0)))
+        self._tiles['diff'].config(text='{:,}'.format(stat.get(STATUS_DIFF, 0)))
+        self._tiles['missing'].config(text='{:,}'.format(stat.get(STATUS_MISSING, 0)))
         self.speed_var.set(
             'Загрузка: {:.2f} с, {:,.0f} строк/с  |  '
             'Сопоставление: {:.2f} с, {:,.0f} строк/с'.format(
@@ -921,7 +966,7 @@ class MainWindow(tk.Tk):
         self.tree.delete(*self.tree.get_children())
         self.tree['columns'] = cols
         for c in cols:
-            self.tree.heading(c, text=c)
+            self.tree.heading(c, text=c, command=lambda col=c: self._sort_by(col))
             if c == FLAG_COLUMN:
                 width = 180
             elif c.endswith(STATUS_SUFFIX):
@@ -930,33 +975,8 @@ class MainWindow(tk.Tk):
                 width = 190
             self.tree.column(c, width=width, anchor='w', minwidth=80)
 
-        status_cols = [c for c in cols if c.endswith(STATUS_SUFFIX)]
+        self._render_tree()
 
-        # В интерфейсе показываем часть строк, чтобы окно не зависало.
-        # В self.result_df остаётся полный результат для экспорта.
-        preview = df.head(PREVIEW_MAX_ROWS)
-        status_idx = [cols.index(c) for c in status_cols]
-
-        for values in preview.itertuples(index=False, name=None):
-            statuses = []
-            for idx in status_idx:
-                v = values[idx]
-                if pd.isna(v):
-                    continue
-                s = str(v).strip().replace('\ufeff', '')
-                if s:
-                    statuses.append(s)
-
-            if STATUS_MISSING in statuses:
-                tag = TAG_MISSING
-            elif STATUS_DIFF in statuses:
-                tag = TAG_DIFF
-            else:
-                tag = TAG_MATCH
-
-            self.tree.insert('', 'end', values=values, tags=(tag,))
-
-        self.tree.update_idletasks()
         if len(df) > PREVIEW_MAX_ROWS:
             self.status_var.set(
                 self.status_var.get() +
@@ -966,6 +986,108 @@ class MainWindow(tk.Tk):
         self._update_all_wraplengths()
 
         # Подробности открываются кнопкой рядом с таблицей результатов.
+
+    def _filtered_view(self):
+        """Представление с учётом «только расхождения», поиска и сортировки."""
+        df = self.result_df
+        cols = list(df.columns)
+        status_cols = [c for c in cols if c.endswith(STATUS_SUFFIX)]
+        keep = pd.Series(True, index=df.index)
+        if self._only_diff_var.get():
+            if FLAG_COLUMN in cols:
+                keep &= (df[FLAG_COLUMN] == FLAG_YES)
+            else:
+                bad = pd.Series(False, index=df.index)
+                for c in status_cols:
+                    bad |= df[c].isin([STATUS_DIFF, STATUS_MISSING])
+                keep &= bad
+        search = self._search_var.get().strip().lower()
+        if search:
+            match = pd.Series(False, index=df.index)
+            for c in cols:
+                match |= (df[c].astype(object).fillna('')
+                          .astype(str).str.lower().str.contains(search,
+                                                                regex=False))
+            keep &= match
+        view = df.loc[keep]
+        if self._sort_col and self._sort_col in cols:
+            view = view.sort_values(by=self._sort_col,
+                                    ascending=not self._sort_desc,
+                                    na_position='last')
+        return view
+
+    def _discrepancy_view(self):
+        """Только записи с расхождением (для экспорта)."""
+        df = self.result_df
+        cols = list(df.columns)
+        if FLAG_COLUMN in cols:
+            return df[df[FLAG_COLUMN] == FLAG_YES]
+        status_cols = [c for c in cols if c.endswith(STATUS_SUFFIX)]
+        bad = pd.Series(False, index=df.index)
+        for c in status_cols:
+            bad |= df[c].isin([STATUS_DIFF, STATUS_MISSING])
+        return df[bad]
+
+    @staticmethod
+    def _compute_stat(df):
+        """Пересчитать итог по подмножеству строк (для экспорта расхождений)."""
+        columns = [c for c in df.columns if c.endswith(STATUS_SUFFIX)]
+        if not columns:
+            return {STATUS_MATCH: len(df), STATUS_DIFF: 0, STATUS_MISSING: 0}
+        missing = pd.Series(False, index=df.index)
+        diff = pd.Series(False, index=df.index)
+        for c in columns:
+            missing |= (df[c] == STATUS_MISSING)
+            diff |= (df[c] == STATUS_DIFF)
+        diff &= ~missing
+        return {
+            STATUS_MATCH: int((~missing & ~diff).sum()),
+            STATUS_DIFF: int(diff.sum()),
+            STATUS_MISSING: int(missing.sum()),
+        }
+
+    def _render_tree(self):
+        if self.result_df is None:
+            return
+        view = self._filtered_view()
+        cols = list(self.result_df.columns)
+        status_cols = [c for c in cols if c.endswith(STATUS_SUFFIX)]
+        status_idx = [cols.index(c) for c in status_cols]
+        preview = view.head(PREVIEW_MAX_ROWS)
+        self.tree.delete(*self.tree.get_children())
+        for values in preview.itertuples(index=False, name=None):
+            statuses = []
+            for idx in status_idx:
+                v = values[idx]
+                if pd.isna(v):
+                    continue
+                s = str(v).strip().replace('\ufeff', '')
+                if s:
+                    statuses.append(s)
+            if STATUS_MISSING in statuses:
+                tag = TAG_MISSING
+            elif STATUS_DIFF in statuses:
+                tag = TAG_DIFF
+            else:
+                tag = TAG_MATCH
+            self.tree.insert('', 'end', values=values, tags=(tag,))
+
+    def _sort_by(self, col):
+        if self._sort_col == col:
+            self._sort_desc = not self._sort_desc
+        else:
+            self._sort_col = col
+            self._sort_desc = False
+        self._render_tree()
+
+    def _copy_tsv(self):
+        if self.result_df is None:
+            return
+        view = self._filtered_view()
+        self.clipboard_clear()
+        self.clipboard_append(view.to_csv(index=False, sep='\t'))
+        self.status_var.set('Скопировано {:,} строк в буфер обмена.'
+                            .format(len(view)))
 
     def _on_error(self, e):
         self._set_progress(0, 'Ошибка')
@@ -1058,9 +1180,18 @@ class MainWindow(tk.Tk):
                        self._set_progress(
                            p, 'Сохранение: {:,} из {:,} записей'.format(d, t)))
 
+        data = self.result_df
+        stat = self.last_stat
+        details = self.detail_stats
+        if self._export_only_diff_var.get():
+            data = self._discrepancy_view()
+            stat = self._compute_stat(data)
+            details = StatisticsAnalyzer(
+                data, self._last_cmp_fields, list(self.frames)).summarize()
+
         report = ReportExporter(
-            self.result_df, self.last_stat, self.last_key_fields,
-            self.detail_stats, self.frames, self.load_metrics,
+            data, stat, self.last_key_fields,
+            details, self.frames, self.load_metrics,
             self.load_elapsed, self.compare_elapsed,
             progress_cb=on_progress)
 
@@ -1099,3 +1230,9 @@ class MainWindow(tk.Tk):
             except tk.TclError:
                 pass
         self._help_window = HelpWindow(self, anchor=anchor)
+
+
+def main():
+    """Точка входа: создать и показать окно приложения."""
+    app = MainWindow()
+    app.mainloop()

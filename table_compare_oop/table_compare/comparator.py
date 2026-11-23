@@ -114,7 +114,7 @@ class TableComparator:
         }
         stat = {STATUS_MATCH: 0, STATUS_DIFF: 0, STATUS_MISSING: 0}
 
-        for n in names:
+        for file_idx, n in enumerate(names):
             d = compact[n].set_index(index_cols, drop=False)
             sa = d.reindex(selected_index)
             occurrence_present = sa['__occ__'].notna().to_numpy()
@@ -165,6 +165,9 @@ class TableComparator:
                 compare_arrays[f].append(arr)
                 result[f'{short[n]}::{f}'] = arr
 
+            if progress_cb:
+                progress_cb(file_idx + 1, len(names))
+
         # Статусы по каждому полю - векторно.
         any_missing = np.zeros(len(result), dtype=bool)
         any_diff = np.zeros(len(result), dtype=bool)
@@ -199,7 +202,7 @@ class TableComparator:
         result = self._finalize(result, ordered)
 
         if progress_cb:
-            progress_cb(len(result), len(result))
+            progress_cb(len(names), len(names))
         return result, stat
 
     @staticmethod
@@ -311,5 +314,5 @@ class TableComparator:
         ordered += [f'{short}::{field}' for field in compare_fields for short in shorts]
         ordered += [f'{field}{STATUS_SUFFIX}' for field in compare_fields]
         if progress_cb:
-            progress_cb(len(result), len(result))
+            progress_cb(1, 1)
         return self._finalize(result, ordered), stat

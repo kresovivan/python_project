@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "table-compare-oop"
+version = "1.0.0"
+description = "Настольное приложение для сравнения таблиц CSV / Excel по общему ключу"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "chardet>=5.0",
+    "openpyxl>=3.1",
+    "xlrd>=2.0",
+]
+
+[project.scripts]
+table-compare = "table_compare.ui.main_window:main"
+
+[tool.setuptools.packages.find]
+include = ["table_compare*"]
+
+[tool.setuptools.package-data]
+table_compare = ["py.typed"]

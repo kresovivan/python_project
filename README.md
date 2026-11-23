@@ -24,7 +24,7 @@ pip install -r english_for_programmers_gui/requirements.txt
 | Папка | Что это |
 |---|---|
 | english_for_programmers/ | консольная версия тренажёра |
-| table_compare_oop/ | сравнение таблиц (учебный проект по ООП) |
+| table_compare_oop/ | сравнение таблиц CSV/Excel по общему ключу (GUI на Tkinter, ООП, векторное сопоставление) — см. [table_compare_oop/README.md](table_compare_oop/README.md) |
 | python_mike_mcgrath/ | упражнения из книги (функции, циклы, исключения) |
 | python_task_automation/ | упражнения «Автоматизация рутинных задач» |
 | config_dump_parser/ | парсер конфигураций 1С |
@@ -42,4 +42,11 @@ python -m unittest discover -s tests -t .
 
 ```text
 python -m unittest discover -s tests/unit -t .
+```
+
+В `table_compare_oop`:
+
+```text
+cd table_compare_oop
+python -m unittest discover -s tests -v
 ```
